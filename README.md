@@ -9,7 +9,7 @@ uz DMN odluke i Camunda 8 forme integrirane u TO-BE model.
 - TO-BE: `it-hire-to-be.bpmn`
 
 ### DMN
-- `models/dmn/it-hire-decisions-fixed.dmn`
+- `it-hire-decisions.dmn`
 
 ### Forme (Camunda 8)
 - `form-unos-zahtjeva.form`
