@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_FinalInterview",
+  "type": "default",
+  "name": "Finalni intervju (menadžment) – unos ocjena",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "finalInterviewScore",
+      "label": "Ocjena finalnog intervjua (0–100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "radio",
+      "key": "managementApproval",
+      "label": "Odobrenje menadžmenta",
+      "values": [
+        {
+          "label": "ODOBRENO",
+          "value": true
+        },
+        {
+          "label": "NIJE ODOBRENO",
+          "value": false
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "riskConcerns",
+      "label": "Rizici / zabrinutosti (ako postoje)",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "finalInterviewNotes",
+      "label": "Zaključak i preporuka",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}

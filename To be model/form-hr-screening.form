@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_HRScreening",
+  "type": "default",
+  "name": "HR screening intervju",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "radio",
+      "key": "hrScreeningPassed",
+      "label": "Prolaz HR screeninga",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "softSkillsScore",
+      "label": "Ocjena komunikacije i soft skills (0–100)",
+      "description": "Procjena kulture, komunikacije, motivacije.",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "motivationNotes",
+      "label": "Motivacija i očekivanja",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "number",
+      "key": "salaryExpectationEur",
+      "label": "Očekivana bruto plaća (EUR)",
+      "validate": {
+        "required": false,
+        "min": 0
+      }
+    },
+    {
+      "type": "datetime",
+      "key": "availabilityDate",
+      "label": "Dostupnost (najraniji mogući početak)",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "hrNotes",
+      "label": "Napomene HR-a",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}

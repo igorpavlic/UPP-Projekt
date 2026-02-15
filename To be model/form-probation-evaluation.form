@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_ProbationEvaluation",
+  "type": "default",
+  "name": "Evaluacija probnog rada",
+  "components": [
+    {
+      "type": "text",
+      "key": "employeeName",
+      "label": "Ime i prezime zaposlenika",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "performanceScore",
+      "label": "Ocjena performansi (0–100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "number",
+      "key": "teamFitScore",
+      "label": "Uklapanje u tim (0–100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "achievements",
+      "label": "Postignuća / doprinos tijekom probnog rada",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "developmentAreas",
+      "label": "Područja za razvoj",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "radio",
+      "key": "probationPassed",
+      "label": "Odluka nakon probnog rada",
+      "values": [
+        {
+          "label": "Nastavak zaposlenja",
+          "value": true
+        },
+        {
+          "label": "Raskid ugovora",
+          "value": false
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "finalRecommendation",
+      "label": "Zaključak / preporuka",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}

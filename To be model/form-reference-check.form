@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_ReferenceCheck",
+  "type": "default",
+  "name": "Provjera referenci",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "text",
+      "key": "reference1Name",
+      "label": "Referenca 1 – ime i kontakt",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "text",
+      "key": "reference2Name",
+      "label": "Referenca 2 – ime i kontakt",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "radio",
+      "key": "referenceCheckPassed",
+      "label": "Provjera referenci (rezultat)",
+      "values": [
+        {
+          "label": "POZITIVNO",
+          "value": true
+        },
+        {
+          "label": "NEGATIVNO / NEPOTPUNO",
+          "value": false
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "referenceNotes",
+      "label": "Sažetak provjere referenci",
+      "description": "Što je potvrđeno (uloga, trajanje, performanse, razlozi odlaska).",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}

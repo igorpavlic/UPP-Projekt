@@ -5,19 +5,19 @@ uz DMN odluke i Camunda 8 forme integrirane u TO-BE model.
 
 ## Modeli
 ### BPMN
-- AS-IS: `it-hire-as-is.bpmn`
-- TO-BE: `it-hire-to-be.bpmn`
+- AS-IS: `As is model/it-hire-as-is.bpmn`
+- TO-BE: `To be model/it-hire-to-be.bpmn`
 
 ### DMN
-- `it-hire-decisions.dmn`
+- `To be model/it-hire-decisions.dmn`
 
 ### Forme (Camunda 8)
-- `form-unos-zahtjeva.form`
-- `form-unos-ocjena-intervjua.form`
-- `form-slanje-ponude.form`
-- `form-potpis-ugovora.form`
-- `form-nabava-rezervacija-opreme.form`
-- `form-potvrda-dostupnosti-opreme.form`
+- `To be model/form-final-interview.form`
+- `To be model/form-hr-screening.form`
+- `To be model/form-onboarding-day1.form`
+- `To be model/form-probation-evaluation.form`
+- `To be model/form-reference-check.form`
+- `To be model/form-tech-test.form`
 
 ## Dokumentacija
 - Seminarski rad: `seminar.md`

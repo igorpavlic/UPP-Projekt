@@ -130,17 +130,6 @@
 
     <!-- Faza 3: selekcijski postupak -->
     <bpmn:subProcess id="SP_Selection" name="Faza 3: Selekcijski postupak">
-      <bpmn:incoming>Flow_6</bpmn:incoming>
-      <bpmn:outgoing>Flow_7</bpmn:outgoing>
-
-      <!-- SLA: 14 dana za selekciju (prema dokumentu 7-14 dana) -->
-      <bpmn:boundaryEvent id="BE_Selection_SLA" name="SLA selekcije (14d)" attachedToRef="SP_Selection" cancelActivity="true">
-        <bpmn:outgoing>Flow_Selection_SLA</bpmn:outgoing>
-        <bpmn:timerEventDefinition>
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P14D</bpmn:timeDuration>
-        </bpmn:timerEventDefinition>
-      </bpmn:boundaryEvent>
-
       
       <bpmn:startEvent id="Sel_Start" name="Kandidat u selekciji">
         <bpmn:outgoing>Sel_Flow_1</bpmn:outgoing>
@@ -154,16 +143,28 @@
         </bpmn:extensionElements>
       </bpmn:userTask>
 
-      <bpmn:userTask id="Sel_TechTest" name="Tehnički test (unos rezultata)">
+      <bpmn:exclusiveGateway id="Sel_GW_HRPassed" name="HR screening prošao?">
         <bpmn:incoming>Sel_Flow_2</bpmn:incoming>
+        <bpmn:outgoing>Sel_Flow_2_yes</bpmn:outgoing>
+        <bpmn:outgoing>Sel_Flow_2_no</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+
+      <bpmn:userTask id="Sel_TechTest" name="Tehnički test (unos rezultata)">
+        <bpmn:incoming>Sel_Flow_2_yes</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_3</bpmn:outgoing>
         <bpmn:extensionElements>
           <zeebe:formDefinition formId="Form_TechTest"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
-      <bpmn:userTask id="Sel_TechInterview" name="Tehnički intervju (unos ocjena)">
+      <bpmn:exclusiveGateway id="Sel_GW_TestPassed" name="Prošao tehnički test?">
         <bpmn:incoming>Sel_Flow_3</bpmn:incoming>
+        <bpmn:outgoing>Sel_Flow_3_yes</bpmn:outgoing>
+        <bpmn:outgoing>Sel_Flow_3_no</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+
+      <bpmn:userTask id="Sel_TechInterview" name="Tehnički intervju (unos ocjena)">
+        <bpmn:incoming>Sel_Flow_3_yes</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_4</bpmn:outgoing>
         <bpmn:extensionElements>
           <zeebe:formDefinition formId="Form_InterviewScores"/>
@@ -184,8 +185,14 @@
         </bpmn:extensionElements>
       </bpmn:userTask>
 
-      <bpmn:userTask id="Sel_RefCheck" name="Provjera referenci">
+      <bpmn:exclusiveGateway id="Sel_GW_MgmtApproved" name="Odobreno od menadžmenta?">
         <bpmn:incoming>Sel_Flow_6</bpmn:incoming>
+        <bpmn:outgoing>Sel_Flow_6_yes</bpmn:outgoing>
+        <bpmn:outgoing>Sel_Flow_6_no</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+
+      <bpmn:userTask id="Sel_RefCheck" name="Provjera referenci">
+        <bpmn:incoming>Sel_Flow_6_yes</bpmn:incoming>
         <bpmn:incoming>Sel_Flow_5_no</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_7</bpmn:outgoing>
         <bpmn:extensionElements>
@@ -195,12 +202,30 @@
 
       <bpmn:endEvent id="Sel_End" name="Selekcija završena">
         <bpmn:incoming>Sel_Flow_7</bpmn:incoming>
+        <bpmn:incoming>Sel_Flow_2_no</bpmn:incoming>
+        <bpmn:incoming>Sel_Flow_3_no</bpmn:incoming>
+        <bpmn:incoming>Sel_Flow_6_no</bpmn:incoming>
       </bpmn:endEvent>
 
       <!-- Selection flows -->
       <bpmn:sequenceFlow id="Sel_Flow_1" sourceRef="Sel_Start" targetRef="Sel_HRScreen"/>
-      <bpmn:sequenceFlow id="Sel_Flow_2" sourceRef="Sel_HRScreen" targetRef="Sel_TechTest"/>
-      <bpmn:sequenceFlow id="Sel_Flow_3" sourceRef="Sel_TechTest" targetRef="Sel_TechInterview"/>
+      <bpmn:sequenceFlow id="Sel_Flow_2" sourceRef="Sel_HRScreen" targetRef="Sel_GW_HRPassed"/>
+
+      <bpmn:sequenceFlow id="Sel_Flow_2_yes" sourceRef="Sel_GW_HRPassed" targetRef="Sel_TechTest">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= hrScreeningPassed</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Sel_Flow_2_no" sourceRef="Sel_GW_HRPassed" targetRef="Sel_End">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= not(hrScreeningPassed)</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+
+      <bpmn:sequenceFlow id="Sel_Flow_3" sourceRef="Sel_TechTest" targetRef="Sel_GW_TestPassed"/>
+      <bpmn:sequenceFlow id="Sel_Flow_3_yes" sourceRef="Sel_GW_TestPassed" targetRef="Sel_TechInterview">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= techTestPassed</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Sel_Flow_3_no" sourceRef="Sel_GW_TestPassed" targetRef="Sel_End">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= not(techTestPassed)</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+
       <bpmn:sequenceFlow id="Sel_Flow_4" sourceRef="Sel_TechInterview" targetRef="Sel_GW_FinalNeeded"/>
       <bpmn:sequenceFlow id="Sel_Flow_5_yes" sourceRef="Sel_GW_FinalNeeded" targetRef="Sel_FinalInterview">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= needsFinalInterview</bpmn:conditionExpression>
@@ -208,11 +233,29 @@
       <bpmn:sequenceFlow id="Sel_Flow_5_no" sourceRef="Sel_GW_FinalNeeded" targetRef="Sel_RefCheck">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= not(needsFinalInterview)</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Sel_Flow_6" sourceRef="Sel_FinalInterview" targetRef="Sel_RefCheck"/>
+
+      <bpmn:sequenceFlow id="Sel_Flow_6" sourceRef="Sel_FinalInterview" targetRef="Sel_GW_MgmtApproved"/>
+      <bpmn:sequenceFlow id="Sel_Flow_6_yes" sourceRef="Sel_GW_MgmtApproved" targetRef="Sel_RefCheck">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= managementApproval</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Sel_Flow_6_no" sourceRef="Sel_GW_MgmtApproved" targetRef="Sel_End">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= not(managementApproval)</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+
       <bpmn:sequenceFlow id="Sel_Flow_7" sourceRef="Sel_RefCheck" targetRef="Sel_End"/>
 
 
+
     </bpmn:subProcess>
+
+    <!-- SLA: 14 dana za selekciju (7-14 dana iz dokumenta) -->
+    <bpmn:boundaryEvent id="BE_Selection_SLA" name="SLA selekcije (14d)" attachedToRef="SP_Selection" cancelActivity="true">
+      <bpmn:outgoing>Flow_Selection_SLA</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P14D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+
 
     <bpmn:serviceTask id="ST_NotifyReject_SLA" name="Obavijesti o prekoračenju SLA">
       <bpmn:incoming>Flow_Selection_SLA</bpmn:incoming>

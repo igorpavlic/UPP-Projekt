@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_TechTest",
+  "type": "default",
+  "name": "Tehnički test – unos rezultata",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "text",
+      "key": "testIdOrLink",
+      "label": "ID testa ili poveznica",
+      "description": "Npr. link na platformu ili interna oznaka.",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "number",
+      "key": "technicalTestScore",
+      "label": "Rezultat tehničkog testa (0–100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "radio",
+      "key": "techTestPassed",
+      "label": "Prolaz testa",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "techTestNotes",
+      "label": "Napomene / zapažanja",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}
