@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dmndi="http://www.omg.org/spec/DMN/20151101/DMNDI/" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_JGL_IT_Hire_DMN" name="JGL IT Hire Decisions" namespace="http://jgl.hr/dmn/it-hire">
+  <inputData id="Input_RoleType" name="Role Type">
+    <variable id="Var_RoleType" name="roleType" typeRef="string" />
+  </inputData>
+  <inputData id="Input_TechScore" name="Tech Score">
+    <variable id="Var_TechScore" name="techScore" typeRef="number" />
+  </inputData>
+  <inputData id="Input_SoftScore" name="Soft Score">
+    <variable id="Var_SoftScore" name="softScore" typeRef="number" />
+  </inputData>
+  <inputData id="Input_ExperienceYears" name="Experience Years">
+    <variable id="Var_ExperienceYears" name="experienceYears" typeRef="number" />
+  </inputData>
+  <decision id="Decision_EvaluateCandidate" name="Evaluate Candidate">
+    <informationRequirement id="IR_EC_RoleType">
+      <requiredInput href="#Input_RoleType" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_TechScore">
+      <requiredInput href="#Input_TechScore" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_SoftScore">
+      <requiredInput href="#Input_SoftScore" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_ExpYears">
+      <requiredInput href="#Input_ExperienceYears" />
+    </informationRequirement>
+    <decisionTable id="DT_EvaluateCandidate" hitPolicy="FIRST">
+      <input id="DT_EC_In1">
+        <inputExpression id="IE_RoleType" typeRef="string">
+          <text>roleType</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In2">
+        <inputExpression id="IE_TechScore" typeRef="number">
+          <text>techScore</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In3">
+        <inputExpression id="IE_SoftScore" typeRef="number">
+          <text>softScore</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In4">
+        <inputExpression id="IE_ExpYears" typeRef="number">
+          <text>experienceYears</text>
+        </inputExpression>
+      </input>
+      <output id="DT_EC_Out1" name="result" typeRef="string" />
+      <output id="DT_EC_Out2" name="note" typeRef="string" />
+      <rule id="R_EC_1">
+        <inputEntry id="R_EC_1_I1">
+          <text>"helpdesk tehničar"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_1_I2">
+          <text>&gt;= 60</text>
+        </inputEntry>
+        <inputEntry id="R_EC_1_I3">
+          <text>&gt;= 55</text>
+        </inputEntry>
+        <inputEntry id="R_EC_1_I4">
+          <text>&gt;= 0</text>
+        </inputEntry>
+        <outputEntry id="R_EC_1_O1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_1_O2">
+          <text>"Proći u fazu ponude"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_2">
+        <inputEntry id="R_EC_2_I1">
+          <text>"specijalist poslovnih aplikacija"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_2_I2">
+          <text>&gt;= 70</text>
+        </inputEntry>
+        <inputEntry id="R_EC_2_I3">
+          <text>&gt;= 60</text>
+        </inputEntry>
+        <inputEntry id="R_EC_2_I4">
+          <text>&gt;= 2</text>
+        </inputEntry>
+        <outputEntry id="R_EC_2_O1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_2_O2">
+          <text>"Proći u fazu ponude"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_3">
+        <inputEntry id="R_EC_3_I1">
+          <text>"specijalist SOC/noc"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_3_I2">
+          <text>&gt;= 75</text>
+        </inputEntry>
+        <inputEntry id="R_EC_3_I3">
+          <text>&gt;= 60</text>
+        </inputEntry>
+        <inputEntry id="R_EC_3_I4">
+          <text>&gt;= 2</text>
+        </inputEntry>
+        <outputEntry id="R_EC_3_O1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_3_O2">
+          <text>"Proći u fazu ponude"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_4">
+        <inputEntry id="R_EC_4_I1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_4_I2">
+          <text>&lt; 70</text>
+        </inputEntry>
+        <inputEntry id="R_EC_4_I3">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_4_I4">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_4_O1">
+          <text>"Reject"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_4_O2">
+          <text>"Nedovoljan tehnički prag"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_5">
+        <inputEntry id="R_EC_5_I1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_5_I2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_5_I3">
+          <text>&lt; 55</text>
+        </inputEntry>
+        <inputEntry id="R_EC_5_I4">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_5_O1">
+          <text>"Reject"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_5_O2">
+          <text>"Nedovoljne soft vještine"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_EquipmentProfile" name="Equipment Profile">
+    <informationRequirement id="IR_EP_RoleType">
+      <requiredInput href="#Input_RoleType" />
+    </informationRequirement>
+    <decisionTable id="DT_EquipmentProfile" hitPolicy="FIRST">
+      <input id="DT_EP_In1">
+        <inputExpression id="IE_EP_RoleType" typeRef="string">
+          <text>roleType</text>
+        </inputExpression>
+      </input>
+      <output id="DT_EP_Out1" name="laptopClass" typeRef="string" />
+      <output id="DT_EP_Out2" name="extraMonitors" typeRef="number" />
+      <output id="DT_EP_Out3" name="securityTools" typeRef="string" />
+      <rule id="R_EP_1">
+        <inputEntry id="R_EP_1_I1">
+          <text>"helpdesk tehničar"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_1_O1">
+          <text>"Standard"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_1_O2">
+          <text>1</text>
+        </outputEntry>
+        <outputEntry id="R_EP_1_O3">
+          <text>"EDR, Ticketing"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_2">
+        <inputEntry id="R_EP_2_I1">
+          <text>"specijalist poslovnih aplikacija"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_2_O1">
+          <text>"Pro"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_2_O2">
+          <text>2</text>
+        </outputEntry>
+        <outputEntry id="R_EP_2_O3">
+          <text>"VPN, Admin tools"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_3">
+        <inputEntry id="R_EP_3_I1">
+          <text>"specijalist SOC/noc"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_3_O1">
+          <text>"HighPerformance"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_3_O2">
+          <text>2</text>
+        </outputEntry>
+        <outputEntry id="R_EP_3_O3">
+          <text>"SIEM, EDR, VPN"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_4">
+        <inputEntry id="R_EP_4_I1">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EP_4_O1">
+          <text>"Standard"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_4_O2">
+          <text>1</text>
+        </outputEntry>
+        <outputEntry id="R_EP_4_O3">
+          <text>"EDR"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

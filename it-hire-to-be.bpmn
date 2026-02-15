@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+  id="Defs_JGL_IT_Hire_ToBe_Full"
+  targetNamespace="http://jgl.hr/process/it-hire/to-be">
+
+  <bpmn:collaboration id="Collab_ToBe_Full">
+    <bpmn:participant id="P_JGL_TB" name="JGL" processRef="Proc_JGL_ToBe"/>
+  </bpmn:collaboration>
+
+  <bpmn:process id="Proc_JGL_ToBe" name="Zapošljavanje IT djelatnika (TO-BE)" isExecutable="true">
+
+    <bpmn:laneSet id="LS_TB">
+      <bpmn:lane id="TB_Lane_HR" name="HR">
+        <bpmn:flowNodeRef>TB_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Request</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_GW_Approved</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Interview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_DMN_Evaluate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_GW_Offer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_SendOffer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_WaitCandidate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_GW_Accept</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Contract</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Parallel</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_End</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_End_NotApproved</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_End_Rejected</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_End_Declined</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="TB_Lane_ITOps" name="IT odjel (automatizacija / priprema)">
+        <bpmn:flowNodeRef>TB_ITPrep</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="TB_Lane_Proc" name="Nabava">
+        <bpmn:flowNodeRef>TB_DMN_Equip</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_CheckEquip</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_GW_EquipAvail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_ReserveEquip</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_OrderEquip</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TB_Delivery</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Data objects -->
+    <bpmn:dataObjectReference id="TB_DO_Request" name="Zahtjev" dataObjectRef="TB_D_Request"/>
+    <bpmn:dataObjectReference id="TB_DO_Scores" name="Ocjene intervjua" dataObjectRef="TB_D_Scores"/>
+    <bpmn:dataObjectReference id="TB_DO_Decision" name="Odluka (DMN)" dataObjectRef="TB_D_Decision"/>
+    <bpmn:dataObjectReference id="TB_DO_Contract" name="Ugovor" dataObjectRef="TB_D_Contract"/>
+    <bpmn:dataObjectReference id="TB_DO_EquipProfile" name="Profil opreme (DMN)" dataObjectRef="TB_D_EquipProfile"/>
+
+    <bpmn:dataObject id="TB_D_Request"/>
+    <bpmn:dataObject id="TB_D_Scores"/>
+    <bpmn:dataObject id="TB_D_Decision"/>
+    <bpmn:dataObject id="TB_D_Contract"/>
+    <bpmn:dataObject id="TB_D_EquipProfile"/>
+
+    <bpmn:textAnnotation id="TB_TA_SLA">
+      <bpmn:text>SLA: odgovor kandidata u 5 dana (timer). Automatizirane notifikacije kroz Tasklist/connector.</bpmn:text>
+    </bpmn:textAnnotation>
+
+    <!-- Flow -->
+    <bpmn:startEvent id="TB_Start" name="Potreba za novim IT djelatnikom">
+      <bpmn:outgoing>TB_F1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:userTask id="TB_Request" name="Unos zahtjeva (HR/IT voditelj)">
+      <bpmn:incoming>TB_F1</bpmn:incoming>
+      <bpmn:outgoing>TB_F2</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_JobRequest"/>
+      </bpmn:extensionElements>
+
+    </bpmn:userTask>
+
+    <bpmn:exclusiveGateway id="TB_GW_Approved" name="Odobreno?">
+      <bpmn:incoming>TB_F2</bpmn:incoming>
+      <bpmn:outgoing>TB_F3_yes</bpmn:outgoing>
+      <bpmn:outgoing>TB_F3_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="TB_End_NotApproved" name="Odbijeno / stop">
+      <bpmn:incoming>TB_F3_no</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:userTask id="TB_Interview" name="Intervjui + unos ocjena">
+      <bpmn:incoming>TB_F3_yes</bpmn:incoming>
+      <bpmn:outgoing>TB_F4</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_InterviewScores"/>
+      </bpmn:extensionElements>
+
+    </bpmn:userTask>
+
+    <bpmn:businessRuleTask id="TB_DMN_Evaluate" name="DMN: Evaluacija kandidata">
+      <bpmn:incoming>TB_F4</bpmn:incoming>
+      <bpmn:outgoing>TB_F5</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="Decision_EvaluateCandidate" resultVariable="candidateDecision"/>
+      </bpmn:extensionElements>
+    </bpmn:businessRuleTask>
+
+    <bpmn:exclusiveGateway id="TB_GW_Offer" name="Offer?">
+      <bpmn:incoming>TB_F5</bpmn:incoming>
+      <bpmn:outgoing>TB_F6_offer</bpmn:outgoing>
+      <bpmn:outgoing>TB_F6_reject</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="TB_End_Rejected" name="Kandidat odbijen">
+      <bpmn:incoming>TB_F6_reject</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:userTask id="TB_SendOffer" name="Slanje ponude (HR)">
+      <bpmn:incoming>TB_F6_offer</bpmn:incoming>
+      <bpmn:outgoing>TB_F7</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_SendOffer"/>
+      </bpmn:extensionElements>
+
+    </bpmn:userTask>
+
+    <bpmn:intermediateCatchEvent id="TB_WaitCandidate" name="Čekanje odgovora (5 dana)">
+      <bpmn:incoming>TB_F7</bpmn:incoming>
+      <bpmn:outgoing>TB_F8</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT120H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:association id="TB_Assoc_SLA" sourceRef="TB_WaitCandidate" targetRef="TB_TA_SLA"/>
+
+    <bpmn:exclusiveGateway id="TB_GW_Accept" name="Kandidat prihvaća?">
+      <bpmn:incoming>TB_F8</bpmn:incoming>
+      <bpmn:outgoing>TB_F9_yes</bpmn:outgoing>
+      <bpmn:outgoing>TB_F9_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="TB_End_Declined" name="Ponuda odbijena">
+      <bpmn:incoming>TB_F9_no</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:userTask id="TB_Contract" name="Generiranje/potpis ugovora (HR)">
+      <bpmn:incoming>TB_F9_yes</bpmn:incoming>
+      <bpmn:outgoing>TB_F10</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_ContractSignature"/>
+      </bpmn:extensionElements>
+
+    </bpmn:userTask>
+
+    <bpmn:parallelGateway id="TB_Parallel" name="IT + Nabava paralelno">
+      <bpmn:incoming>TB_F10</bpmn:incoming>
+      <bpmn:outgoing>TB_F11_IT</bpmn:outgoing>
+      <bpmn:outgoing>TB_F11_PROC</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:serviceTask id="TB_ITPrep" name="IT priprema (Job Worker)">
+      <bpmn:incoming>TB_F11_IT</bpmn:incoming>
+      <bpmn:outgoing>TB_F12_IT</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="it-prepare-workplace" retries="R3/PT5M"/>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <bpmn:businessRuleTask id="TB_DMN_Equip" name="DMN: Profil opreme">
+      <bpmn:incoming>TB_F11_PROC</bpmn:incoming>
+      <bpmn:outgoing>TB_F12</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="Decision_EquipmentProfile" resultVariable="equipmentProfile"/>
+      </bpmn:extensionElements>
+    </bpmn:businessRuleTask>
+
+    <bpmn:userTask id="TB_CheckEquip" name="Potvrda dostupnosti opreme">
+      <bpmn:incoming>TB_F12</bpmn:incoming>
+      <bpmn:outgoing>TB_F13</bpmn:outgoing>
+      
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_EquipmentAvailability"/>
+      </bpmn:extensionElements>
+</bpmn:userTask>
+
+    <bpmn:exclusiveGateway id="TB_GW_EquipAvail" name="Oprema dostupna?">
+      <bpmn:incoming>TB_F13</bpmn:incoming>
+      <bpmn:outgoing>TB_F14_yes</bpmn:outgoing>
+      <bpmn:outgoing>TB_F14_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:userTask id="TB_ReserveEquip" name="Rezervacija opreme">
+      <bpmn:incoming>TB_F14_yes</bpmn:incoming>
+      <bpmn:outgoing>TB_F15_PROC</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_ProcurementReserveOrder"/>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:userTask id="TB_OrderEquip" name="Pokretanje nabave">
+      <bpmn:incoming>TB_F14_no</bpmn:incoming>
+      <bpmn:outgoing>TB_F16</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_ProcurementReserveOrder"/>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+
+    <bpmn:intermediateCatchEvent id="TB_Delivery" name="Isporuka (npr. 10 dana)">
+      <bpmn:incoming>TB_F16</bpmn:incoming>
+      <bpmn:outgoing>TB_F15_PROC</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P10D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:parallelGateway id="TB_Join" name="Sve spremno">
+      <bpmn:incoming>TB_F12_IT</bpmn:incoming>
+      <bpmn:incoming>TB_F15_PROC</bpmn:incoming>
+      <bpmn:outgoing>TB_F17</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:endEvent id="TB_End" name="Onboarding spreman">
+      <bpmn:incoming>TB_F17</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- flows -->
+    <bpmn:sequenceFlow id="TB_F1" sourceRef="TB_Start" targetRef="TB_Request"/>
+    <bpmn:sequenceFlow id="TB_F2" sourceRef="TB_Request" targetRef="TB_GW_Approved"/>
+    <bpmn:sequenceFlow id="TB_F3_yes" sourceRef="TB_GW_Approved" targetRef="TB_Interview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TB_F3_no" sourceRef="TB_GW_Approved" targetRef="TB_End_NotApproved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TB_F4" sourceRef="TB_Interview" targetRef="TB_DMN_Evaluate"/>
+    <bpmn:sequenceFlow id="TB_F5" sourceRef="TB_DMN_Evaluate" targetRef="TB_GW_Offer"/>
+
+    <bpmn:sequenceFlow id="TB_F6_offer" sourceRef="TB_GW_Offer" targetRef="TB_SendOffer">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateDecision.result = "Offer"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TB_F6_reject" sourceRef="TB_GW_Offer" targetRef="TB_End_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateDecision.result = "Reject"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="TB_F7" sourceRef="TB_SendOffer" targetRef="TB_WaitCandidate"/>
+    <bpmn:sequenceFlow id="TB_F8" sourceRef="TB_WaitCandidate" targetRef="TB_GW_Accept"/>
+
+    <bpmn:sequenceFlow id="TB_F9_yes" sourceRef="TB_GW_Accept" targetRef="TB_Contract">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateAccepts = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TB_F9_no" sourceRef="TB_GW_Accept" targetRef="TB_End_Declined">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateAccepts = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="TB_F10" sourceRef="TB_Contract" targetRef="TB_Parallel"/>
+    <bpmn:sequenceFlow id="TB_F11_IT" sourceRef="TB_Parallel" targetRef="TB_ITPrep"/>
+    <bpmn:sequenceFlow id="TB_F11_PROC" sourceRef="TB_Parallel" targetRef="TB_DMN_Equip"/>
+
+    <bpmn:sequenceFlow id="TB_F12_IT" sourceRef="TB_ITPrep" targetRef="TB_Join"/>
+    <bpmn:sequenceFlow id="TB_F12" sourceRef="TB_DMN_Equip" targetRef="TB_CheckEquip"/>
+    <bpmn:sequenceFlow id="TB_F13" sourceRef="TB_CheckEquip" targetRef="TB_GW_EquipAvail"/>
+
+    <bpmn:sequenceFlow id="TB_F14_yes" sourceRef="TB_GW_EquipAvail" targetRef="TB_ReserveEquip">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= equipmentAvailable = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TB_F14_no" sourceRef="TB_GW_EquipAvail" targetRef="TB_OrderEquip">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= equipmentAvailable = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="TB_F15_PROC" sourceRef="TB_ReserveEquip" targetRef="TB_Join"/>
+    <bpmn:sequenceFlow id="TB_F16" sourceRef="TB_OrderEquip" targetRef="TB_Delivery"/>
+    <bpmn:sequenceFlow id="TB_F17" sourceRef="TB_Join" targetRef="TB_End"/>
+
+    <!-- associations -->
+    <bpmn:association id="TB_A_Request" sourceRef="TB_Request" targetRef="TB_DO_Request"/>
+    <bpmn:association id="TB_A_Scores" sourceRef="TB_Interview" targetRef="TB_DO_Scores"/>
+    <bpmn:association id="TB_A_Decision" sourceRef="TB_DMN_Evaluate" targetRef="TB_DO_Decision"/>
+    <bpmn:association id="TB_A_Contract" sourceRef="TB_Contract" targetRef="TB_DO_Contract"/>
+    <bpmn:association id="TB_A_EquipProfile" sourceRef="TB_DMN_Equip" targetRef="TB_DO_EquipProfile"/>
+
+  </bpmn:process>
+
+  <!-- ===================== DIAGRAM (FULL) ===================== -->
+  <bpmndi:BPMNDiagram id="Diag_ToBe_Full">
+    <bpmndi:BPMNPlane id="Plane_ToBe_Full" bpmnElement="Collab_ToBe_Full">
+
+      <bpmndi:BPMNShape id="Shape_P_JGL_TB" bpmnElement="P_JGL_TB" isHorizontal="true">
+        <dc:Bounds x="60" y="60" width="2400" height="420"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes -->
+      <bpmndi:BPMNShape id="Shape_TB_Lane_HR" bpmnElement="TB_Lane_HR" isHorizontal="true">
+        <dc:Bounds x="90" y="90" width="2370" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TB_Lane_ITOps" bpmnElement="TB_Lane_ITOps" isHorizontal="true">
+        <dc:Bounds x="90" y="240" width="2370" height="120"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TB_Lane_Proc" bpmnElement="TB_Lane_Proc" isHorizontal="true">
+        <dc:Bounds x="90" y="360" width="2370" height="120"/>
+      </bpmndi:BPMNShape>
+
+      <!-- HR nodes -->
+      <bpmndi:BPMNShape id="S_TB_Start" bpmnElement="TB_Start">
+        <dc:Bounds x="140" y="145" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_Request" bpmnElement="TB_Request">
+        <dc:Bounds x="220" y="123" width="230" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_GW_Approved" bpmnElement="TB_GW_Approved" isMarkerVisible="true">
+        <dc:Bounds x="490" y="138" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_End_NotApproved" bpmnElement="TB_End_NotApproved">
+        <dc:Bounds x="502" y="200" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_TB_Interview" bpmnElement="TB_Interview">
+        <dc:Bounds x="580" y="123" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_DMN_Evaluate" bpmnElement="TB_DMN_Evaluate">
+        <dc:Bounds x="830" y="123" width="230" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_GW_Offer" bpmnElement="TB_GW_Offer" isMarkerVisible="true">
+        <dc:Bounds x="1090" y="138" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_End_Rejected" bpmnElement="TB_End_Rejected">
+        <dc:Bounds x="1102" y="200" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_TB_SendOffer" bpmnElement="TB_SendOffer">
+        <dc:Bounds x="1180" y="123" width="210" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_WaitCandidate" bpmnElement="TB_WaitCandidate">
+        <dc:Bounds x="1420" y="145" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_GW_Accept" bpmnElement="TB_GW_Accept" isMarkerVisible="true">
+        <dc:Bounds x="1500" y="138" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_End_Declined" bpmnElement="TB_End_Declined">
+        <dc:Bounds x="1512" y="200" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_TB_Contract" bpmnElement="TB_Contract">
+        <dc:Bounds x="1590" y="123" width="240" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_TB_Parallel" bpmnElement="TB_Parallel" isMarkerVisible="true">
+        <dc:Bounds x="1860" y="138" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_TB_Join" bpmnElement="TB_Join" isMarkerVisible="true">
+        <dc:Bounds x="2280" y="138" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_End" bpmnElement="TB_End">
+        <dc:Bounds x="2380" y="145" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- IT lane node -->
+      <bpmndi:BPMNShape id="S_TB_ITPrep" bpmnElement="TB_ITPrep">
+        <dc:Bounds x="1970" y="255" width="260" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Proc lane nodes -->
+      <bpmndi:BPMNShape id="S_TB_DMN_Equip" bpmnElement="TB_DMN_Equip">
+        <dc:Bounds x="1970" y="375" width="260" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_CheckEquip" bpmnElement="TB_CheckEquip">
+        <dc:Bounds x="2260" y="375" width="260" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_GW_EquipAvail" bpmnElement="TB_GW_EquipAvail" isMarkerVisible="true">
+        <dc:Bounds x="2550" y="390" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_ReserveEquip" bpmnElement="TB_ReserveEquip">
+        <dc:Bounds x="2620" y="375" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_OrderEquip" bpmnElement="TB_OrderEquip">
+        <dc:Bounds x="2620" y="470" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_Delivery" bpmnElement="TB_Delivery">
+        <dc:Bounds x="2870" y="492" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Data objects -->
+      <bpmndi:BPMNShape id="S_TB_DO_Request" bpmnElement="TB_DO_Request">
+        <dc:Bounds x="260" y="60" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_DO_Scores" bpmnElement="TB_DO_Scores">
+        <dc:Bounds x="620" y="60" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_DO_Decision" bpmnElement="TB_DO_Decision">
+        <dc:Bounds x="900" y="60" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_DO_Contract" bpmnElement="TB_DO_Contract">
+        <dc:Bounds x="1680" y="60" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_TB_DO_EquipProfile" bpmnElement="TB_DO_EquipProfile">
+        <dc:Bounds x="2050" y="60" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Annotation -->
+      <bpmndi:BPMNShape id="S_TB_TA_SLA" bpmnElement="TB_TA_SLA">
+        <dc:Bounds x="1320" y="60" width="500" height="45"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="E_TB_F1" bpmnElement="TB_F1"><di:waypoint x="176" y="163"/><di:waypoint x="220" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F2" bpmnElement="TB_F2"><di:waypoint x="450" y="163"/><di:waypoint x="490" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F3_yes" bpmnElement="TB_F3_yes"><di:waypoint x="540" y="163"/><di:waypoint x="580" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F3_no" bpmnElement="TB_F3_no"><di:waypoint x="515" y="188"/><di:waypoint x="520" y="200"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F4" bpmnElement="TB_F4"><di:waypoint x="800" y="163"/><di:waypoint x="830" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F5" bpmnElement="TB_F5"><di:waypoint x="1060" y="163"/><di:waypoint x="1090" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F6_offer" bpmnElement="TB_F6_offer"><di:waypoint x="1140" y="163"/><di:waypoint x="1180" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F6_reject" bpmnElement="TB_F6_reject"><di:waypoint x="1115" y="188"/><di:waypoint x="1120" y="200"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F7" bpmnElement="TB_F7"><di:waypoint x="1390" y="163"/><di:waypoint x="1420" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F8" bpmnElement="TB_F8"><di:waypoint x="1456" y="163"/><di:waypoint x="1500" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F9_yes" bpmnElement="TB_F9_yes"><di:waypoint x="1550" y="163"/><di:waypoint x="1590" y="163"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F9_no" bpmnElement="TB_F9_no"><di:waypoint x="1525" y="188"/><di:waypoint x="1530" y="200"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F10" bpmnElement="TB_F10"><di:waypoint x="1830" y="163"/><di:waypoint x="1860" y="163"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_TB_F11_IT" bpmnElement="TB_F11_IT"><di:waypoint x="1885" y="138"/><di:waypoint x="1885" y="295"/><di:waypoint x="1970" y="295"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F11_PROC" bpmnElement="TB_F11_PROC"><di:waypoint x="1885" y="188"/><di:waypoint x="1885" y="415"/><di:waypoint x="1970" y="415"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_TB_F12_IT" bpmnElement="TB_F12_IT"><di:waypoint x="2230" y="295"/><di:waypoint x="2305" y="295"/><di:waypoint x="2305" y="188"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F12" bpmnElement="TB_F12"><di:waypoint x="2230" y="415"/><di:waypoint x="2260" y="415"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F13" bpmnElement="TB_F13"><di:waypoint x="2520" y="415"/><di:waypoint x="2550" y="415"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F14_yes" bpmnElement="TB_F14_yes"><di:waypoint x="2600" y="415"/><di:waypoint x="2620" y="415"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F14_no" bpmnElement="TB_F14_no"><di:waypoint x="2575" y="440"/><di:waypoint x="2575" y="510"/><di:waypoint x="2620" y="510"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F16" bpmnElement="TB_F16"><di:waypoint x="2840" y="510"/><di:waypoint x="2870" y="510"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_F15_PROC" bpmnElement="TB_F15_PROC"><di:waypoint x="2840" y="415"/><di:waypoint x="2305" y="415"/><di:waypoint x="2305" y="188"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_TB_F17" bpmnElement="TB_F17"><di:waypoint x="2330" y="163"/><di:waypoint x="2380" y="163"/></bpmndi:BPMNEdge>
+
+      <!-- Associations -->
+      <bpmndi:BPMNEdge id="E_TB_A_Request" bpmnElement="TB_A_Request"><di:waypoint x="300" y="123"/><di:waypoint x="278" y="110"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_A_Scores" bpmnElement="TB_A_Scores"><di:waypoint x="690" y="123"/><di:waypoint x="638" y="110"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_A_Decision" bpmnElement="TB_A_Decision"><di:waypoint x="945" y="123"/><di:waypoint x="918" y="110"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_A_Contract" bpmnElement="TB_A_Contract"><di:waypoint x="1710" y="123"/><di:waypoint x="1698" y="110"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_TB_A_EquipProfile" bpmnElement="TB_A_EquipProfile"><di:waypoint x="2050" y="375"/><di:waypoint x="2068" y="110"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_TB_Assoc_SLA" bpmnElement="TB_Assoc_SLA"><di:waypoint x="1438" y="145"/><di:waypoint x="1320" y="82"/></bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

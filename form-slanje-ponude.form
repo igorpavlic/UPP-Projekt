@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_SendOffer",
+  "type": "default",
+  "name": "Slanje ponude",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Tip pozicije",
+      "description": "Odaberi tip IT pozicije.",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk tehničar"
+        },
+        {
+          "label": "Specijalist poslovnih aplikacija",
+          "value": "specijalist poslovnih aplikacija"
+        },
+        {
+          "label": "Specijalist SOC/NOC",
+          "value": "specijalist SOC/noc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "offerGrossSalary",
+      "label": "Ponuda - bruto iznos",
+      "description": "Upiši bruto iznos ponude.",
+      "validate": {
+        "required": true,
+        "min": 0
+      }
+    },
+    {
+      "type": "select",
+      "key": "offerCurrency",
+      "label": "Valuta",
+      "values": [
+        {
+          "label": "EUR",
+          "value": "EUR"
+        }
+      ],
+      "defaultValue": "EUR",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "date",
+      "key": "offerStartDate",
+      "label": "Predloženi datum početka",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "offerResponseDays",
+      "label": "Rok za odgovor (dana)",
+      "defaultValue": 5,
+      "validate": {
+        "required": true,
+        "min": 1,
+        "max": 30
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "offerNotes",
+      "label": "Napomene uz ponudu",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "checkbox",
+      "key": "offerSent",
+      "label": "Ponuda poslana",
+      "defaultValue": false,
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}

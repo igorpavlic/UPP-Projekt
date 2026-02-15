@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_InterviewScores",
+  "type": "default",
+  "name": "Unos ocjena intervjua",
+  "components": [
+    {
+      "type": "text",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Tip pozicije",
+      "description": "Odaberi tip IT pozicije.",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk tehničar"
+        },
+        {
+          "label": "Specijalist poslovnih aplikacija",
+          "value": "specijalist poslovnih aplikacija"
+        },
+        {
+          "label": "Specijalist SOC/NOC",
+          "value": "specijalist SOC/noc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "key": "techScore",
+      "label": "Tehnička ocjena (0-100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "number",
+      "key": "softScore",
+      "label": "Soft ocjena (0-100)",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      }
+    },
+    {
+      "type": "number",
+      "key": "experienceYears",
+      "label": "Godine iskustva",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 60
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "interviewNotes",
+      "label": "Bilješke s intervjua",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "checkbox",
+      "key": "referenceCheckDone",
+      "label": "Reference provjerene",
+      "defaultValue": false
+    }
+  ]
+}

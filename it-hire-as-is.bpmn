@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+  id="Defs_JGL_IT_Hire_AsIs_Full"
+  targetNamespace="http://jgl.hr/process/it-hire/as-is">
+
+  <!-- Collaboration -->
+  <bpmn:collaboration id="Collab_AsIs_Full">
+    <bpmn:participant id="P_JGL" name="JGL" processRef="Proc_JGL_AsIs"/>
+    <bpmn:participant id="P_AGY" name="Vanjska agencija" processRef="Proc_AGY_AsIs"/>
+
+    <bpmn:messageFlow id="MF_RequestToAgency" name="Zahtjev za regrutiranje"
+      sourceRef="JGL_SendReqAgency" targetRef="AGY_RecvReq"/>
+
+    <bpmn:messageFlow id="MF_ShortlistToJGL" name="Shortlist kandidata"
+      sourceRef="AGY_SendShortlist" targetRef="JGL_CatchShortlist"/>
+
+    <bpmn:messageFlow id="MF_OfferToAgency" name="Ponuda kandidatu"
+      sourceRef="JGL_SendOffer" targetRef="AGY_RecvOffer"/>
+
+    <bpmn:messageFlow id="MF_ResponseToJGL" name="Odgovor kandidata"
+      sourceRef="AGY_SendResponse" targetRef="JGL_CatchCandidateResponse"/>
+  </bpmn:collaboration>
+
+  <!-- ===================== JGL PROCESS (AS-IS) ===================== -->
+  <bpmn:process id="Proc_JGL_AsIs" name="Zapošljavanje IT djelatnika (AS-IS)" isExecutable="true">
+
+    <bpmn:laneSet id="LS_JGL">
+      <bpmn:lane id="Lane_HR" name="HR">
+        <bpmn:flowNodeRef>JGL_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_ReceiveNeed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_CreateJobDesc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_SendApproval</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_GW_Approved</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_SendReqAgency</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_CatchShortlist</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_ScheduleInterviews</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_SendOffer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_TimerWaitResponse</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_CatchCandidateResponse</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_GW_Accepts</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_CreateContract</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_Parallel_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_Parallel_Join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_End_Hired</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_End_NotApproved</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_End_OfferDeclined</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_ITLead" name="IT voditelj">
+        <bpmn:flowNodeRef>JGL_DefineRoleNeeds</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_TechInterview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_EvaluateCandidate</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_ITOps" name="IT odjel (priprema računala)">
+        <bpmn:flowNodeRef>JGL_Call_PrepareWorkplace</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Proc" name="Nabava">
+        <bpmn:flowNodeRef>JGL_CheckEquipment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_GW_EquipmentAvailable</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_ReserveEquipment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_OrderEquipment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>JGL_Timer_Delivery</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Data objects -->
+    <bpmn:dataObjectReference id="DO_JobRequest" name="Zahtjev za zapošljavanje" dataObjectRef="D_JobRequest"/>
+    <bpmn:dataObjectReference id="DO_JobDescription" name="Opis radnog mjesta" dataObjectRef="D_JobDescription"/>
+    <bpmn:dataObjectReference id="DO_Shortlist" name="Shortlist kandidata" dataObjectRef="D_Shortlist"/>
+    <bpmn:dataObjectReference id="DO_Offer" name="Ponuda" dataObjectRef="D_Offer"/>
+    <bpmn:dataObjectReference id="DO_Contract" name="Ugovor" dataObjectRef="D_Contract"/>
+    <bpmn:dataObjectReference id="DO_EquipOrder" name="Narudžba opreme" dataObjectRef="D_EquipOrder"/>
+
+    <bpmn:dataObject id="D_JobRequest"/>
+    <bpmn:dataObject id="D_JobDescription"/>
+    <bpmn:dataObject id="D_Shortlist"/>
+    <bpmn:dataObject id="D_Offer"/>
+    <bpmn:dataObject id="D_Contract"/>
+    <bpmn:dataObject id="D_EquipOrder"/>
+
+    <!-- Text annotation -->
+    <bpmn:textAnnotation id="TA_SLA_Candidate">
+      <bpmn:text>SLA: kandidat odgovara u 5 dana (timer)</bpmn:text>
+    </bpmn:textAnnotation>
+
+    <!-- Start / HR -->
+    <bpmn:startEvent id="JGL_Start" name="Potreba za novim IT djelatnikom">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="JGL_ReceiveNeed" name="Zaprimanje zahtjeva od IT voditelja">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_DefineRoleNeeds" name="Definiranje potreba (tip pozicije)">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_CreateJobDesc" name="Izrada opisa radnog mjesta">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_SendApproval" name="Slanje zahtjeva na odobrenje upravi">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="JGL_GW_Approved" name="Odobreno?">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F6_yes</bpmn:outgoing>
+      <bpmn:outgoing>F6_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="JGL_End_NotApproved" name="Odbijeno / stop">
+      <bpmn:incoming>F6_no</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sendTask id="JGL_SendReqAgency" name="Slanje zahtjeva agenciji">
+      <bpmn:incoming>F6_yes</bpmn:incoming>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+    </bpmn:sendTask>
+
+    <bpmn:intermediateCatchEvent id="JGL_CatchShortlist" name="Zaprimanje shortlist kandidata">
+      <bpmn:incoming>F7</bpmn:incoming>
+      <bpmn:outgoing>F8</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_Shortlist"/>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:task id="JGL_ScheduleInterviews" name="Organizacija intervjua (HR + IT)">
+      <bpmn:incoming>F8</bpmn:incoming>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_TechInterview" name="Tehnički intervju (IT voditelj)">
+      <bpmn:incoming>F9</bpmn:incoming>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_EvaluateCandidate" name="Evaluacija kandidata">
+      <bpmn:incoming>F10</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:sendTask id="JGL_SendOffer" name="Slanje ponude kandidatu (preko agencije)">
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+    </bpmn:sendTask>
+
+    <bpmn:intermediateCatchEvent id="JGL_TimerWaitResponse" name="Čekanje odgovora (5 dana)">
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TED_Candidate">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT120H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:intermediateCatchEvent id="JGL_CatchCandidateResponse" name="Odgovor kandidata">
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_Response"/>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:association id="A_SLA" sourceRef="JGL_TimerWaitResponse" targetRef="TA_SLA_Candidate"/>
+
+    <bpmn:exclusiveGateway id="JGL_GW_Accepts" name="Kandidat prihvaća?">
+      <bpmn:incoming>F14</bpmn:incoming>
+      <bpmn:outgoing>F15_yes</bpmn:outgoing>
+      <bpmn:outgoing>F15_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="JGL_End_OfferDeclined" name="Ponuda odbijena / povrat na shortlist">
+      <bpmn:incoming>F15_no</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:task id="JGL_CreateContract" name="Izrada ugovora">
+      <bpmn:incoming>F15_yes</bpmn:incoming>
+      <bpmn:outgoing>F16</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:parallelGateway id="JGL_Parallel_Start" name="Pokreni IT + Nabavu">
+      <bpmn:incoming>F16</bpmn:incoming>
+      <bpmn:outgoing>F17_IT</bpmn:outgoing>
+      <bpmn:outgoing>F17_PR</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:callActivity id="JGL_Call_PrepareWorkplace" name="Potproces: Priprema radnog mjesta"
+      calledElement="Proc_PrepareWorkplace_AsIs">
+      <bpmn:incoming>F17_IT</bpmn:incoming>
+      <bpmn:outgoing>F18_ITDone</bpmn:outgoing>
+    </bpmn:callActivity>
+
+    <bpmn:task id="JGL_CheckEquipment" name="Provjera dostupnosti opreme">
+      <bpmn:incoming>F17_PR</bpmn:incoming>
+      <bpmn:outgoing>F19</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="JGL_GW_EquipmentAvailable" name="Oprema dostupna?">
+      <bpmn:incoming>F19</bpmn:incoming>
+      <bpmn:outgoing>F20_yes</bpmn:outgoing>
+      <bpmn:outgoing>F20_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="JGL_ReserveEquipment" name="Rezervacija opreme">
+      <bpmn:incoming>F20_yes</bpmn:incoming>
+      <bpmn:outgoing>F21_PRDone</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="JGL_OrderEquipment" name="Pokretanje nabave opreme">
+      <bpmn:incoming>F20_no</bpmn:incoming>
+      <bpmn:outgoing>F22</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:intermediateCatchEvent id="JGL_Timer_Delivery" name="Isporuka opreme (7-14 dana)">
+      <bpmn:incoming>F22</bpmn:incoming>
+      <bpmn:outgoing>F21_PRDone</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TED_Delivery">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P10D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+
+    <bpmn:parallelGateway id="JGL_Parallel_Join" name="Sve spremno?">
+      <bpmn:incoming>F18_ITDone</bpmn:incoming>
+      <bpmn:incoming>F21_PRDone</bpmn:incoming>
+      <bpmn:outgoing>F23</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:endEvent id="JGL_End_Hired" name="Djelatnik zaposlen / onboarding spreman">
+      <bpmn:incoming>F23</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence flows -->
+    <bpmn:sequenceFlow id="F1" sourceRef="JGL_Start" targetRef="JGL_ReceiveNeed"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="JGL_ReceiveNeed" targetRef="JGL_DefineRoleNeeds"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="JGL_DefineRoleNeeds" targetRef="JGL_CreateJobDesc"/>
+    <bpmn:sequenceFlow id="F4" sourceRef="JGL_CreateJobDesc" targetRef="JGL_SendApproval"/>
+    <bpmn:sequenceFlow id="F5" sourceRef="JGL_SendApproval" targetRef="JGL_GW_Approved"/>
+    <bpmn:sequenceFlow id="F6_yes" sourceRef="JGL_GW_Approved" targetRef="JGL_SendReqAgency">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F6_no" sourceRef="JGL_GW_Approved" targetRef="JGL_End_NotApproved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="F7" sourceRef="JGL_SendReqAgency" targetRef="JGL_CatchShortlist"/>
+    <bpmn:sequenceFlow id="F8" sourceRef="JGL_CatchShortlist" targetRef="JGL_ScheduleInterviews"/>
+    <bpmn:sequenceFlow id="F9" sourceRef="JGL_ScheduleInterviews" targetRef="JGL_TechInterview"/>
+    <bpmn:sequenceFlow id="F10" sourceRef="JGL_TechInterview" targetRef="JGL_EvaluateCandidate"/>
+    <bpmn:sequenceFlow id="F11" sourceRef="JGL_EvaluateCandidate" targetRef="JGL_SendOffer"/>
+    <bpmn:sequenceFlow id="F12" sourceRef="JGL_SendOffer" targetRef="JGL_TimerWaitResponse"/>
+    <bpmn:sequenceFlow id="F13" sourceRef="JGL_TimerWaitResponse" targetRef="JGL_CatchCandidateResponse"/>
+    <bpmn:sequenceFlow id="F14" sourceRef="JGL_CatchCandidateResponse" targetRef="JGL_GW_Accepts"/>
+
+    <bpmn:sequenceFlow id="F15_yes" sourceRef="JGL_GW_Accepts" targetRef="JGL_CreateContract">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateAccepts = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F15_no" sourceRef="JGL_GW_Accepts" targetRef="JGL_End_OfferDeclined">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= candidateAccepts = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="F16" sourceRef="JGL_CreateContract" targetRef="JGL_Parallel_Start"/>
+    <bpmn:sequenceFlow id="F17_IT" sourceRef="JGL_Parallel_Start" targetRef="JGL_Call_PrepareWorkplace"/>
+    <bpmn:sequenceFlow id="F17_PR" sourceRef="JGL_Parallel_Start" targetRef="JGL_CheckEquipment"/>
+
+    <bpmn:sequenceFlow id="F18_ITDone" sourceRef="JGL_Call_PrepareWorkplace" targetRef="JGL_Parallel_Join"/>
+    <bpmn:sequenceFlow id="F19" sourceRef="JGL_CheckEquipment" targetRef="JGL_GW_EquipmentAvailable"/>
+    <bpmn:sequenceFlow id="F20_yes" sourceRef="JGL_GW_EquipmentAvailable" targetRef="JGL_ReserveEquipment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= equipmentAvailable = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F20_no" sourceRef="JGL_GW_EquipmentAvailable" targetRef="JGL_OrderEquipment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= equipmentAvailable = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F22" sourceRef="JGL_OrderEquipment" targetRef="JGL_Timer_Delivery"/>
+    <bpmn:sequenceFlow id="F21_PRDone" sourceRef="JGL_ReserveEquipment" targetRef="JGL_Parallel_Join"/>
+    <bpmn:sequenceFlow id="F23" sourceRef="JGL_Parallel_Join" targetRef="JGL_End_Hired"/>
+
+    <!-- Data associations -->
+    <bpmn:association id="Assoc_Req" sourceRef="JGL_ReceiveNeed" targetRef="DO_JobRequest"/>
+    <bpmn:association id="Assoc_JobDesc" sourceRef="JGL_CreateJobDesc" targetRef="DO_JobDescription"/>
+    <bpmn:association id="Assoc_Shortlist" sourceRef="JGL_CatchShortlist" targetRef="DO_Shortlist"/>
+    <bpmn:association id="Assoc_Offer" sourceRef="JGL_SendOffer" targetRef="DO_Offer"/>
+    <bpmn:association id="Assoc_Contract" sourceRef="JGL_CreateContract" targetRef="DO_Contract"/>
+    <bpmn:association id="Assoc_Equip" sourceRef="JGL_OrderEquipment" targetRef="DO_EquipOrder"/>
+
+  </bpmn:process>
+
+  <!-- ===================== AGENCY PROCESS (AS-IS) ===================== -->
+  <bpmn:process id="Proc_AGY_AsIs" name="Agencija - regrutiranje (AS-IS)" isExecutable="false">
+    <bpmn:startEvent id="AGY_Start" name="Zahtjev zaprimljen">
+      <bpmn:outgoing>AF1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="AGY_MED_Request"/>
+    </bpmn:startEvent>
+
+    <bpmn:receiveTask id="AGY_RecvReq" name="Zaprimanje zahtjeva">
+      <bpmn:incoming>AF1</bpmn:incoming>
+      <bpmn:outgoing>AF2</bpmn:outgoing>
+    </bpmn:receiveTask>
+
+    <bpmn:task id="AGY_Publish" name="Objava oglasa i sourcing">
+      <bpmn:incoming>AF2</bpmn:incoming>
+      <bpmn:outgoing>AF3</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="AGY_Screen" name="Selekcija kandidata">
+      <bpmn:incoming>AF3</bpmn:incoming>
+      <bpmn:outgoing>AF4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:sendTask id="AGY_SendShortlist" name="Slanje shortlist HR-u">
+      <bpmn:incoming>AF4</bpmn:incoming>
+      <bpmn:outgoing>AF5</bpmn:outgoing>
+    </bpmn:sendTask>
+
+    <bpmn:receiveTask id="AGY_RecvOffer" name="Zaprimanje ponude i prosljeđivanje kandidatu">
+      <bpmn:incoming>AF5</bpmn:incoming>
+      <bpmn:outgoing>AF6</bpmn:outgoing>
+    </bpmn:receiveTask>
+
+    <bpmn:sendTask id="AGY_SendResponse" name="Slanje odgovora kandidata HR-u">
+      <bpmn:incoming>AF6</bpmn:incoming>
+      <bpmn:outgoing>AF7</bpmn:outgoing>
+    </bpmn:sendTask>
+
+    <bpmn:endEvent id="AGY_End" name="Krug zatvoren">
+      <bpmn:incoming>AF7</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="AF1" sourceRef="AGY_Start" targetRef="AGY_RecvReq"/>
+    <bpmn:sequenceFlow id="AF2" sourceRef="AGY_RecvReq" targetRef="AGY_Publish"/>
+    <bpmn:sequenceFlow id="AF3" sourceRef="AGY_Publish" targetRef="AGY_Screen"/>
+    <bpmn:sequenceFlow id="AF4" sourceRef="AGY_Screen" targetRef="AGY_SendShortlist"/>
+    <bpmn:sequenceFlow id="AF5" sourceRef="AGY_SendShortlist" targetRef="AGY_RecvOffer"/>
+    <bpmn:sequenceFlow id="AF6" sourceRef="AGY_RecvOffer" targetRef="AGY_SendResponse"/>
+    <bpmn:sequenceFlow id="AF7" sourceRef="AGY_SendResponse" targetRef="AGY_End"/>
+  </bpmn:process>
+
+  <!-- ===================== CALLED SUBPROCESS (AS-IS) ===================== -->
+  <bpmn:process id="Proc_PrepareWorkplace_AsIs" name="Priprema radnog mjesta (AS-IS)" isExecutable="true">
+    <bpmn:startEvent id="PW_Start" name="Start pripreme">
+      <bpmn:outgoing>PW1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="PW_CreateUser" name="Kreiranje korisnika (AD/SSO)">
+      <bpmn:incoming>PW1</bpmn:incoming>
+      <bpmn:outgoing>PW2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="PW_AssignAccess" name="Dodjela prava i pristupa">
+      <bpmn:incoming>PW2</bpmn:incoming>
+      <bpmn:outgoing>PW3</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="PW_PrepareLaptop" name="Priprema računala (image + app)">
+      <bpmn:incoming>PW3</bpmn:incoming>
+      <bpmn:outgoing>PW4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="PW_Test" name="Testiranje pristupa">
+      <bpmn:incoming>PW4</bpmn:incoming>
+      <bpmn:outgoing>PW5</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="PW_End" name="Radno mjesto spremno">
+      <bpmn:incoming>PW5</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="PW1" sourceRef="PW_Start" targetRef="PW_CreateUser"/>
+    <bpmn:sequenceFlow id="PW2" sourceRef="PW_CreateUser" targetRef="PW_AssignAccess"/>
+    <bpmn:sequenceFlow id="PW3" sourceRef="PW_AssignAccess" targetRef="PW_PrepareLaptop"/>
+    <bpmn:sequenceFlow id="PW4" sourceRef="PW_PrepareLaptop" targetRef="PW_Test"/>
+    <bpmn:sequenceFlow id="PW5" sourceRef="PW_Test" targetRef="PW_End"/>
+  </bpmn:process>
+
+  <!-- ===================== DIAGRAM (FULL) ===================== -->
+  <bpmndi:BPMNDiagram id="Diag_AsIs_Full">
+    <bpmndi:BPMNPlane id="Plane_AsIs_Full" bpmnElement="Collab_AsIs_Full">
+
+      <!-- Participants -->
+      <bpmndi:BPMNShape id="Shape_P_JGL" bpmnElement="P_JGL" isHorizontal="true">
+        <dc:Bounds x="60" y="60" width="2100" height="520"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_AGY" bpmnElement="P_AGY" isHorizontal="true">
+        <dc:Bounds x="60" y="620" width="2100" height="220"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes (JGL) -->
+      <bpmndi:BPMNShape id="Shape_Lane_HR" bpmnElement="Lane_HR" isHorizontal="true">
+        <dc:Bounds x="90" y="90" width="2070" height="130"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_ITLead" bpmnElement="Lane_ITLead" isHorizontal="true">
+        <dc:Bounds x="90" y="220" width="2070" height="130"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_ITOps" bpmnElement="Lane_ITOps" isHorizontal="true">
+        <dc:Bounds x="90" y="350" width="2070" height="115"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Proc" bpmnElement="Lane_Proc" isHorizontal="true">
+        <dc:Bounds x="90" y="465" width="2070" height="115"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Nodes (HR lane y ~110) -->
+      <bpmndi:BPMNShape id="S_JGL_Start" bpmnElement="JGL_Start">
+        <dc:Bounds x="140" y="130" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_ReceiveNeed" bpmnElement="JGL_ReceiveNeed">
+        <dc:Bounds x="220" y="108" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_CreateJobDesc" bpmnElement="JGL_CreateJobDesc">
+        <dc:Bounds x="620" y="108" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_SendApproval" bpmnElement="JGL_SendApproval">
+        <dc:Bounds x="880" y="108" width="240" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_GW_Approved" bpmnElement="JGL_GW_Approved" isMarkerVisible="true">
+        <dc:Bounds x="1160" y="123" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_End_NotApproved" bpmnElement="JGL_End_NotApproved">
+        <dc:Bounds x="1168" y="175" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_JGL_SendReqAgency" bpmnElement="JGL_SendReqAgency">
+        <dc:Bounds x="1240" y="108" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_CatchShortlist" bpmnElement="JGL_CatchShortlist">
+        <dc:Bounds x="1500" y="130" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_ScheduleInterviews" bpmnElement="JGL_ScheduleInterviews">
+        <dc:Bounds x="1565" y="108" width="260" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_SendOffer" bpmnElement="JGL_SendOffer">
+        <dc:Bounds x="1960" y="108" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_JGL_TimerWaitResponse" bpmnElement="JGL_TimerWaitResponse">
+        <dc:Bounds x="2220" y="130" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_CatchCandidateResponse" bpmnElement="JGL_CatchCandidateResponse">
+        <dc:Bounds x="2300" y="130" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_GW_Accepts" bpmnElement="JGL_GW_Accepts" isMarkerVisible="true">
+        <dc:Bounds x="2380" y="123" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_End_OfferDeclined" bpmnElement="JGL_End_OfferDeclined">
+        <dc:Bounds x="2392" y="175" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="S_JGL_CreateContract" bpmnElement="JGL_CreateContract">
+        <dc:Bounds x="2470" y="108" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_Parallel_Start" bpmnElement="JGL_Parallel_Start" isMarkerVisible="true">
+        <dc:Bounds x="2730" y="123" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_Parallel_Join" bpmnElement="JGL_Parallel_Join" isMarkerVisible="true">
+        <dc:Bounds x="3220" y="123" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_End_Hired" bpmnElement="JGL_End_Hired">
+        <dc:Bounds x="3320" y="130" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Nodes (IT lead lane y ~240) -->
+      <bpmndi:BPMNShape id="S_JGL_DefineRoleNeeds" bpmnElement="JGL_DefineRoleNeeds">
+        <dc:Bounds x="480" y="238" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_TechInterview" bpmnElement="JGL_TechInterview">
+        <dc:Bounds x="1840" y="238" width="240" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_EvaluateCandidate" bpmnElement="JGL_EvaluateCandidate">
+        <dc:Bounds x="2120" y="238" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Nodes (IT Ops lane y ~365) -->
+      <bpmndi:BPMNShape id="S_JGL_Call_PrepareWorkplace" bpmnElement="JGL_Call_PrepareWorkplace">
+        <dc:Bounds x="2840" y="370" width="250" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Nodes (Proc lane y ~485) -->
+      <bpmndi:BPMNShape id="S_JGL_CheckEquipment" bpmnElement="JGL_CheckEquipment">
+        <dc:Bounds x="2840" y="485" width="240" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_GW_EquipmentAvailable" bpmnElement="JGL_GW_EquipmentAvailable" isMarkerVisible="true">
+        <dc:Bounds x="3110" y="500" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_ReserveEquipment" bpmnElement="JGL_ReserveEquipment">
+        <dc:Bounds x="3180" y="485" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_OrderEquipment" bpmnElement="JGL_OrderEquipment">
+        <dc:Bounds x="3180" y="585" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_JGL_Timer_Delivery" bpmnElement="JGL_Timer_Delivery">
+        <dc:Bounds x="3435" y="607" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Agency nodes -->
+      <bpmndi:BPMNShape id="S_AGY_Start" bpmnElement="AGY_Start">
+        <dc:Bounds x="140" y="710" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_RecvReq" bpmnElement="AGY_RecvReq">
+        <dc:Bounds x="220" y="688" width="220" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_Publish" bpmnElement="AGY_Publish">
+        <dc:Bounds x="480" y="688" width="230" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_Screen" bpmnElement="AGY_Screen">
+        <dc:Bounds x="750" y="688" width="200" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_SendShortlist" bpmnElement="AGY_SendShortlist">
+        <dc:Bounds x="990" y="688" width="230" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_RecvOffer" bpmnElement="AGY_RecvOffer">
+        <dc:Bounds x="1260" y="688" width="260" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_SendResponse" bpmnElement="AGY_SendResponse">
+        <dc:Bounds x="1560" y="688" width="250" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_AGY_End" bpmnElement="AGY_End">
+        <dc:Bounds x="1850" y="710" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Data objects shapes -->
+      <bpmndi:BPMNShape id="S_DO_JobRequest" bpmnElement="DO_JobRequest">
+        <dc:Bounds x="260" y="40" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_DO_JobDescription" bpmnElement="DO_JobDescription">
+        <dc:Bounds x="670" y="40" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_DO_Shortlist" bpmnElement="DO_Shortlist">
+        <dc:Bounds x="1510" y="40" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_DO_Offer" bpmnElement="DO_Offer">
+        <dc:Bounds x="2020" y="40" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_DO_Contract" bpmnElement="DO_Contract">
+        <dc:Bounds x="2500" y="40" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_DO_EquipOrder" bpmnElement="DO_EquipOrder">
+        <dc:Bounds x="3230" y="660" width="36" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Text annotation -->
+      <bpmndi:BPMNShape id="S_TA_SLA_Candidate" bpmnElement="TA_SLA_Candidate">
+        <dc:Bounds x="2100" y="60" width="260" height="40"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Sequence edges (JGL main path - minimal waypoints) -->
+      <bpmndi:BPMNEdge id="E_F1" bpmnElement="F1"><di:waypoint x="176" y="148"/><di:waypoint x="220" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F2" bpmnElement="F2"><di:waypoint x="440" y="148"/><di:waypoint x="480" y="278"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F3" bpmnElement="F3"><di:waypoint x="700" y="278"/><di:waypoint x="620" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F4" bpmnElement="F4"><di:waypoint x="840" y="148"/><di:waypoint x="880" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F5" bpmnElement="F5"><di:waypoint x="1120" y="148"/><di:waypoint x="1160" y="148"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_F6_yes" bpmnElement="F6_yes"><di:waypoint x="1210" y="148"/><di:waypoint x="1240" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F6_no" bpmnElement="F6_no"><di:waypoint x="1185" y="173"/><di:waypoint x="1186" y="193"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_F7" bpmnElement="F7"><di:waypoint x="1460" y="148"/><di:waypoint x="1500" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F8" bpmnElement="F8"><di:waypoint x="1536" y="148"/><di:waypoint x="1565" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F9" bpmnElement="F9"><di:waypoint x="1825" y="148"/><di:waypoint x="1840" y="278"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F10" bpmnElement="F10"><di:waypoint x="2080" y="278"/><di:waypoint x="2120" y="278"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F11" bpmnElement="F11"><di:waypoint x="2340" y="278"/><di:waypoint x="1960" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F12" bpmnElement="F12"><di:waypoint x="2180" y="148"/><di:waypoint x="2220" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F13" bpmnElement="F13"><di:waypoint x="2256" y="148"/><di:waypoint x="2300" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F14" bpmnElement="F14"><di:waypoint x="2336" y="148"/><di:waypoint x="2380" y="148"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_F15_yes" bpmnElement="F15_yes"><di:waypoint x="2430" y="148"/><di:waypoint x="2470" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F15_no" bpmnElement="F15_no"><di:waypoint x="2405" y="173"/><di:waypoint x="2410" y="193"/></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="E_F16" bpmnElement="F16"><di:waypoint x="2690" y="148"/><di:waypoint x="2730" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F17_IT" bpmnElement="F17_IT"><di:waypoint x="2755" y="123"/><di:waypoint x="2755" y="410"/><di:waypoint x="2840" y="410"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F17_PR" bpmnElement="F17_PR"><di:waypoint x="2755" y="173"/><di:waypoint x="2755" y="525"/><di:waypoint x="2840" y="525"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F18_ITDone" bpmnElement="F18_ITDone"><di:waypoint x="3090" y="410"/><di:waypoint x="3245" y="410"/><di:waypoint x="3245" y="173"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F19" bpmnElement="F19"><di:waypoint x="3080" y="525"/><di:waypoint x="3110" y="525"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F20_yes" bpmnElement="F20_yes"><di:waypoint x="3160" y="525"/><di:waypoint x="3180" y="525"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F20_no" bpmnElement="F20_no"><di:waypoint x="3135" y="550"/><di:waypoint x="3135" y="625"/><di:waypoint x="3180" y="625"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F22" bpmnElement="F22"><di:waypoint x="3400" y="625"/><di:waypoint x="3435" y="625"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F21_PRDone" bpmnElement="F21_PRDone"><di:waypoint x="3400" y="525"/><di:waypoint x="3245" y="525"/><di:waypoint x="3245" y="173"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F23" bpmnElement="F23"><di:waypoint x="3270" y="148"/><di:waypoint x="3320" y="148"/></bpmndi:BPMNEdge>
+
+      <!-- Agency edges -->
+      <bpmndi:BPMNEdge id="E_AF1" bpmnElement="AF1"><di:waypoint x="176" y="728"/><di:waypoint x="220" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF2" bpmnElement="AF2"><di:waypoint x="440" y="728"/><di:waypoint x="480" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF3" bpmnElement="AF3"><di:waypoint x="710" y="728"/><di:waypoint x="750" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF4" bpmnElement="AF4"><di:waypoint x="950" y="728"/><di:waypoint x="990" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF5" bpmnElement="AF5"><di:waypoint x="1220" y="728"/><di:waypoint x="1260" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF6" bpmnElement="AF6"><di:waypoint x="1520" y="728"/><di:waypoint x="1560" y="728"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_AF7" bpmnElement="AF7"><di:waypoint x="1810" y="728"/><di:waypoint x="1850" y="728"/></bpmndi:BPMNEdge>
+
+      <!-- Message flows -->
+      <bpmndi:BPMNEdge id="E_MF_RequestToAgency" bpmnElement="MF_RequestToAgency">
+        <di:waypoint x="1350" y="188"/><di:waypoint x="330" y="688"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_MF_ShortlistToJGL" bpmnElement="MF_ShortlistToJGL">
+        <di:waypoint x="1105" y="688"/><di:waypoint x="1518" y="166"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_MF_OfferToAgency" bpmnElement="MF_OfferToAgency">
+        <di:waypoint x="2070" y="188"/><di:waypoint x="1390" y="688"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_MF_ResponseToJGL" bpmnElement="MF_ResponseToJGL">
+        <di:waypoint x="1685" y="688"/><di:waypoint x="2318" y="166"/>
+      </bpmndi:BPMNEdge>
+
+      <!-- Associations (data + annotation) -->
+      <bpmndi:BPMNEdge id="E_Assoc_Req" bpmnElement="Assoc_Req"><di:waypoint x="330" y="108"/><di:waypoint x="278" y="90"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Assoc_JobDesc" bpmnElement="Assoc_JobDesc"><di:waypoint x="730" y="108"/><di:waypoint x="688" y="90"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Assoc_Shortlist" bpmnElement="Assoc_Shortlist"><di:waypoint x="1518" y="130"/><di:waypoint x="1528" y="90"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Assoc_Offer" bpmnElement="Assoc_Offer"><di:waypoint x="2070" y="108"/><di:waypoint x="2038" y="90"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Assoc_Contract" bpmnElement="Assoc_Contract"><di:waypoint x="2580" y="108"/><di:waypoint x="2518" y="90"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Assoc_Equip" bpmnElement="Assoc_Equip"><di:waypoint x="3290" y="585"/><di:waypoint x="3248" y="660"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_A_SLA" bpmnElement="A_SLA"><di:waypoint x="2238" y="130"/><di:waypoint x="2100" y="80"/></bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>

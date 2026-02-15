@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 10,
+  "id": "Form_ContractSignature",
+  "type": "default",
+  "name": "Potpis ugovora",
+  "components": [
+    {
+      "type": "text",
+      "key": "employeeFullName",
+      "label": "Ime i prezime zaposlenika",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "text",
+      "key": "employeeId",
+      "label": "Matični broj / ID (ako postoji)",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "select",
+      "key": "roleType",
+      "label": "Tip pozicije",
+      "description": "Odaberi tip IT pozicije.",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk tehničar"
+        },
+        {
+          "label": "Specijalist poslovnih aplikacija",
+          "value": "specijalist poslovnih aplikacija"
+        },
+        {
+          "label": "Specijalist SOC/NOC",
+          "value": "specijalist SOC/noc"
+        }
+      ],
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "date",
+      "key": "employmentStartDate",
+      "label": "Datum početka rada",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "date",
+      "key": "contractDate",
+      "label": "Datum ugovora",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "checkbox",
+      "key": "contractSigned",
+      "label": "Ugovor potpisan",
+      "defaultValue": false,
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "contractNotes",
+      "label": "Napomene",
+      "validate": {
+        "required": false
+      }
+    }
+  ]
+}
