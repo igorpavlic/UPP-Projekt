@@ -1,0 +1,96 @@
+{
+  "components": [
+    {
+      "text": "# Onboarding Day 1",
+      "type": "text",
+      "layout": {
+        "row": "Row_1qemuqd",
+        "columns": null
+      },
+      "id": "Field_0ykvnlb"
+    },
+    {
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "type": "select",
+      "key": "roleType",
+      "validate": {
+        "required": true
+      },
+      "id": "Field_0nhbxo5",
+      "layout": {
+        "row": "Row_15kmd8a"
+      }
+    },
+    {
+      "label": "Oprema predana zaposleniku",
+      "type": "checkbox",
+      "key": "equipmentHandedOver",
+      "validate": {
+        "required": true
+      },
+      "id": "Field_18uvt2d",
+      "layout": {
+        "row": "Row_1s2mkr9"
+      }
+    },
+    {
+      "label": "Računi i pristupi rade (AD/M365/VPN/ticketing)",
+      "type": "checkbox",
+      "key": "accountsWorking",
+      "validate": {
+        "required": true
+      },
+      "id": "Field_0i4y5ow",
+      "layout": {
+        "row": "Row_0azaz67"
+      }
+    },
+    {
+      "label": "Sigurnosna edukacija odrađena",
+      "type": "checkbox",
+      "key": "securityTrainingCompleted",
+      "validate": {
+        "required": false
+      },
+      "id": "Field_1tna7ob",
+      "layout": {
+        "row": "Row_1i6a1wu"
+      }
+    },
+    {
+      "label": "Otvoreni problemi / ticketi",
+      "type": "textarea",
+      "key": "openIssues",
+      "validate": {
+        "required": false
+      },
+      "id": "Field_16alkd8",
+      "layout": {
+        "row": "Row_1d8tudh"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_OnboardingDay1",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  },
+  "schemaVersion": 19
+}

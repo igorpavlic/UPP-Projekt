@@ -1,0 +1,108 @@
+{
+  "components": [
+    {
+      "text": "# Završni razgovor",
+      "type": "text",
+      "layout": {
+        "row": "Row_02h9fq8",
+        "columns": null
+      },
+      "id": "Field_0q76iog"
+    },
+    {
+      "label": "Pozicija",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "type": "select",
+      "key": "roleType",
+      "validate": {
+        "required": true
+      },
+      "id": "Field_0s9vouf",
+      "layout": {
+        "row": "Row_1767lfc"
+      }
+    },
+    {
+      "label": "Ocjena finalnog intervjua (0–100)",
+      "type": "number",
+      "key": "finalInterviewScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "Field_1r7cqv0",
+      "layout": {
+        "row": "Row_1nxsyia"
+      }
+    },
+    {
+      "label": "Odobrenje menadžmenta",
+      "values": [
+        {
+          "label": "ODOBRENO",
+          "value": true
+        },
+        {
+          "label": "NIJE ODOBRENO",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "managementApproval",
+      "validate": {
+        "required": true
+      },
+      "id": "Field_1rsrbe2",
+      "layout": {
+        "row": "Row_06va044"
+      }
+    },
+    {
+      "label": "Rizici / zabrinutosti (ako postoje)",
+      "type": "textarea",
+      "key": "riskConcerns",
+      "validate": {
+        "required": false
+      },
+      "id": "Field_0kha3z7",
+      "layout": {
+        "row": "Row_1pttmbs"
+      }
+    },
+    {
+      "label": "Zaključak i preporuka",
+      "type": "textarea",
+      "key": "finalInterviewNotes",
+      "validate": {
+        "required": false
+      },
+      "id": "Field_0d78ivn",
+      "layout": {
+        "row": "Row_0mnsm9a"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_FinalInterview",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  },
+  "schemaVersion": 19
+}

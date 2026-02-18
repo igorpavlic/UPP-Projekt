@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 19,
+  "id": "Form_InterviewScores",
+  "type": "default",
+  "components": [
+    {
+      "text": "# Tehnički intervju – ocjene",
+      "type": "text",
+      "id": "h1"
+    },
+    {
+      "type": "textfield",
+      "id": "Field_001",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "id": "Field_002",
+      "key": "technicalKnowledge",
+      "label": "Tehničko znanje (1-5)",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "id": "Field_003",
+      "key": "problemSolving",
+      "label": "Rješavanje problema (1-5)",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "number",
+      "id": "Field_004",
+      "key": "communication",
+      "label": "Komunikacija (1-5)",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Field_005",
+      "key": "recommendation",
+      "label": "Preporuka",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "Field_006",
+      "key": "comments",
+      "label": "Komentari",
+      "validate": {
+        "required": true
+      },
+      "rows": 4
+    }
+  ],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "1.22.0"
+  }
+}

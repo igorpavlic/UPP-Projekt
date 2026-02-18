@@ -1,18 +1,19 @@
 {
-  "type": "default",
-  "id": "Form_FinalInterview",
   "components": [
     {
+      "text": "# Tehnički test",
       "type": "text",
       "key": "candidateName",
       "label": "Ime i prezime kandidata",
       "validate": {
         "required": true
+      },
+      "id": "Field_0u6abhk",
+      "layout": {
+        "row": "Row_02gvdfd"
       }
     },
     {
-      "type": "select",
-      "key": "roleType",
       "label": "Pozicija",
       "values": [
         {
@@ -28,55 +29,72 @@
           "value": "noc_soc"
         }
       ],
+      "type": "select",
+      "key": "roleType",
       "validate": {
         "required": true
+      },
+      "id": "Field_13opx6x",
+      "layout": {
+        "row": "Row_16268gn"
       }
     },
     {
+      "label": "Rezultat tehničkog testa (0–100)",
       "type": "number",
-      "key": "finalInterviewScore",
-      "label": "Ocjena finalnog intervjua (0–100)",
+      "key": "technicalTestScore",
       "validate": {
         "required": true,
         "min": 0,
         "max": 100
+      },
+      "id": "Field_0sc6ac3",
+      "layout": {
+        "row": "Row_1xqs55b"
       }
     },
     {
-      "type": "radio",
-      "key": "managementApproval",
-      "label": "Odobrenje menadžmenta",
+      "label": "Prolaz testa",
       "values": [
         {
-          "label": "ODOBRENO",
+          "label": "DA",
           "value": true
         },
         {
-          "label": "NIJE ODOBRENO",
+          "label": "NE",
           "value": false
         }
       ],
+      "type": "radio",
+      "key": "techTestPassed",
       "validate": {
         "required": true
+      },
+      "id": "Field_10djobl",
+      "layout": {
+        "row": "Row_13rlmzo"
       }
     },
     {
+      "label": "Napomene / zapažanja",
       "type": "textarea",
-      "key": "riskConcerns",
-      "label": "Rizici / zabrinutosti (ako postoje)",
+      "key": "techTestNotes",
       "validate": {
         "required": false
-      }
-    },
-    {
-      "type": "textarea",
-      "key": "finalInterviewNotes",
-      "label": "Zaključak i preporuka",
-      "validate": {
-        "required": false
+      },
+      "id": "Field_0u96x29",
+      "layout": {
+        "row": "Row_1ndvevn"
       }
     }
-],
+  ],
+  "type": "default",
+  "id": "Form_TechTest",
   "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.8.0"
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  },
+  "schemaVersion": 19
 }

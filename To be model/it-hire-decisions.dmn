@@ -278,63 +278,63 @@
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_1" name="JGL IT Hire Decisions">
       <dmndi:DMNShape id="DMNShape_Decision_EvaluateCandidate" dmnElementRef="Decision_EvaluateCandidate">
-        <dc:Bounds height="80" width="220" x="290" y="120" />
+        <dc:Bounds height="80" width="220" x="380" y="180" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Decision_EquipmentProfile" dmnElementRef="Decision_EquipmentProfile">
-        <dc:Bounds height="80" width="220" x="630" y="120" />
+        <dc:Bounds height="80" width="220" x="720" y="180" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_roleType" dmnElementRef="Input_roleType">
-        <dc:Bounds height="60" width="160" x="540" y="320" />
+        <dc:Bounds height="60" width="160" x="570" y="80" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_hrScreeningPassed" dmnElementRef="Input_hrScreeningPassed">
-        <dc:Bounds height="60" width="220" x="160" y="260" />
+        <dc:Bounds height="60" width="220" x="160" y="320" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_technicalTestScore" dmnElementRef="Input_technicalTestScore">
-        <dc:Bounds height="60" width="220" x="190" y="340" />
+        <dc:Bounds height="60" width="220" x="250" y="400" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_technicalInterviewScore" dmnElementRef="Input_technicalInterviewScore">
-        <dc:Bounds height="60" width="220" x="190" y="420" />
+        <dc:Bounds height="60" width="220" x="380" y="480" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_referenceCheckPassed" dmnElementRef="Input_referenceCheckPassed">
-        <dc:Bounds height="60" width="220" x="190" y="500" />
+        <dc:Bounds height="60" width="220" x="510" y="400" />
       </dmndi:DMNShape>
       <dmndi:DMNShape id="DMNShape_Input_seniority" dmnElementRef="Input_seniority">
-        <dc:Bounds height="60" width="220" x="330" y="600" />
+        <dc:Bounds height="60" width="220" x="600" y="320" />
       </dmndi:DMNShape>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_roleType" dmnElementRef="IR_EC_roleType">
-        <di:waypoint x="620" y="320" />
-        <di:waypoint x="479" y="220" />
-        <di:waypoint x="479" y="200" />
+        <di:waypoint x="650" y="140" />
+        <di:waypoint x="490" y="160" />
+        <di:waypoint x="490" y="180" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_hr" dmnElementRef="IR_EC_hr">
-        <di:waypoint x="270" y="260" />
-        <di:waypoint x="321" y="220" />
-        <di:waypoint x="321" y="200" />
+        <di:waypoint x="270" y="320" />
+        <di:waypoint x="417" y="280" />
+        <di:waypoint x="417" y="260" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_test" dmnElementRef="IR_EC_test">
-        <di:waypoint x="300" y="340" />
-        <di:waypoint x="353" y="220" />
-        <di:waypoint x="353" y="200" />
+        <di:waypoint x="360" y="400" />
+        <di:waypoint x="453" y="280" />
+        <di:waypoint x="453" y="260" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_interview" dmnElementRef="IR_EC_interview">
-        <di:waypoint x="300" y="420" />
-        <di:waypoint x="384" y="220" />
-        <di:waypoint x="384" y="200" />
+        <di:waypoint x="490" y="480" />
+        <di:waypoint x="490" y="280" />
+        <di:waypoint x="490" y="260" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_ref" dmnElementRef="IR_EC_ref">
-        <di:waypoint x="300" y="500" />
-        <di:waypoint x="416" y="220" />
-        <di:waypoint x="416" y="200" />
+        <di:waypoint x="620" y="400" />
+        <di:waypoint x="527" y="280" />
+        <di:waypoint x="527" y="260" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EC_seniority" dmnElementRef="IR_EC_seniority">
-        <di:waypoint x="440" y="600" />
-        <di:waypoint x="447" y="220" />
-        <di:waypoint x="447" y="200" />
+        <di:waypoint x="710" y="320" />
+        <di:waypoint x="563" y="280" />
+        <di:waypoint x="563" y="260" />
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="DMNEdge_IR_EP_roleType" dmnElementRef="IR_EP_roleType">
-        <di:waypoint x="620" y="320" />
-        <di:waypoint x="740" y="220" />
-        <di:waypoint x="740" y="200" />
+        <di:waypoint x="650" y="140" />
+        <di:waypoint x="830" y="160" />
+        <di:waypoint x="830" y="180" />
       </dmndi:DMNEdge>
     </dmndi:DMNDiagram>
   </dmndi:DMNDI>

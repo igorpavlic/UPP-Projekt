@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 19,
+  "id": "Form_SendOffer",
+  "type": "default",
+  "components": [
+    {
+      "text": "# Slanje ponude",
+      "type": "text",
+      "id": "h1"
+    },
+    {
+      "type": "textfield",
+      "id": "Field_001",
+      "key": "candidateName",
+      "label": "Ime i prezime kandidata",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Field_002",
+      "key": "position",
+      "label": "Pozicija",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Field_003",
+      "key": "offerDocument",
+      "label": "Ponuda (link / naziv datoteke)",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Field_004",
+      "key": "offerSentAt",
+      "label": "Datum slanja ponude",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "Field_005",
+      "key": "notes",
+      "label": "Napomena",
+      "validate": {
+        "required": true
+      },
+      "rows": 4
+    }
+  ],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "1.22.0"
+  }
+}

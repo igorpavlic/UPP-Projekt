@@ -1,18 +1,16 @@
 {
-  "type": "default",
-  "id": "Form_ProbationEvaluation",
   "components": [
     {
+      "text": "# Evaluacija probnog rada",
       "type": "text",
       "key": "employeeName",
       "label": "Ime i prezime zaposlenika",
       "validate": {
         "required": true
-      }
+      },
+      "id": "Field_170zso2"
     },
     {
-      "type": "select",
-      "key": "roleType",
       "label": "Pozicija",
       "values": [
         {
@@ -28,49 +26,54 @@
           "value": "noc_soc"
         }
       ],
+      "type": "select",
+      "key": "roleType",
       "validate": {
         "required": true
-      }
+      },
+      "id": "Field_162ac52"
     },
     {
+      "label": "Ocjena performansi (0–100)",
       "type": "number",
       "key": "performanceScore",
-      "label": "Ocjena performansi (0–100)",
       "validate": {
         "required": true,
         "min": 0,
         "max": 100
-      }
+      },
+      "id": "Field_122pfvl"
     },
     {
+      "label": "Uklapanje u tim (0–100)",
       "type": "number",
       "key": "teamFitScore",
-      "label": "Uklapanje u tim (0–100)",
       "validate": {
         "required": true,
         "min": 0,
         "max": 100
-      }
+      },
+      "id": "Field_1nbisc3"
     },
     {
+      "label": "Postignuća / doprinos tijekom probnog rada",
       "type": "textarea",
       "key": "achievements",
-      "label": "Postignuća / doprinos tijekom probnog rada",
       "validate": {
         "required": false
-      }
+      },
+      "id": "Field_12jkvmk"
     },
     {
+      "label": "Područja za razvoj",
       "type": "textarea",
       "key": "developmentAreas",
-      "label": "Područja za razvoj",
       "validate": {
         "required": false
-      }
+      },
+      "id": "Field_0zb3ube"
     },
     {
-      "type": "radio",
-      "key": "probationPassed",
       "label": "Odluka nakon probnog rada",
       "values": [
         {
@@ -82,19 +85,30 @@
           "value": false
         }
       ],
+      "type": "radio",
+      "key": "probationPassed",
       "validate": {
         "required": true
-      }
+      },
+      "id": "Field_0zvz1fe"
     },
     {
+      "label": "Zaključak / preporuka",
       "type": "textarea",
       "key": "finalRecommendation",
-      "label": "Zaključak / preporuka",
       "validate": {
         "required": false
-      }
+      },
+      "id": "Field_1lp9pw0"
     }
-],
+  ],
+  "type": "default",
+  "id": "Form_ProbationEvaluation",
   "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.8.0"
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  },
+  "schemaVersion": 19
 }

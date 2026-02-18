@@ -1,18 +1,15 @@
 {
-  "type": "default",
-  "id": "Form_HRScreening",
   "components": [
     {
+      "text": "# HR Screening",
       "type": "text",
-      "key": "candidateName",
-      "label": "Ime i prezime kandidata",
-      "validate": {
-        "required": true
-      }
+      "layout": {
+        "row": "Row_1s1ggz4",
+        "columns": null
+      },
+      "id": "Field_1351vi0"
     },
     {
-      "type": "select",
-      "key": "roleType",
       "label": "Pozicija",
       "values": [
         {
@@ -28,13 +25,17 @@
           "value": "noc_soc"
         }
       ],
+      "type": "select",
+      "key": "roleType",
       "validate": {
         "required": true
+      },
+      "id": "Field_0f3wabz",
+      "layout": {
+        "row": "Row_18zigaf"
       }
     },
     {
-      "type": "radio",
-      "key": "hrScreeningPassed",
       "label": "Prolaz HR screeninga",
       "values": [
         {
@@ -46,55 +47,89 @@
           "value": false
         }
       ],
+      "type": "radio",
+      "key": "hrScreeningPassed",
       "validate": {
         "required": true
+      },
+      "id": "Field_1kwe8nv",
+      "layout": {
+        "row": "Row_1337nvr"
       }
     },
     {
+      "label": "Ocjena komunikacije i soft skills (0–100)",
       "type": "number",
       "key": "softSkillsScore",
-      "label": "Ocjena komunikacije i soft skills (0–100)",
       "description": "Procjena kulture, komunikacije, motivacije.",
       "validate": {
         "required": true,
         "min": 0,
         "max": 100
+      },
+      "id": "Field_11f9p1e",
+      "layout": {
+        "row": "Row_0e6lwg4"
       }
     },
     {
+      "label": "Motivacija i očekivanja",
       "type": "textarea",
       "key": "motivationNotes",
-      "label": "Motivacija i očekivanja",
       "validate": {
         "required": false
+      },
+      "id": "Field_1gk3sy0",
+      "layout": {
+        "row": "Row_1kcphzn"
       }
     },
     {
+      "label": "Očekivana bruto plaća (EUR)",
       "type": "number",
       "key": "salaryExpectationEur",
-      "label": "Očekivana bruto plaća (EUR)",
       "validate": {
         "required": false,
         "min": 0
+      },
+      "id": "Field_1i2gcmf",
+      "layout": {
+        "row": "Row_0zt25y9"
       }
     },
     {
+      "subtype": "date",
       "type": "datetime",
       "key": "availabilityDate",
       "label": "Dostupnost (najraniji mogući početak)",
       "validate": {
         "required": false
+      },
+      "id": "Field_18nobb3",
+      "layout": {
+        "row": "Row_02bk1zj"
       }
     },
     {
+      "label": "Napomene HR-a",
       "type": "textarea",
       "key": "hrNotes",
-      "label": "Napomene HR-a",
       "validate": {
         "required": false
+      },
+      "id": "Field_1vtqod7",
+      "layout": {
+        "row": "Row_1wbahbe"
       }
     }
-],
+  ],
+  "type": "default",
+  "id": "Form_HRScreening",
   "executionPlatform": "Camunda Cloud",
-  "executionPlatformVersion": "8.8.0"
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  },
+  "schemaVersion": 19
 }

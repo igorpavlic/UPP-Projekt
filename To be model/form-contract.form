@@ -1,0 +1,37 @@
+{
+  "type": "default",
+  "id": "Form_Contract",
+  "components": [
+    {
+      "text": "# Digitalno potpisivanje ugovora",
+      "type": "text",
+      "id": "h1"
+    },
+    {
+      "label": "Broj ugovora",
+      "type": "textfield",
+      "id": "f1",
+      "key": "contractNumber",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Datum potpisa",
+      "type": "textfield",
+      "id": "f2",
+      "key": "signDate",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Ugovor potpisan",
+      "type": "checkbox",
+      "id": "f3",
+      "key": "contractSigned"
+    }
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
+}

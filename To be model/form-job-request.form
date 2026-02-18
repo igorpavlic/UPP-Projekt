@@ -1,0 +1,127 @@
+{
+  "type": "default",
+  "id": "Form_JobRequest",
+  "components": [
+    {
+      "text": "# Zahtjev za zapošljavanje IT djelatnika",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_0rw51pr"
+      }
+    },
+    {
+      "label": "Tip pozicije",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "type": "select",
+      "id": "f1",
+      "key": "roleType",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_02swsb9"
+      }
+    },
+    {
+      "label": "Broj izvršitelja (FTE)",
+      "type": "number",
+      "id": "f3",
+      "key": "fteCount",
+      "defaultValue": 1,
+      "validate": {
+        "required": true,
+        "min": 1,
+        "max": 5
+      },
+      "layout": {
+        "row": "Row_1kn729o"
+      }
+    },
+    {
+      "label": "Potrebne tehničke vještine",
+      "type": "textarea",
+      "id": "f4",
+      "key": "technicalSkills",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_1begu5x"
+      }
+    },
+    {
+      "label": "Potrebni certifikati",
+      "type": "textarea",
+      "id": "f5",
+      "key": "certificates",
+      "layout": {
+        "row": "Row_1xdnmkv"
+      }
+    },
+    {
+      "label": "Razlog zapošljavanja",
+      "values": [
+        {
+          "label": "Povećanje opsega posla",
+          "value": "growth"
+        },
+        {
+          "label": "Odlazak zaposlenika",
+          "value": "replacement"
+        },
+        {
+          "label": "Novi projekt",
+          "value": "new_project"
+        }
+      ],
+      "type": "select",
+      "id": "f6",
+      "key": "hiringReason",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_1sa5ccv"
+      }
+    },
+    {
+      "label": "Predložena bruto plaća (EUR/mj)",
+      "type": "number",
+      "id": "f7",
+      "key": "salaryRange",
+      "validate": {
+        "required": true,
+        "min": 1000,
+        "max": 10000
+      },
+      "layout": {
+        "row": "Row_1juf2yy"
+      }
+    },
+    {
+      "label": "Dodatne napomene",
+      "type": "textarea",
+      "id": "f8",
+      "key": "requestNotes",
+      "layout": {
+        "row": "Row_0qop301"
+      }
+    }
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
+}
