@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_ProbationEvaluation",
   "type": "default",
-  "name": "Evaluacija probnog rada",
+  "id": "Form_ProbationEvaluation",
   "components": [
     {
       "type": "text",
@@ -96,5 +94,7 @@
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }

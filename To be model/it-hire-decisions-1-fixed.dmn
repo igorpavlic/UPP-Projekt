@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0wkq8mt" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.40.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <inputData id="Input_roleType" name="Role Type">
+    <variable id="Var_roleType" name="roleType" typeRef="string" />
+  </inputData>
+  <inputData id="Input_hrScreeningPassed" name="HR Screening Passed">
+    <variable id="Var_hrScreeningPassed" name="hrScreeningPassed" typeRef="boolean" />
+  </inputData>
+  <inputData id="Input_technicalTestScore" name="Technical Test Score">
+    <variable id="Var_technicalTestScore" name="technicalTestScore" typeRef="integer" />
+  </inputData>
+  <inputData id="Input_technicalInterviewScore" name="Technical Interview Score">
+    <variable id="Var_technicalInterviewScore" name="technicalInterviewScore" typeRef="integer" />
+  </inputData>
+  <inputData id="Input_referenceCheckPassed" name="Reference Check Passed">
+    <variable id="Var_referenceCheckPassed" name="referenceCheckPassed" typeRef="boolean" />
+  </inputData>
+  <inputData id="Input_seniority" name="Seniority">
+    <variable id="Var_seniority" name="seniority" typeRef="string" />
+  </inputData>
+  <decision id="Decision_EvaluateCandidate" name="Evaluate Candidate">
+    <variable id="Var_Decision_EvaluateCandidate" name="evaluationResult" typeRef="string" />
+    <informationRequirement id="IR_EC_roleType">
+      <requiredInput href="#Input_roleType" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_hr">
+      <requiredInput href="#Input_hrScreeningPassed" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_test">
+      <requiredInput href="#Input_technicalTestScore" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_interview">
+      <requiredInput href="#Input_technicalInterviewScore" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_ref">
+      <requiredInput href="#Input_referenceCheckPassed" />
+    </informationRequirement>
+    <informationRequirement id="IR_EC_seniority">
+      <requiredInput href="#Input_seniority" />
+    </informationRequirement>
+    <decisionTable id="DT_EvaluateCandidate" hitPolicy="FIRST">
+      <input id="DT_EC_In1">
+        <inputExpression id="DT_EC_InExpr1" typeRef="string">
+          <text>roleType</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In2">
+        <inputExpression id="DT_EC_InExpr2" typeRef="boolean">
+          <text>hrScreeningPassed</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In3">
+        <inputExpression id="DT_EC_InExpr3" typeRef="integer">
+          <text>technicalTestScore</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In4">
+        <inputExpression id="DT_EC_InExpr4" typeRef="integer">
+          <text>technicalInterviewScore</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In5">
+        <inputExpression id="DT_EC_InExpr5" typeRef="boolean">
+          <text>referenceCheckPassed</text>
+        </inputExpression>
+      </input>
+      <input id="DT_EC_In6">
+        <inputExpression id="DT_EC_InExpr6" typeRef="string">
+          <text>seniority</text>
+        </inputExpression>
+      </input>
+      <output id="DT_EC_Out1" name="result" typeRef="string" />
+      <output id="DT_EC_Out2" name="needsFinalInterview" typeRef="boolean" />
+      <rule id="R_EC_Helpdesk_Offer">
+        <inputEntry id="R_EC_Helpdesk_Offer_i1">
+          <text>"helpdesk"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Helpdesk_Offer_i2">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Helpdesk_Offer_i3">
+          <text>&gt;= 60</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Helpdesk_Offer_i4">
+          <text>&gt;= 65</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Helpdesk_Offer_i5">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Helpdesk_Offer_i6">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_Helpdesk_Offer_o1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_Helpdesk_Offer_o2">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_Dev_Offer">
+        <inputEntry id="R_EC_Dev_Offer_i1">
+          <text>"programer"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Dev_Offer_i2">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Dev_Offer_i3">
+          <text>&gt;= 75</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Dev_Offer_i4">
+          <text>&gt;= 75</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Dev_Offer_i5">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Dev_Offer_i6">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_Dev_Offer_o1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_Dev_Offer_o2">
+          <text>seniority = "senior"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_NocSoc_Offer">
+        <inputEntry id="R_EC_NocSoc_Offer_i1">
+          <text>"noc_soc"</text>
+        </inputEntry>
+        <inputEntry id="R_EC_NocSoc_Offer_i2">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_NocSoc_Offer_i3">
+          <text>&gt;= 70</text>
+        </inputEntry>
+        <inputEntry id="R_EC_NocSoc_Offer_i4">
+          <text>&gt;= 75</text>
+        </inputEntry>
+        <inputEntry id="R_EC_NocSoc_Offer_i5">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="R_EC_NocSoc_Offer_i6">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_NocSoc_Offer_o1">
+          <text>"Offer"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_NocSoc_Offer_o2">
+          <text>seniority = "senior"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EC_Reject">
+        <inputEntry id="R_EC_Reject_i1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Reject_i2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Reject_i3">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Reject_i4">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Reject_i5">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="R_EC_Reject_i6">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EC_Reject_o1">
+          <text>"Reject"</text>
+        </outputEntry>
+        <outputEntry id="R_EC_Reject_o2">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_EquipmentProfile" name="Equipment Profile">
+    <variable id="Var_Decision_EquipmentProfile" name="equipment" typeRef="string" />
+    <informationRequirement id="IR_EP_roleType">
+      <requiredInput href="#Input_roleType" />
+    </informationRequirement>
+    <decisionTable id="DT_EquipmentProfile" hitPolicy="FIRST">
+      <input id="DT_EP_In1">
+        <inputExpression id="DT_EP_InExpr1" typeRef="string">
+          <text>roleType</text>
+        </inputExpression>
+      </input>
+      <output id="DT_EP_Out1" name="hardwarePackage" typeRef="string" />
+      <output id="DT_EP_Out2" name="monitorCount" typeRef="integer" />
+      <output id="DT_EP_Out3" name="peripherals" typeRef="string" />
+      <output id="DT_EP_Out4" name="softwarePackage" typeRef="string" />
+      <output id="DT_EP_Out5" name="securityLevel" typeRef="string" />
+      <rule id="R_EP_Helpdesk">
+        <inputEntry id="R_EP_Helpdesk_i1">
+          <text>"helpdesk"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_Helpdesk_o1">
+          <text>"Laptop (standard/srednja klasa)"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Helpdesk_o2">
+          <text>2</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Helpdesk_o3">
+          <text>"Docking; headset"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Helpdesk_o4">
+          <text>"MS 365; ticketing; remote support; RMM"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Helpdesk_o5">
+          <text>"Standard"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_Programer">
+        <inputEntry id="R_EP_Programer_i1">
+          <text>"programer"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_Programer_o1">
+          <text>"Laptop visoke klase (SSD, 16GB+ RAM)"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Programer_o2">
+          <text>3</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Programer_o3">
+          <text>"Docking; ergonomija"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Programer_o4">
+          <text>"IDE (VS Code/JetBrains); Git; Docker; dev alati"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Programer_o5">
+          <text>"Standard+"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_NocSoc">
+        <inputEntry id="R_EP_NocSoc_i1">
+          <text>"noc_soc"</text>
+        </inputEntry>
+        <outputEntry id="R_EP_NocSoc_o1">
+          <text>"Workstation / laptop (viša klasa)"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_NocSoc_o2">
+          <text>4</text>
+        </outputEntry>
+        <outputEntry id="R_EP_NocSoc_o3">
+          <text>"Docking; headset"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_NocSoc_o4">
+          <text>"SIEM; monitoring; mrežni analizatori; VPN"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_NocSoc_o5">
+          <text>"High"</text>
+        </outputEntry>
+      </rule>
+      <rule id="R_EP_Default">
+        <inputEntry id="R_EP_Default_i1">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="R_EP_Default_o1">
+          <text>"Standard laptop"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Default_o2">
+          <text>2</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Default_o3">
+          <text>"Tipkovnica; miš"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Default_o4">
+          <text>"MS 365"</text>
+        </outputEntry>
+        <outputEntry id="R_EP_Default_o5">
+          <text>"Standard"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1" name="JGL IT Hire Decisions">
+      <dmndi:DMNShape id="DMNShape_Decision_EvaluateCandidate" dmnElementRef="Decision_EvaluateCandidate">
+        <dc:Bounds height="80" width="220" x="290" y="120" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Decision_EquipmentProfile" dmnElementRef="Decision_EquipmentProfile">
+        <dc:Bounds height="80" width="220" x="630" y="120" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_roleType" dmnElementRef="Input_roleType">
+        <dc:Bounds height="60" width="160" x="540" y="320" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_hrScreeningPassed" dmnElementRef="Input_hrScreeningPassed">
+        <dc:Bounds height="60" width="220" x="160" y="260" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_technicalTestScore" dmnElementRef="Input_technicalTestScore">
+        <dc:Bounds height="60" width="220" x="190" y="340" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_technicalInterviewScore" dmnElementRef="Input_technicalInterviewScore">
+        <dc:Bounds height="60" width="220" x="190" y="420" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_referenceCheckPassed" dmnElementRef="Input_referenceCheckPassed">
+        <dc:Bounds height="60" width="220" x="190" y="500" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_Input_seniority" dmnElementRef="Input_seniority">
+        <dc:Bounds height="60" width="220" x="330" y="600" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_roleType" dmnElementRef="IR_EC_roleType">
+        <di:waypoint x="620" y="320" />
+        <di:waypoint x="479" y="220" />
+        <di:waypoint x="479" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_hr" dmnElementRef="IR_EC_hr">
+        <di:waypoint x="270" y="260" />
+        <di:waypoint x="321" y="220" />
+        <di:waypoint x="321" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_test" dmnElementRef="IR_EC_test">
+        <di:waypoint x="300" y="340" />
+        <di:waypoint x="353" y="220" />
+        <di:waypoint x="353" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_interview" dmnElementRef="IR_EC_interview">
+        <di:waypoint x="300" y="420" />
+        <di:waypoint x="384" y="220" />
+        <di:waypoint x="384" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_ref" dmnElementRef="IR_EC_ref">
+        <di:waypoint x="300" y="500" />
+        <di:waypoint x="416" y="220" />
+        <di:waypoint x="416" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EC_seniority" dmnElementRef="IR_EC_seniority">
+        <di:waypoint x="440" y="600" />
+        <di:waypoint x="447" y="220" />
+        <di:waypoint x="447" y="200" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_IR_EP_roleType" dmnElementRef="IR_EP_roleType">
+        <di:waypoint x="620" y="320" />
+        <di:waypoint x="740" y="220" />
+        <di:waypoint x="740" y="200" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

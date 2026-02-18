@@ -1,16 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
-  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
-  id="Definitions_JGL_IT_Hire_ToBe"
-  targetNamespace="http://jgl.hr/bpmn/it-hire/to-be">
-
-  <bpmn:collaboration id="Collab_IT_Hire">
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1n632eo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.40.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:message id="Message_ShortlistReceived" name="Shortlist kandidata zaprimljen"/><bpmn:message id="Message_OfferResponse" name="Odgovor na ponudu"/><bpmn:collaboration id="Collab_IT_Hire">
     <bpmn:participant id="Participant_JGL" name="JGL" processRef="Process_JGL_IT_Hire"/>
     <bpmn:participant id="Participant_Agency" name="Vanjska agencija" processRef="Process_Agency"/>
 
@@ -90,7 +80,7 @@
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_JobRequest"/>
+        <zeebe:userTask/><zeebe:formDefinition formId="Form_JobRequest"/>
       </bpmn:extensionElements>
     </bpmn:userTask>
 
@@ -125,7 +115,7 @@
     <bpmn:intermediateCatchEvent id="IMC_Shortlist" name="Shortlist kandidata zaprimljen">
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MsgDef_Shortlist"/>
+      <bpmn:messageEventDefinition id="MsgDef_Shortlist" messageRef="Message_ShortlistReceived"/>
     </bpmn:intermediateCatchEvent>
 
     <!-- Faza 3: selekcijski postupak -->
@@ -139,7 +129,7 @@
         <bpmn:incoming>Sel_Flow_1</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_2</bpmn:outgoing>
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_HRScreening"/>
+          <zeebe:userTask/><zeebe:formDefinition formId="Form_HRScreening"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
@@ -153,7 +143,7 @@
         <bpmn:incoming>Sel_Flow_2_yes</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_3</bpmn:outgoing>
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_TechTest"/>
+          <zeebe:userTask/><zeebe:formDefinition formId="Form_TechTest"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
@@ -167,7 +157,7 @@
         <bpmn:incoming>Sel_Flow_3_yes</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_4</bpmn:outgoing>
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_InterviewScores"/>
+          <zeebe:userTask/><zeebe:formDefinition formId="Form_InterviewScores"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
@@ -181,7 +171,7 @@
         <bpmn:incoming>Sel_Flow_5_yes</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_6</bpmn:outgoing>
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_FinalInterview"/>
+          <zeebe:userTask/><zeebe:formDefinition formId="Form_FinalInterview"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
@@ -196,7 +186,7 @@
         <bpmn:incoming>Sel_Flow_5_no</bpmn:incoming>
         <bpmn:outgoing>Sel_Flow_7</bpmn:outgoing>
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_ReferenceCheck"/>
+          <zeebe:userTask/><zeebe:formDefinition formId="Form_ReferenceCheck"/>
         </bpmn:extensionElements>
       </bpmn:userTask>
 
@@ -308,7 +298,7 @@
       <bpmn:incoming>Flow_11</bpmn:incoming>
       <bpmn:outgoing>Flow_12</bpmn:outgoing>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_SendOffer"/>
+        <zeebe:userTask/><zeebe:formDefinition formId="Form_SendOffer"/>
       </bpmn:extensionElements>
     </bpmn:userTask>
 
@@ -316,7 +306,7 @@
     <bpmn:intermediateCatchEvent id="IMC_OfferResp" name="Odgovor na ponudu">
       <bpmn:incoming>Flow_12</bpmn:incoming>
       <bpmn:outgoing>Flow_13</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MsgDef_OfferResponse"/>
+      <bpmn:messageEventDefinition id="MsgDef_OfferResponse" messageRef="Message_OfferResponse"/>
     </bpmn:intermediateCatchEvent>
 
     <bpmn:boundaryEvent id="BE_OfferTimeout" name="Rok odgovora (5d)" attachedToRef="IMC_OfferResp" cancelActivity="true">
@@ -374,7 +364,7 @@
       <bpmn:incoming>Flow_17</bpmn:incoming>
       <bpmn:outgoing>Flow_18</bpmn:outgoing>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_ContractSignature"/>
+        <zeebe:userTask/><zeebe:formDefinition formId="Form_ContractSignature"/>
       </bpmn:extensionElements>
     </bpmn:userTask>
 
@@ -509,7 +499,7 @@
       <bpmn:incoming>Flow_19</bpmn:incoming>
       <bpmn:outgoing>Flow_20</bpmn:outgoing>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_OnboardingDay1"/>
+        <zeebe:userTask/><zeebe:formDefinition formId="Form_OnboardingDay1"/>
       </bpmn:extensionElements>
     </bpmn:userTask>
 
@@ -533,7 +523,7 @@
       <bpmn:incoming>Flow_22</bpmn:incoming>
       <bpmn:outgoing>Flow_23</bpmn:outgoing>
       <bpmn:extensionElements>
-        <zeebe:formDefinition formId="Form_ProbationEvaluation"/>
+        <zeebe:userTask/><zeebe:formDefinition formId="Form_ProbationEvaluation"/>
       </bpmn:extensionElements>
     </bpmn:userTask>
 
@@ -666,374 +656,7 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collab_IT_Hire">
 
       
-      <!-- Pools -->
-      <bpmndi:BPMNShape id="DI_Participant_JGL" bpmnElement="Participant_JGL" isHorizontal="true">
-        <dc:Bounds x="80" y="160" width="6700" height="620"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Participant_Agency" bpmnElement="Participant_Agency" isHorizontal="true">
-        <dc:Bounds x="80" y="40" width="1100" height="120"/>
-      </bpmndi:BPMNShape>
-
-      <!-- Lanes (inside JGL pool) -->
-      <bpmndi:BPMNShape id="DI_Lane_HR" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="110" y="160" width="6670" height="160"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Lane_ITLead" bpmnElement="Lane_ITLead" isHorizontal="true">
-        <dc:Bounds x="110" y="320" width="6670" height="160"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Lane_IT" bpmnElement="Lane_IT" isHorizontal="true">
-        <dc:Bounds x="110" y="480" width="6670" height="160"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Lane_Procurement" bpmnElement="Lane_Procurement" isHorizontal="true">
-        <dc:Bounds x="110" y="640" width="6670" height="140"/>
-      </bpmndi:BPMNShape>
-
-<bpmndi:BPMNShape id="DI_StartEvent_1" bpmnElement="StartEvent_1">
-        <dc:Bounds x="120" y="360" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_UT_Request" bpmnElement="UT_Request">
-        <dc:Bounds x="200" y="340" width="140" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_ValidateBudget" bpmnElement="ST_ValidateBudget">
-        <dc:Bounds x="380" y="180" width="160" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_GW_Budget" bpmnElement="GW_Budget">
-        <dc:Bounds x="580" y="200" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_End_BudgetReject" bpmnElement="End_BudgetReject">
-        <dc:Bounds x="720" y="210" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_PublishJob" bpmnElement="ST_PublishJob">
-        <dc:Bounds x="720" y="180" width="170" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_IMC_Shortlist" bpmnElement="IMC_Shortlist">
-        <dc:Bounds x="940" y="210" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_SP_Selection" bpmnElement="SP_Selection">
-        <dc:Bounds x="1020" y="110" width="420" height="240"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_BRT_EvalCandidate" bpmnElement="BRT_EvalCandidate">
-        <dc:Bounds x="1460" y="180" width="180" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_GW_Offer" bpmnElement="GW_Offer">
-        <dc:Bounds x="1680" y="200" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_NotifyReject" bpmnElement="ST_NotifyReject">
-        <dc:Bounds x="1820" y="180" width="170" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_End_Rejected" bpmnElement="End_Rejected">
-        <dc:Bounds x="2020" y="210" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_GenOffer" bpmnElement="ST_GenOffer">
-        <dc:Bounds x="1820" y="290" width="170" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_UT_SendOffer" bpmnElement="UT_SendOffer">
-        <dc:Bounds x="2020" y="290" width="160" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_IMC_OfferResp" bpmnElement="IMC_OfferResp">
-        <dc:Bounds x="2220" y="320" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_BE_OfferTimeout" bpmnElement="BE_OfferTimeout">
-        <dc:Bounds x="2100" y="260" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_RemindOffer" bpmnElement="ST_RemindOffer">
-        <dc:Bounds x="2320" y="290" width="170" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_GW_OfferAccepted" bpmnElement="GW_OfferAccepted">
-        <dc:Bounds x="2520" y="320" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_End_OfferDeclined" bpmnElement="End_OfferDeclined">
-        <dc:Bounds x="2670" y="330" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_RegisterHR" bpmnElement="ST_RegisterHR">
-        <dc:Bounds x="2720" y="180" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_RegisterHZMO" bpmnElement="ST_RegisterHZMO">
-        <dc:Bounds x="2940" y="180" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_RegisterHZZO" bpmnElement="ST_RegisterHZZO">
-        <dc:Bounds x="3160" y="180" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_UT_Contract" bpmnElement="UT_Contract">
-        <dc:Bounds x="3380" y="180" width="170" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_PG_ParallelStart" bpmnElement="PG_ParallelStart">
-        <dc:Bounds x="3620" y="200" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_BRT_EquipProfile" bpmnElement="BRT_EquipProfile">
-        <dc:Bounds x="3740" y="660" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_CheckInventory" bpmnElement="ST_CheckInventory">
-        <dc:Bounds x="3960" y="660" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_GW_InStock" bpmnElement="GW_InStock">
-        <dc:Bounds x="4180" y="680" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_ReserveEquip" bpmnElement="ST_ReserveEquip">
-        <dc:Bounds x="4320" y="620" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_OrderEquip" bpmnElement="ST_OrderEquip">
-        <dc:Bounds x="4320" y="720" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_TrackDelivery" bpmnElement="ST_TrackDelivery">
-        <dc:Bounds x="4540" y="660" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_HandoverToIT" bpmnElement="ST_HandoverToIT">
-        <dc:Bounds x="4760" y="660" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_ProvisionAD" bpmnElement="ST_ProvisionAD">
-        <dc:Bounds x="3740" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_CreateM365" bpmnElement="ST_CreateM365">
-        <dc:Bounds x="3960" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_AssignLic" bpmnElement="ST_AssignLic">
-        <dc:Bounds x="4180" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_CreateAccess" bpmnElement="ST_CreateAccess">
-        <dc:Bounds x="4400" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_ConfigureDevice" bpmnElement="ST_ConfigureDevice">
-        <dc:Bounds x="4620" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_SecurityConfig" bpmnElement="ST_SecurityConfig">
-        <dc:Bounds x="4840" y="460" width="190" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_TestAndRegister" bpmnElement="ST_TestAndRegister">
-        <dc:Bounds x="5060" y="460" width="210" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_PG_ParallelJoin" bpmnElement="PG_ParallelJoin">
-        <dc:Bounds x="5320" y="200" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_UT_OnboardingDay1" bpmnElement="UT_OnboardingDay1">
-        <dc:Bounds x="5440" y="180" width="200" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_ScheduleCheckins" bpmnElement="ST_ScheduleCheckins">
-        <dc:Bounds x="5680" y="180" width="210" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Timer_Probation" bpmnElement="Timer_Probation">
-        <dc:Bounds x="5920" y="210" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_UT_ProbationEval" bpmnElement="UT_ProbationEval">
-        <dc:Bounds x="6040" y="180" width="200" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_ST_EvalProbationHR" bpmnElement="ST_EvalProbationHR">
-        <dc:Bounds x="6280" y="180" width="220" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_GW_ProbationPass" bpmnElement="GW_ProbationPass">
-        <dc:Bounds x="6540" y="200" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_End_Pass" bpmnElement="End_Pass">
-        <dc:Bounds x="6680" y="210" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_End_Fail" bpmnElement="End_Fail">
-        <dc:Bounds x="6680" y="290" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Agency_Start" bpmnElement="Agency_Start">
-        <dc:Bounds x="740" y="120" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Agency_Task_Sourcing" bpmnElement="Agency_Task_Sourcing">
-        <dc:Bounds x="820" y="100" width="220" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DI_Agency_End_Shortlist" bpmnElement="Agency_End_Shortlist">
-        <dc:Bounds x="1070" y="120" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-
-      <bpmndi:BPMNEdge id="DI_Flow_1" bpmnElement="Flow_1">
-        <di:waypoint x="138.0" y="378.0"/>
-        <di:waypoint x="270.0" y="380.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_2" bpmnElement="Flow_2">
-        <di:waypoint x="270.0" y="380.0"/>
-        <di:waypoint x="460.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_3" bpmnElement="Flow_3">
-        <di:waypoint x="460.0" y="220.0"/>
-        <di:waypoint x="605.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_4_yes" bpmnElement="Flow_4_yes">
-        <di:waypoint x="605.0" y="225.0"/>
-        <di:waypoint x="805.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_4_no" bpmnElement="Flow_4_no">
-        <di:waypoint x="605.0" y="225.0"/>
-        <di:waypoint x="738.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_5" bpmnElement="Flow_5">
-        <di:waypoint x="805.0" y="220.0"/>
-        <di:waypoint x="958.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_6" bpmnElement="Flow_6">
-        <di:waypoint x="958.0" y="228.0"/>
-        <di:waypoint x="1230.0" y="230.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_7" bpmnElement="Flow_7">
-        <di:waypoint x="1230.0" y="230.0"/>
-        <di:waypoint x="1550.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_8" bpmnElement="Flow_8">
-        <di:waypoint x="1550.0" y="220.0"/>
-        <di:waypoint x="1705.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_9_offer" bpmnElement="Flow_9_offer">
-        <di:waypoint x="1705.0" y="225.0"/>
-        <di:waypoint x="1905.0" y="330.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_9_reject" bpmnElement="Flow_9_reject">
-        <di:waypoint x="1705.0" y="225.0"/>
-        <di:waypoint x="1905.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_10" bpmnElement="Flow_10">
-        <di:waypoint x="1905.0" y="220.0"/>
-        <di:waypoint x="2038.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_11" bpmnElement="Flow_11">
-        <di:waypoint x="1905.0" y="330.0"/>
-        <di:waypoint x="2100.0" y="330.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_12" bpmnElement="Flow_12">
-        <di:waypoint x="2100.0" y="330.0"/>
-        <di:waypoint x="2238.0" y="338.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_13" bpmnElement="Flow_13">
-        <di:waypoint x="2238.0" y="338.0"/>
-        <di:waypoint x="2545.0" y="345.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_14_yes" bpmnElement="Flow_14_yes">
-        <di:waypoint x="2545.0" y="345.0"/>
-        <di:waypoint x="2815.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_14_no" bpmnElement="Flow_14_no">
-        <di:waypoint x="2545.0" y="345.0"/>
-        <di:waypoint x="2688.0" y="348.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_15" bpmnElement="Flow_15">
-        <di:waypoint x="2815.0" y="220.0"/>
-        <di:waypoint x="3035.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_16" bpmnElement="Flow_16">
-        <di:waypoint x="3035.0" y="220.0"/>
-        <di:waypoint x="3255.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_17" bpmnElement="Flow_17">
-        <di:waypoint x="3255.0" y="220.0"/>
-        <di:waypoint x="3465.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_18" bpmnElement="Flow_18">
-        <di:waypoint x="3465.0" y="220.0"/>
-        <di:waypoint x="3645.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_1" bpmnElement="Flow_IT_1">
-        <di:waypoint x="3645.0" y="225.0"/>
-        <di:waypoint x="3835.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_2" bpmnElement="Flow_IT_2">
-        <di:waypoint x="3835.0" y="500.0"/>
-        <di:waypoint x="4055.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_3" bpmnElement="Flow_IT_3">
-        <di:waypoint x="4055.0" y="500.0"/>
-        <di:waypoint x="4275.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_4" bpmnElement="Flow_IT_4">
-        <di:waypoint x="4275.0" y="500.0"/>
-        <di:waypoint x="4495.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_5" bpmnElement="Flow_IT_5">
-        <di:waypoint x="4495.0" y="500.0"/>
-        <di:waypoint x="4715.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_6" bpmnElement="Flow_IT_6">
-        <di:waypoint x="4715.0" y="500.0"/>
-        <di:waypoint x="4935.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_7" bpmnElement="Flow_IT_7">
-        <di:waypoint x="4935.0" y="500.0"/>
-        <di:waypoint x="5165.0" y="500.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_IT_8" bpmnElement="Flow_IT_8">
-        <di:waypoint x="5165.0" y="500.0"/>
-        <di:waypoint x="5345.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_1" bpmnElement="Flow_PR_1">
-        <di:waypoint x="3645.0" y="225.0"/>
-        <di:waypoint x="3835.0" y="700.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_2" bpmnElement="Flow_PR_2">
-        <di:waypoint x="3835.0" y="700.0"/>
-        <di:waypoint x="4055.0" y="700.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_3" bpmnElement="Flow_PR_3">
-        <di:waypoint x="4055.0" y="700.0"/>
-        <di:waypoint x="4205.0" y="705.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_4_yes" bpmnElement="Flow_PR_4_yes">
-        <di:waypoint x="4205.0" y="705.0"/>
-        <di:waypoint x="4415.0" y="660.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_4_no" bpmnElement="Flow_PR_4_no">
-        <di:waypoint x="4205.0" y="705.0"/>
-        <di:waypoint x="4415.0" y="760.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_5a" bpmnElement="Flow_PR_5a">
-        <di:waypoint x="4415.0" y="660.0"/>
-        <di:waypoint x="4635.0" y="700.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_5b" bpmnElement="Flow_PR_5b">
-        <di:waypoint x="4415.0" y="760.0"/>
-        <di:waypoint x="4635.0" y="700.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_6" bpmnElement="Flow_PR_6">
-        <di:waypoint x="4635.0" y="700.0"/>
-        <di:waypoint x="4855.0" y="700.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_PR_7" bpmnElement="Flow_PR_7">
-        <di:waypoint x="4855.0" y="700.0"/>
-        <di:waypoint x="5345.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_19" bpmnElement="Flow_19">
-        <di:waypoint x="5345.0" y="225.0"/>
-        <di:waypoint x="5540.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_20" bpmnElement="Flow_20">
-        <di:waypoint x="5540.0" y="220.0"/>
-        <di:waypoint x="5785.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_21" bpmnElement="Flow_21">
-        <di:waypoint x="5785.0" y="220.0"/>
-        <di:waypoint x="5938.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_22" bpmnElement="Flow_22">
-        <di:waypoint x="5938.0" y="228.0"/>
-        <di:waypoint x="6140.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_23" bpmnElement="Flow_23">
-        <di:waypoint x="6140.0" y="220.0"/>
-        <di:waypoint x="6390.0" y="220.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_24" bpmnElement="Flow_24">
-        <di:waypoint x="6390.0" y="220.0"/>
-        <di:waypoint x="6565.0" y="225.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_25_pass" bpmnElement="Flow_25_pass">
-        <di:waypoint x="6565.0" y="225.0"/>
-        <di:waypoint x="6698.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Flow_25_fail" bpmnElement="Flow_25_fail">
-        <di:waypoint x="6565.0" y="225.0"/>
-        <di:waypoint x="6698.0" y="308.0"/>
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="DI_Msg_RequestToAgency" bpmnElement="Msg_RequestToAgency">
-        <di:waypoint x="805.0" y="220.0"/>
-        <di:waypoint x="758.0" y="138.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DI_Msg_ShortlistToHR" bpmnElement="Msg_ShortlistToHR">
-        <di:waypoint x="1088.0" y="138.0"/>
-        <di:waypoint x="958.0" y="228.0"/>
-      </bpmndi:BPMNEdge>
-
-    </bpmndi:BPMNPlane>
+      <bpmndi:BPMNShape id="DI_Participant_JGL" bpmnElement="Participant_JGL" isHorizontal="true"><dc:Bounds x="50" y="50" width="2000" height="900"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Participant_Agency" bpmnElement="Participant_Agency" isHorizontal="true"><dc:Bounds x="50" y="1020" width="2000" height="400"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_StartEvent_1" bpmnElement="StartEvent_1"><dc:Bounds x="300" y="120" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_UT_Request" bpmnElement="UT_Request"><dc:Bounds x="500" y="120" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_ValidateBudget" bpmnElement="ST_ValidateBudget"><dc:Bounds x="700" y="120" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_GW_Budget" bpmnElement="GW_Budget"><dc:Bounds x="900" y="120" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_BudgetReject" bpmnElement="End_BudgetReject"><dc:Bounds x="1100" y="120" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_PublishJob" bpmnElement="ST_PublishJob"><dc:Bounds x="1300" y="120" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_IMC_Shortlist" bpmnElement="IMC_Shortlist"><dc:Bounds x="1500" y="120" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_SP_Selection" bpmnElement="SP_Selection"><dc:Bounds x="1700" y="120" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_Start" bpmnElement="Sel_Start"><dc:Bounds x="300" y="260" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_HRScreen" bpmnElement="Sel_HRScreen"><dc:Bounds x="500" y="260" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_GW_HRPassed" bpmnElement="Sel_GW_HRPassed"><dc:Bounds x="700" y="260" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_TechTest" bpmnElement="Sel_TechTest"><dc:Bounds x="900" y="260" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_GW_TestPassed" bpmnElement="Sel_GW_TestPassed"><dc:Bounds x="1100" y="260" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_TechInterview" bpmnElement="Sel_TechInterview"><dc:Bounds x="1300" y="260" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_GW_FinalNeeded" bpmnElement="Sel_GW_FinalNeeded"><dc:Bounds x="1500" y="260" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_FinalInterview" bpmnElement="Sel_FinalInterview"><dc:Bounds x="1700" y="260" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_GW_MgmtApproved" bpmnElement="Sel_GW_MgmtApproved"><dc:Bounds x="300" y="400" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_RefCheck" bpmnElement="Sel_RefCheck"><dc:Bounds x="500" y="400" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Sel_End" bpmnElement="Sel_End"><dc:Bounds x="700" y="400" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_BE_Selection_SLA" bpmnElement="BE_Selection_SLA"><dc:Bounds x="900" y="400" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_NotifyReject_SLA" bpmnElement="ST_NotifyReject_SLA"><dc:Bounds x="1100" y="400" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_SLA" bpmnElement="End_SLA"><dc:Bounds x="1300" y="400" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_BRT_EvalCandidate" bpmnElement="BRT_EvalCandidate"><dc:Bounds x="1500" y="400" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_GW_Offer" bpmnElement="GW_Offer"><dc:Bounds x="1700" y="400" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_NotifyReject" bpmnElement="ST_NotifyReject"><dc:Bounds x="300" y="540" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_Rejected" bpmnElement="End_Rejected"><dc:Bounds x="500" y="540" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_GenOffer" bpmnElement="ST_GenOffer"><dc:Bounds x="700" y="540" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_UT_SendOffer" bpmnElement="UT_SendOffer"><dc:Bounds x="900" y="540" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_IMC_OfferResp" bpmnElement="IMC_OfferResp"><dc:Bounds x="1100" y="540" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_BE_OfferTimeout" bpmnElement="BE_OfferTimeout"><dc:Bounds x="1300" y="540" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_RemindOffer" bpmnElement="ST_RemindOffer"><dc:Bounds x="1500" y="540" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_OfferDeclined" bpmnElement="End_OfferDeclined"><dc:Bounds x="1700" y="540" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_GW_OfferAccepted" bpmnElement="GW_OfferAccepted"><dc:Bounds x="300" y="680" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_RegisterHR" bpmnElement="ST_RegisterHR"><dc:Bounds x="500" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_RegisterHZMO" bpmnElement="ST_RegisterHZMO"><dc:Bounds x="700" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_RegisterHZZO" bpmnElement="ST_RegisterHZZO"><dc:Bounds x="900" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_UT_Contract" bpmnElement="UT_Contract"><dc:Bounds x="1100" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_PG_ParallelStart" bpmnElement="PG_ParallelStart"><dc:Bounds x="1300" y="680" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_BRT_EquipProfile" bpmnElement="BRT_EquipProfile"><dc:Bounds x="1500" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_CheckInventory" bpmnElement="ST_CheckInventory"><dc:Bounds x="1700" y="680" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_GW_InStock" bpmnElement="GW_InStock"><dc:Bounds x="300" y="820" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_ReserveEquip" bpmnElement="ST_ReserveEquip"><dc:Bounds x="500" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_OrderEquip" bpmnElement="ST_OrderEquip"><dc:Bounds x="700" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_TrackDelivery" bpmnElement="ST_TrackDelivery"><dc:Bounds x="900" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_HandoverToIT" bpmnElement="ST_HandoverToIT"><dc:Bounds x="1100" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_ProvisionAD" bpmnElement="ST_ProvisionAD"><dc:Bounds x="1300" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_CreateM365" bpmnElement="ST_CreateM365"><dc:Bounds x="1500" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_AssignLic" bpmnElement="ST_AssignLic"><dc:Bounds x="1700" y="820" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_CreateAccess" bpmnElement="ST_CreateAccess"><dc:Bounds x="300" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_ConfigureDevice" bpmnElement="ST_ConfigureDevice"><dc:Bounds x="500" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_SecurityConfig" bpmnElement="ST_SecurityConfig"><dc:Bounds x="700" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_TestAndRegister" bpmnElement="ST_TestAndRegister"><dc:Bounds x="900" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_PG_ParallelJoin" bpmnElement="PG_ParallelJoin"><dc:Bounds x="1100" y="960" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_UT_OnboardingDay1" bpmnElement="UT_OnboardingDay1"><dc:Bounds x="1300" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_ScheduleCheckins" bpmnElement="ST_ScheduleCheckins"><dc:Bounds x="1500" y="960" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Timer_Probation" bpmnElement="Timer_Probation"><dc:Bounds x="1700" y="960" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_UT_ProbationEval" bpmnElement="UT_ProbationEval"><dc:Bounds x="300" y="1100" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_ST_EvalProbationHR" bpmnElement="ST_EvalProbationHR"><dc:Bounds x="500" y="1100" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_GW_ProbationPass" bpmnElement="GW_ProbationPass"><dc:Bounds x="700" y="1100" width="50" height="50"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_Pass" bpmnElement="End_Pass"><dc:Bounds x="900" y="1100" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_End_Fail" bpmnElement="End_Fail"><dc:Bounds x="1100" y="1100" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Agency_Start" bpmnElement="Agency_Start"><dc:Bounds x="300" y="1100" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Agency_Task_Sourcing" bpmnElement="Agency_Task_Sourcing"><dc:Bounds x="500" y="1100" width="120" height="80"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_Agency_End_Shortlist" bpmnElement="Agency_End_Shortlist"><dc:Bounds x="700" y="1100" width="36" height="36"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_Sel_Flow_1" bpmnElement="Sel_Flow_1"><di:waypoint x="318.0" y="278.0"/><di:waypoint x="560.0" y="300.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_2" bpmnElement="Sel_Flow_2"><di:waypoint x="560.0" y="300.0"/><di:waypoint x="725.0" y="285.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_2_yes" bpmnElement="Sel_Flow_2_yes"><di:waypoint x="725.0" y="285.0"/><di:waypoint x="960.0" y="300.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_2_no" bpmnElement="Sel_Flow_2_no"><di:waypoint x="725.0" y="285.0"/><di:waypoint x="718.0" y="418.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_3" bpmnElement="Sel_Flow_3"><di:waypoint x="960.0" y="300.0"/><di:waypoint x="1125.0" y="285.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_3_yes" bpmnElement="Sel_Flow_3_yes"><di:waypoint x="1125.0" y="285.0"/><di:waypoint x="1360.0" y="300.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_3_no" bpmnElement="Sel_Flow_3_no"><di:waypoint x="1125.0" y="285.0"/><di:waypoint x="718.0" y="418.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_4" bpmnElement="Sel_Flow_4"><di:waypoint x="1360.0" y="300.0"/><di:waypoint x="1525.0" y="285.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_5_yes" bpmnElement="Sel_Flow_5_yes"><di:waypoint x="1525.0" y="285.0"/><di:waypoint x="1760.0" y="300.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_5_no" bpmnElement="Sel_Flow_5_no"><di:waypoint x="1525.0" y="285.0"/><di:waypoint x="560.0" y="440.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_6" bpmnElement="Sel_Flow_6"><di:waypoint x="1760.0" y="300.0"/><di:waypoint x="325.0" y="425.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_6_yes" bpmnElement="Sel_Flow_6_yes"><di:waypoint x="325.0" y="425.0"/><di:waypoint x="560.0" y="440.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_6_no" bpmnElement="Sel_Flow_6_no"><di:waypoint x="325.0" y="425.0"/><di:waypoint x="718.0" y="418.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Sel_Flow_7" bpmnElement="Sel_Flow_7"><di:waypoint x="560.0" y="440.0"/><di:waypoint x="718.0" y="418.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_1" bpmnElement="Flow_1"><di:waypoint x="318.0" y="138.0"/><di:waypoint x="560.0" y="160.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_2" bpmnElement="Flow_2"><di:waypoint x="560.0" y="160.0"/><di:waypoint x="760.0" y="160.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_3" bpmnElement="Flow_3"><di:waypoint x="760.0" y="160.0"/><di:waypoint x="925.0" y="145.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_4_yes" bpmnElement="Flow_4_yes"><di:waypoint x="925.0" y="145.0"/><di:waypoint x="1360.0" y="160.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_4_no" bpmnElement="Flow_4_no"><di:waypoint x="925.0" y="145.0"/><di:waypoint x="1118.0" y="138.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_5" bpmnElement="Flow_5"><di:waypoint x="1360.0" y="160.0"/><di:waypoint x="1518.0" y="138.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_6" bpmnElement="Flow_6"><di:waypoint x="1518.0" y="138.0"/><di:waypoint x="1760.0" y="160.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_7" bpmnElement="Flow_7"><di:waypoint x="1760.0" y="160.0"/><di:waypoint x="1560.0" y="440.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_8" bpmnElement="Flow_8"><di:waypoint x="1560.0" y="440.0"/><di:waypoint x="1725.0" y="425.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_9_offer" bpmnElement="Flow_9_offer"><di:waypoint x="1725.0" y="425.0"/><di:waypoint x="760.0" y="580.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_9_reject" bpmnElement="Flow_9_reject"><di:waypoint x="1725.0" y="425.0"/><di:waypoint x="360.0" y="580.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_10" bpmnElement="Flow_10"><di:waypoint x="360.0" y="580.0"/><di:waypoint x="518.0" y="558.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_11" bpmnElement="Flow_11"><di:waypoint x="760.0" y="580.0"/><di:waypoint x="960.0" y="580.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_12" bpmnElement="Flow_12"><di:waypoint x="960.0" y="580.0"/><di:waypoint x="1118.0" y="558.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_13" bpmnElement="Flow_13"><di:waypoint x="1118.0" y="558.0"/><di:waypoint x="325.0" y="705.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_14_yes" bpmnElement="Flow_14_yes"><di:waypoint x="325.0" y="705.0"/><di:waypoint x="560.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_14_no" bpmnElement="Flow_14_no"><di:waypoint x="325.0" y="705.0"/><di:waypoint x="1718.0" y="558.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_15" bpmnElement="Flow_15"><di:waypoint x="560.0" y="720.0"/><di:waypoint x="760.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_16" bpmnElement="Flow_16"><di:waypoint x="760.0" y="720.0"/><di:waypoint x="960.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_17" bpmnElement="Flow_17"><di:waypoint x="960.0" y="720.0"/><di:waypoint x="1160.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_18" bpmnElement="Flow_18"><di:waypoint x="1160.0" y="720.0"/><di:waypoint x="1325.0" y="705.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_1" bpmnElement="Flow_IT_1"><di:waypoint x="1325.0" y="705.0"/><di:waypoint x="1360.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_2" bpmnElement="Flow_IT_2"><di:waypoint x="1360.0" y="860.0"/><di:waypoint x="1560.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_3" bpmnElement="Flow_IT_3"><di:waypoint x="1560.0" y="860.0"/><di:waypoint x="1760.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_4" bpmnElement="Flow_IT_4"><di:waypoint x="1760.0" y="860.0"/><di:waypoint x="360.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_5" bpmnElement="Flow_IT_5"><di:waypoint x="360.0" y="1000.0"/><di:waypoint x="560.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_6" bpmnElement="Flow_IT_6"><di:waypoint x="560.0" y="1000.0"/><di:waypoint x="760.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_7" bpmnElement="Flow_IT_7"><di:waypoint x="760.0" y="1000.0"/><di:waypoint x="960.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_IT_8" bpmnElement="Flow_IT_8"><di:waypoint x="960.0" y="1000.0"/><di:waypoint x="1125.0" y="985.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_1" bpmnElement="Flow_PR_1"><di:waypoint x="1325.0" y="705.0"/><di:waypoint x="1560.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_2" bpmnElement="Flow_PR_2"><di:waypoint x="1560.0" y="720.0"/><di:waypoint x="1760.0" y="720.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_3" bpmnElement="Flow_PR_3"><di:waypoint x="1760.0" y="720.0"/><di:waypoint x="325.0" y="845.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_4_yes" bpmnElement="Flow_PR_4_yes"><di:waypoint x="325.0" y="845.0"/><di:waypoint x="560.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_4_no" bpmnElement="Flow_PR_4_no"><di:waypoint x="325.0" y="845.0"/><di:waypoint x="760.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_5a" bpmnElement="Flow_PR_5a"><di:waypoint x="560.0" y="860.0"/><di:waypoint x="960.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_5b" bpmnElement="Flow_PR_5b"><di:waypoint x="760.0" y="860.0"/><di:waypoint x="960.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_6" bpmnElement="Flow_PR_6"><di:waypoint x="960.0" y="860.0"/><di:waypoint x="1160.0" y="860.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_PR_7" bpmnElement="Flow_PR_7"><di:waypoint x="1160.0" y="860.0"/><di:waypoint x="1125.0" y="985.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_19" bpmnElement="Flow_19"><di:waypoint x="1125.0" y="985.0"/><di:waypoint x="1360.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_20" bpmnElement="Flow_20"><di:waypoint x="1360.0" y="1000.0"/><di:waypoint x="1560.0" y="1000.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_21" bpmnElement="Flow_21"><di:waypoint x="1560.0" y="1000.0"/><di:waypoint x="1718.0" y="978.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_22" bpmnElement="Flow_22"><di:waypoint x="1718.0" y="978.0"/><di:waypoint x="360.0" y="1140.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_23" bpmnElement="Flow_23"><di:waypoint x="360.0" y="1140.0"/><di:waypoint x="560.0" y="1140.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_24" bpmnElement="Flow_24"><di:waypoint x="560.0" y="1140.0"/><di:waypoint x="725.0" y="1125.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_25_pass" bpmnElement="Flow_25_pass"><di:waypoint x="725.0" y="1125.0"/><di:waypoint x="918.0" y="1118.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_25_fail" bpmnElement="Flow_25_fail"><di:waypoint x="725.0" y="1125.0"/><di:waypoint x="1118.0" y="1118.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_Selection_SLA" bpmnElement="Flow_Selection_SLA"><di:waypoint x="918.0" y="418.0"/><di:waypoint x="1160.0" y="440.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_Selection_SLA_2" bpmnElement="Flow_Selection_SLA_2"><di:waypoint x="1160.0" y="440.0"/><di:waypoint x="1318.0" y="418.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_OfferTimeout" bpmnElement="Flow_OfferTimeout"><di:waypoint x="1318.0" y="558.0"/><di:waypoint x="1560.0" y="580.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Flow_RemindOffer_2" bpmnElement="Flow_RemindOffer_2"><di:waypoint x="1560.0" y="580.0"/><di:waypoint x="1718.0" y="558.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Agency_Flow_1" bpmnElement="Agency_Flow_1"><di:waypoint x="318.0" y="1118.0"/><di:waypoint x="560.0" y="1140.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Agency_Flow_2" bpmnElement="Agency_Flow_2"><di:waypoint x="560.0" y="1140.0"/><di:waypoint x="718.0" y="1118.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Msg_RequestToAgency" bpmnElement="Msg_RequestToAgency"><di:waypoint x="1360.0" y="160.0"/><di:waypoint x="318.0" y="1118.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_Msg_ShortlistToHR" bpmnElement="Msg_ShortlistToHR"><di:waypoint x="718.0" y="1118.0"/><di:waypoint x="1518.0" y="138.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 
 </bpmn:definitions>

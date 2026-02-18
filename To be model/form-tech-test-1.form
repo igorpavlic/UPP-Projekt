@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_FinalInterview",
   "type": "default",
-  "name": "Finalni intervju (menadžment) – unos ocjena",
+  "id": "Form_TechTest",
   "components": [
     {
       "type": "text",
@@ -35,9 +33,18 @@
       }
     },
     {
+      "type": "text",
+      "key": "testIdOrLink",
+      "label": "ID testa ili poveznica",
+      "description": "Npr. link na platformu ili interna oznaka.",
+      "validate": {
+        "required": false
+      }
+    },
+    {
       "type": "number",
-      "key": "finalInterviewScore",
-      "label": "Ocjena finalnog intervjua (0–100)",
+      "key": "technicalTestScore",
+      "label": "Rezultat tehničkog testa (0–100)",
       "validate": {
         "required": true,
         "min": 0,
@@ -46,15 +53,15 @@
     },
     {
       "type": "radio",
-      "key": "managementApproval",
-      "label": "Odobrenje menadžmenta",
+      "key": "techTestPassed",
+      "label": "Prolaz testa",
       "values": [
         {
-          "label": "ODOBRENO",
+          "label": "DA",
           "value": true
         },
         {
-          "label": "NIJE ODOBRENO",
+          "label": "NE",
           "value": false
         }
       ],
@@ -64,19 +71,13 @@
     },
     {
       "type": "textarea",
-      "key": "riskConcerns",
-      "label": "Rizici / zabrinutosti (ako postoje)",
-      "validate": {
-        "required": false
-      }
-    },
-    {
-      "type": "textarea",
-      "key": "finalInterviewNotes",
-      "label": "Zaključak i preporuka",
+      "key": "techTestNotes",
+      "label": "Napomene / zapažanja",
       "validate": {
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }

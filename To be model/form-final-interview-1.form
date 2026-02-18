@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_ReferenceCheck",
   "type": "default",
-  "name": "Provjera referenci",
+  "id": "Form_FinalInterview",
   "components": [
     {
       "type": "text",
@@ -35,32 +33,26 @@
       }
     },
     {
-      "type": "text",
-      "key": "reference1Name",
-      "label": "Referenca 1 – ime i kontakt",
+      "type": "number",
+      "key": "finalInterviewScore",
+      "label": "Ocjena finalnog intervjua (0–100)",
       "validate": {
-        "required": false
-      }
-    },
-    {
-      "type": "text",
-      "key": "reference2Name",
-      "label": "Referenca 2 – ime i kontakt",
-      "validate": {
-        "required": false
+        "required": true,
+        "min": 0,
+        "max": 100
       }
     },
     {
       "type": "radio",
-      "key": "referenceCheckPassed",
-      "label": "Provjera referenci (rezultat)",
+      "key": "managementApproval",
+      "label": "Odobrenje menadžmenta",
       "values": [
         {
-          "label": "POZITIVNO",
+          "label": "ODOBRENO",
           "value": true
         },
         {
-          "label": "NEGATIVNO / NEPOTPUNO",
+          "label": "NIJE ODOBRENO",
           "value": false
         }
       ],
@@ -70,12 +62,21 @@
     },
     {
       "type": "textarea",
-      "key": "referenceNotes",
-      "label": "Sažetak provjere referenci",
-      "description": "Što je potvrđeno (uloga, trajanje, performanse, razlozi odlaska).",
+      "key": "riskConcerns",
+      "label": "Rizici / zabrinutosti (ako postoje)",
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "key": "finalInterviewNotes",
+      "label": "Zaključak i preporuka",
       "validate": {
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }

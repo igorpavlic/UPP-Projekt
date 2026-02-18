@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_TechTest",
   "type": "default",
-  "name": "Tehnički test – unos rezultata",
+  "id": "Form_ReferenceCheck",
   "components": [
     {
       "type": "text",
@@ -36,34 +34,31 @@
     },
     {
       "type": "text",
-      "key": "testIdOrLink",
-      "label": "ID testa ili poveznica",
-      "description": "Npr. link na platformu ili interna oznaka.",
+      "key": "reference1Name",
+      "label": "Referenca 1 – ime i kontakt",
       "validate": {
         "required": false
       }
     },
     {
-      "type": "number",
-      "key": "technicalTestScore",
-      "label": "Rezultat tehničkog testa (0–100)",
+      "type": "text",
+      "key": "reference2Name",
+      "label": "Referenca 2 – ime i kontakt",
       "validate": {
-        "required": true,
-        "min": 0,
-        "max": 100
+        "required": false
       }
     },
     {
       "type": "radio",
-      "key": "techTestPassed",
-      "label": "Prolaz testa",
+      "key": "referenceCheckPassed",
+      "label": "Provjera referenci (rezultat)",
       "values": [
         {
-          "label": "DA",
+          "label": "POZITIVNO",
           "value": true
         },
         {
-          "label": "NE",
+          "label": "NEGATIVNO / NEPOTPUNO",
           "value": false
         }
       ],
@@ -73,11 +68,14 @@
     },
     {
       "type": "textarea",
-      "key": "techTestNotes",
-      "label": "Napomene / zapažanja",
+      "key": "referenceNotes",
+      "label": "Sažetak provjere referenci",
+      "description": "Što je potvrđeno (uloga, trajanje, performanse, razlozi odlaska).",
       "validate": {
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }

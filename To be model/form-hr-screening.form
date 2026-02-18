@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_HRScreening",
   "type": "default",
-  "name": "HR screening intervju",
+  "id": "Form_HRScreening",
   "components": [
     {
       "type": "text",
@@ -96,5 +94,7 @@
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }

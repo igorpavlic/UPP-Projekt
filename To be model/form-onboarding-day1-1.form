@@ -1,8 +1,6 @@
 {
-  "schemaVersion": 10,
-  "id": "Form_OnboardingDay1",
   "type": "default",
-  "name": "Onboarding – prvi dan",
+  "id": "Form_OnboardingDay1",
   "components": [
     {
       "type": "text",
@@ -74,5 +72,7 @@
         "required": false
       }
     }
-  ]
+],
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
 }
