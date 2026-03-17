@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "text": "# Priprema ponude za zaposlenje",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_0gc1p1o"
+      }
+    },
+    {
+      "label": "Ponuđena bruto plaća (EUR/mj)",
+      "type": "number",
+      "key": "offeredSalary",
+      "validate": {
+        "required": true,
+        "min": 1000,
+        "max": 10000
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_06t8b1p"
+      }
+    },
+    {
+      "label": "Datum početka rada",
+      "type": "textfield",
+      "key": "startDate",
+      "validate": {
+        "required": true
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_14z7uzk"
+      }
+    },
+    {
+      "label": "Trajanje probnog rada",
+      "values": [
+        {
+          "label": "3 mjeseca",
+          "value": "3"
+        },
+        {
+          "label": "6 mjeseci",
+          "value": "6"
+        }
+      ],
+      "type": "select",
+      "key": "probationMonths",
+      "validate": {
+        "required": true
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_0oo0agm"
+      }
+    },
+    {
+      "label": "Benefiti uključeni u ponudu",
+      "type": "textarea",
+      "key": "benefits",
+      "id": "f4",
+      "layout": {
+        "row": "Row_14hi5sg"
+      }
+    },
+    {
+      "label": "Ponuda poslana kandidatu",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE — odgođeno",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "offerSent",
+      "validate": {
+        "required": true
+      },
+      "id": "f5",
+      "layout": {
+        "row": "Row_1t5g4vu"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_Offer",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

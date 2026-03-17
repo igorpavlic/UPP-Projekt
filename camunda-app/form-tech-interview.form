@@ -1,0 +1,94 @@
+{
+  "components": [
+    {
+      "text": "# Tehnički intervju",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_1145hbx"
+      }
+    },
+    {
+      "label": "Ocjena tehničkog znanja (0-100)",
+      "type": "number",
+      "key": "techKnowledgeScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_0llg2yu"
+      }
+    },
+    {
+      "label": "Ocjena problem-solving sposobnosti (0-100)",
+      "type": "number",
+      "key": "problemSolvingScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_1bhufe6"
+      }
+    },
+    {
+      "label": "Ocjena komunikacijskih vještina (0-100)",
+      "type": "number",
+      "key": "commScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_1ifujtk"
+      }
+    },
+    {
+      "label": "Prolazi tehnički intervju?",
+      "values": [
+        {
+          "label": "DA — kandidat zadovoljava tehničke zahtjeve",
+          "value": true
+        },
+        {
+          "label": "NE — kandidat ne zadovoljava",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "techInterviewPassed",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_0u00qkw"
+      }
+    },
+    {
+      "label": "Tehničke napomene",
+      "type": "textarea",
+      "key": "techNotes",
+      "id": "f5",
+      "layout": {
+        "row": "Row_0tuavh8"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_TechInterview",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "components": [
+    {
+      "text": "# HR Screening intervju",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_0kkbdzb"
+      }
+    },
+    {
+      "label": "Ime i prezime kandidata",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0h466uf",
+        "columns": null
+      },
+      "id": "Field_1ck5wc5",
+      "key": "textfield_6e8qoq"
+    },
+    {
+      "label": "Soft skills ocjena (0-100)",
+      "type": "number",
+      "key": "softSkillsScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_1jq0nis"
+      }
+    },
+    {
+      "label": "Kulturalna kompatibilnost (0-100)",
+      "type": "number",
+      "key": "culturalFitScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_03w5l50"
+      }
+    },
+    {
+      "label": "Motivacija kandidata (0-100)",
+      "type": "number",
+      "key": "motivationScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_0313lc1"
+      }
+    },
+    {
+      "label": "Prolazi HR screening?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "hrScreeningPassed",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_1pro34a"
+      }
+    },
+    {
+      "label": "Napomene HR-a",
+      "type": "textarea",
+      "key": "hrNotes",
+      "id": "f5",
+      "layout": {
+        "row": "Row_0qq6dfu"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_HRScreening",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

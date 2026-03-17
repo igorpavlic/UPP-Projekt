@@ -1,0 +1,118 @@
+{
+  "components": [
+    {
+      "text": "# IT priprema za novog zaposlenika",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_1lhd7if"
+      }
+    },
+    {
+      "label": "AD račun kreiran?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "adCreated",
+      "validate": {
+        "required": true
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_1ycvv3w"
+      }
+    },
+    {
+      "label": "M365 email kreiran?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "m365Created",
+      "validate": {
+        "required": true
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_1wehocr"
+      }
+    },
+    {
+      "label": "VPN pristup konfiguriran?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "vpnConfigured",
+      "validate": {
+        "required": true
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_0mqwepl"
+      }
+    },
+    {
+      "label": "Laptop konfiguriran?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "laptopConfigured",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_1qd6y8o"
+      }
+    },
+    {
+      "label": "IT napomene",
+      "type": "textarea",
+      "key": "itNotes",
+      "id": "f5",
+      "layout": {
+        "row": "Row_0wwd63u"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_ITPrepare",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

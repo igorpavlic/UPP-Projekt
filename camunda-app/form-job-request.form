@@ -1,0 +1,134 @@
+{
+  "components": [
+    {
+      "text": "# Zahtjev za zapošljavanje IT djelatnika",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_157n3vr"
+      }
+    },
+    {
+      "label": "Tip pozicije",
+      "values": [
+        {
+          "label": "Helpdesk tehničar",
+          "value": "helpdesk"
+        },
+        {
+          "label": "Programer",
+          "value": "programer"
+        },
+        {
+          "label": "NOC/SOC analitičar",
+          "value": "noc_soc"
+        }
+      ],
+      "type": "select",
+      "key": "roleType",
+      "validate": {
+        "required": true
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_0xqbjtd"
+      }
+    },
+    {
+      "label": "Seniority",
+      "values": [
+        {
+          "label": "Junior",
+          "value": "junior"
+        },
+        {
+          "label": "Mid",
+          "value": "mid"
+        },
+        {
+          "label": "Senior",
+          "value": "senior"
+        }
+      ],
+      "type": "select",
+      "key": "seniority",
+      "validate": {
+        "required": true
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_1bo8wh9"
+      }
+    },
+    {
+      "label": "Potrebne tehničke vještine",
+      "type": "textarea",
+      "key": "technicalSkills",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_0r06r7g"
+      }
+    },
+    {
+      "label": "Predložena bruto plaća (EUR/mj)",
+      "type": "number",
+      "key": "salaryRange",
+      "validate": {
+        "required": true,
+        "min": 1000,
+        "max": 10000
+      },
+      "id": "f5",
+      "layout": {
+        "row": "Row_0z52z5q"
+      }
+    },
+    {
+      "label": "Razlog zapošljavanja",
+      "values": [
+        {
+          "label": "Povećanje opsega posla",
+          "value": "growth"
+        },
+        {
+          "label": "Odlazak zaposlenika",
+          "value": "replacement"
+        },
+        {
+          "label": "Novi projekt",
+          "value": "new_project"
+        }
+      ],
+      "type": "select",
+      "key": "hiringReason",
+      "validate": {
+        "required": true
+      },
+      "id": "f6",
+      "layout": {
+        "row": "Row_0hm18mt"
+      }
+    },
+    {
+      "label": "Dodatne napomene",
+      "type": "textarea",
+      "key": "requestNotes",
+      "id": "f7",
+      "layout": {
+        "row": "Row_0r77b5y"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_JobRequest",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "components": [
+    {
+      "text": "# Onboarding — prvi dan",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_1aomtcw"
+      }
+    },
+    {
+      "label": "Dokumentacija potpisana (ugovor, NDA, GDPR)?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "docsCompleted",
+      "validate": {
+        "required": true
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_1pthfie"
+      }
+    },
+    {
+      "label": "Oprema predana zaposleniku?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "equipmentHandedOver",
+      "validate": {
+        "required": true
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_02j5w4m"
+      }
+    },
+    {
+      "label": "Pristupi funkcionalni?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE — ima problema",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "accessWorking",
+      "validate": {
+        "required": true
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_0vn4hh2"
+      }
+    },
+    {
+      "label": "Mentor dodijeljen?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "mentorAssigned",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_0zkqpwc"
+      }
+    },
+    {
+      "label": "Napomene s prvog dana",
+      "type": "textarea",
+      "key": "onboardingNotes",
+      "id": "f5",
+      "layout": {
+        "row": "Row_0y1cr6j"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_Onboarding",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

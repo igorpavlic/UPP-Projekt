@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_AsIs_Reduced" targetNamespace="http://jgl.hr/process/it-hire/as-is-reduced" exporter="Camunda Modeler" exporterVersion="5.40.1">
+  <bpmn:process id="AsIs_ITHire_Reduced" name="Zapošljavanje IT djelatnika — As-Is (reduciran)" isExecutable="true">
+    <bpmn:startEvent id="Start" name="IT voditelj identificira potrebu">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UT_DefineNeed" name="Definiranje zahtjeva za zapošljavanje">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_JobRequest" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UT_Approval" name="Odobrenje zahtjeva (Uprava)">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_BudgetApproval" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_Approved" name="Odobreno?">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F4_yes</bpmn:outgoing>
+      <bpmn:outgoing>F4_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_NotApproved" name="Zahtjev odbijen">
+      <bpmn:incoming>F4_no</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ST_NotifyAgency" name="Obavijesti vanjsku agenciju (email)">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-agency-notification" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F4_yes</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Timer_WaitShortlist" name="Čekanje shortliste (14 dana)">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerDef_Shortlist">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="UT_HRScreening" name="HR screening intervju">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_HRScreening" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F6</bpmn:incoming>
+      <bpmn:outgoing>F7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_HRPass" name="Prolazi HR screening?">
+      <bpmn:incoming>F7</bpmn:incoming>
+      <bpmn:outgoing>F8_yes</bpmn:outgoing>
+      <bpmn:outgoing>F8_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Rejected" name="Kandidat odbijen">
+      <bpmn:incoming>F8_no</bpmn:incoming>
+      <bpmn:incoming>F10_no</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="UT_TechInterview" name="Tehnički intervju (IT voditelj)">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_TechInterview" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F8_yes</bpmn:incoming>
+      <bpmn:outgoing>F9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_TechPass" name="Prolazi tehnički intervju?">
+      <bpmn:incoming>F9</bpmn:incoming>
+      <bpmn:outgoing>F10_yes</bpmn:outgoing>
+      <bpmn:outgoing>F10_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="UT_PrepareOffer" name="Priprema i slanje ponude">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_Offer" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F10_yes</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateCatchEvent id="Timer_WaitResponse" name="Čekanje odgovora kandidata (5 dana)">
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerDef_Response">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="UT_CandidateResponse" name="Unos odgovora kandidata">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_CandidateResponse" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_Accepted" name="Kandidat prihvaća?">
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F14_yes</bpmn:outgoing>
+      <bpmn:outgoing>F14_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Declined" name="Ponuda odbijena">
+      <bpmn:incoming>F14_no</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:parallelGateway id="PG_Split" name="Paralelna priprema">
+      <bpmn:incoming>F14_yes</bpmn:incoming>
+      <bpmn:outgoing>F15_IT</bpmn:outgoing>
+      <bpmn:outgoing>F15_Proc</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="UT_PrepareIT" name="IT priprema: računi, laptop, pristupi">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_ITPrepare" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F15_IT</bpmn:incoming>
+      <bpmn:outgoing>F16_IT</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UT_OrderEquipment" name="Nabava: narudžba i isporuka opreme">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_Equipment" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F15_Proc</bpmn:incoming>
+      <bpmn:outgoing>F16_Proc</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:parallelGateway id="PG_Join" name="Spajanje">
+      <bpmn:incoming>F16_IT</bpmn:incoming>
+      <bpmn:incoming>F16_Proc</bpmn:incoming>
+      <bpmn:outgoing>F17</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="UT_Onboarding" name="Onboarding — prvi dan">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_Onboarding" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F17</bpmn:incoming>
+      <bpmn:outgoing>F18</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UT_ProbationEval" name="Evaluacija probnog rada">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="AsIs_Form_ProbationEval" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>F18</bpmn:incoming>
+      <bpmn:outgoing>F19</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GW_Probation" name="Probni rad uspješan?">
+      <bpmn:incoming>F19</bpmn:incoming>
+      <bpmn:outgoing>F20_yes</bpmn:outgoing>
+      <bpmn:outgoing>F20_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Hired" name="Uspješno zaposlenje">
+      <bpmn:incoming>F20_yes</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_ProbationFail" name="Raskid ugovora">
+      <bpmn:incoming>F20_no</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="UT_DefineNeed" />
+    <bpmn:sequenceFlow id="F2" sourceRef="UT_DefineNeed" targetRef="UT_Approval" />
+    <bpmn:sequenceFlow id="F3" sourceRef="UT_Approval" targetRef="GW_Approved" />
+    <bpmn:sequenceFlow id="F4_yes" name="Da" sourceRef="GW_Approved" targetRef="ST_NotifyAgency">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F4_no" name="Ne" sourceRef="GW_Approved" targetRef="End_NotApproved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F5" sourceRef="ST_NotifyAgency" targetRef="Timer_WaitShortlist" />
+    <bpmn:sequenceFlow id="F6" sourceRef="Timer_WaitShortlist" targetRef="UT_HRScreening" />
+    <bpmn:sequenceFlow id="F7" sourceRef="UT_HRScreening" targetRef="GW_HRPass" />
+    <bpmn:sequenceFlow id="F8_yes" name="Da" sourceRef="GW_HRPass" targetRef="UT_TechInterview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=hrScreeningPassed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F8_no" name="Ne" sourceRef="GW_HRPass" targetRef="End_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=hrScreeningPassed = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F9" sourceRef="UT_TechInterview" targetRef="GW_TechPass" />
+    <bpmn:sequenceFlow id="F10_yes" name="Da" sourceRef="GW_TechPass" targetRef="UT_PrepareOffer">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=techInterviewPassed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F10_no" name="Ne" sourceRef="GW_TechPass" targetRef="End_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=techInterviewPassed = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F11" sourceRef="UT_PrepareOffer" targetRef="Timer_WaitResponse" />
+    <bpmn:sequenceFlow id="F12" sourceRef="Timer_WaitResponse" targetRef="UT_CandidateResponse" />
+    <bpmn:sequenceFlow id="F13" sourceRef="UT_CandidateResponse" targetRef="GW_Accepted" />
+    <bpmn:sequenceFlow id="F14_yes" name="Da" sourceRef="GW_Accepted" targetRef="PG_Split">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=offerAccepted = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F14_no" name="Ne" sourceRef="GW_Accepted" targetRef="End_Declined">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=offerAccepted = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F15_IT" sourceRef="PG_Split" targetRef="UT_PrepareIT" />
+    <bpmn:sequenceFlow id="F15_Proc" sourceRef="PG_Split" targetRef="UT_OrderEquipment" />
+    <bpmn:sequenceFlow id="F16_IT" sourceRef="UT_PrepareIT" targetRef="PG_Join" />
+    <bpmn:sequenceFlow id="F16_Proc" sourceRef="UT_OrderEquipment" targetRef="PG_Join" />
+    <bpmn:sequenceFlow id="F17" sourceRef="PG_Join" targetRef="UT_Onboarding" />
+    <bpmn:sequenceFlow id="F18" sourceRef="UT_Onboarding" targetRef="UT_ProbationEval" />
+    <bpmn:sequenceFlow id="F19" sourceRef="UT_ProbationEval" targetRef="GW_Probation" />
+    <bpmn:sequenceFlow id="F20_yes" name="Da" sourceRef="GW_Probation" targetRef="End_Hired">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=probationPassed = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F20_no" name="Ne" sourceRef="GW_Probation" targetRef="End_ProbationFail">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=probationPassed = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="AsIs_ITHire_Reduced">
+      <bpmndi:BPMNShape id="S_Start" bpmnElement="Start">
+        <dc:Bounds x="180" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="238" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_DefineNeed" bpmnElement="UT_DefineNeed">
+        <dc:Bounds x="270" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_Approval" bpmnElement="UT_Approval">
+        <dc:Bounds x="420" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_GW_Approved" bpmnElement="GW_Approved" isMarkerVisible="true">
+        <dc:Bounds x="575" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="572" y="245" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_NotApproved" bpmnElement="End_NotApproved">
+        <dc:Bounds x="582" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="562" y="83" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_ST_NotifyAgency" bpmnElement="ST_NotifyAgency">
+        <dc:Bounds x="680" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Timer_WaitShortlist" bpmnElement="Timer_WaitShortlist">
+        <dc:Bounds x="832" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="806" y="238" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_HRScreening" bpmnElement="UT_HRScreening">
+        <dc:Bounds x="920" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_GW_HRPass" bpmnElement="GW_HRPass" isMarkerVisible="true">
+        <dc:Bounds x="1075" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1073" y="245" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Rejected" bpmnElement="End_Rejected">
+        <dc:Bounds x="1082" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1058" y="83" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_TechInterview" bpmnElement="UT_TechInterview">
+        <dc:Bounds x="1180" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_GW_TechPass" bpmnElement="GW_TechPass" isMarkerVisible="true">
+        <dc:Bounds x="1335" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1323" y="245" width="75" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_PrepareOffer" bpmnElement="UT_PrepareOffer">
+        <dc:Bounds x="1440" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Timer_WaitResponse" bpmnElement="Timer_WaitResponse">
+        <dc:Bounds x="1592" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1565" y="238" width="90" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_CandidateResponse" bpmnElement="UT_CandidateResponse">
+        <dc:Bounds x="1680" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_GW_Accepted" bpmnElement="GW_Accepted" isMarkerVisible="true">
+        <dc:Bounds x="1835" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1836" y="245" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Declined" bpmnElement="End_Declined">
+        <dc:Bounds x="1842" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1818" y="83" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_PG_Split" bpmnElement="PG_Split">
+        <dc:Bounds x="1940" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1986" y="238" width="47" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_PrepareIT" bpmnElement="UT_PrepareIT">
+        <dc:Bounds x="2050" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_OrderEquipment" bpmnElement="UT_OrderEquipment">
+        <dc:Bounds x="2050" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_PG_Join" bpmnElement="PG_Join">
+        <dc:Bounds x="2215" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2178" y="233" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_Onboarding" bpmnElement="UT_Onboarding">
+        <dc:Bounds x="2320" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_UT_ProbationEval" bpmnElement="UT_ProbationEval">
+        <dc:Bounds x="2470" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_GW_Probation" bpmnElement="GW_Probation" isMarkerVisible="true">
+        <dc:Bounds x="2625" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2625" y="245" width="51" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Hired" bpmnElement="End_Hired">
+        <dc:Bounds x="2732" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2724" y="238" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_ProbationFail" bpmnElement="End_ProbationFail">
+        <dc:Bounds x="2632" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2611" y="83" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="E_F1" bpmnElement="F1">
+        <di:waypoint x="216" y="220" />
+        <di:waypoint x="270" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F2" bpmnElement="F2">
+        <di:waypoint x="370" y="220" />
+        <di:waypoint x="420" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F3" bpmnElement="F3">
+        <di:waypoint x="520" y="220" />
+        <di:waypoint x="575" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F4_yes" bpmnElement="F4_yes">
+        <di:waypoint x="625" y="220" />
+        <di:waypoint x="680" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="645" y="195" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F4_no" bpmnElement="F4_no">
+        <di:waypoint x="600" y="195" />
+        <di:waypoint x="600" y="138" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="608" y="157" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F5" bpmnElement="F5">
+        <di:waypoint x="780" y="220" />
+        <di:waypoint x="832" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F6" bpmnElement="F6">
+        <di:waypoint x="868" y="220" />
+        <di:waypoint x="920" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F7" bpmnElement="F7">
+        <di:waypoint x="1020" y="220" />
+        <di:waypoint x="1075" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F8_yes" bpmnElement="F8_yes">
+        <di:waypoint x="1125" y="220" />
+        <di:waypoint x="1180" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1145" y="195" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F8_no" bpmnElement="F8_no">
+        <di:waypoint x="1100" y="195" />
+        <di:waypoint x="1100" y="138" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1108" y="157" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F9" bpmnElement="F9">
+        <di:waypoint x="1280" y="220" />
+        <di:waypoint x="1335" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F10_yes" bpmnElement="F10_yes">
+        <di:waypoint x="1385" y="220" />
+        <di:waypoint x="1440" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1405" y="195" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F10_no" bpmnElement="F10_no">
+        <di:waypoint x="1360" y="195" />
+        <di:waypoint x="1360" y="120" />
+        <di:waypoint x="1118" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1368" y="148" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F11" bpmnElement="F11">
+        <di:waypoint x="1540" y="220" />
+        <di:waypoint x="1592" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F12" bpmnElement="F12">
+        <di:waypoint x="1628" y="220" />
+        <di:waypoint x="1680" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F13" bpmnElement="F13">
+        <di:waypoint x="1780" y="220" />
+        <di:waypoint x="1835" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F14_yes" bpmnElement="F14_yes">
+        <di:waypoint x="1885" y="220" />
+        <di:waypoint x="1940" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1905" y="195" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F14_no" bpmnElement="F14_no">
+        <di:waypoint x="1860" y="195" />
+        <di:waypoint x="1860" y="138" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1868" y="157" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F15_IT" bpmnElement="F15_IT">
+        <di:waypoint x="1965" y="195" />
+        <di:waypoint x="1965" y="170" />
+        <di:waypoint x="2050" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F15_Proc" bpmnElement="F15_Proc">
+        <di:waypoint x="1965" y="245" />
+        <di:waypoint x="1965" y="300" />
+        <di:waypoint x="2050" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F16_IT" bpmnElement="F16_IT">
+        <di:waypoint x="2150" y="170" />
+        <di:waypoint x="2240" y="170" />
+        <di:waypoint x="2240" y="195" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F16_Proc" bpmnElement="F16_Proc">
+        <di:waypoint x="2150" y="300" />
+        <di:waypoint x="2240" y="300" />
+        <di:waypoint x="2240" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F17" bpmnElement="F17">
+        <di:waypoint x="2265" y="220" />
+        <di:waypoint x="2320" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F18" bpmnElement="F18">
+        <di:waypoint x="2420" y="220" />
+        <di:waypoint x="2470" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F19" bpmnElement="F19">
+        <di:waypoint x="2570" y="220" />
+        <di:waypoint x="2625" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F20_yes" bpmnElement="F20_yes">
+        <di:waypoint x="2675" y="220" />
+        <di:waypoint x="2732" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2696" y="195" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_F20_no" bpmnElement="F20_no">
+        <di:waypoint x="2650" y="195" />
+        <di:waypoint x="2650" y="138" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2658" y="157" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

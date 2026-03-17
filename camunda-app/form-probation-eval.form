@@ -1,0 +1,98 @@
+{
+  "components": [
+    {
+      "text": "# Evaluacija probnog rada",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_0ahc8ra"
+      }
+    },
+    {
+      "label": "Ocjena performansi (0-100)",
+      "type": "number",
+      "key": "performanceScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_1due845"
+      }
+    },
+    {
+      "label": "Uklapanje u tim (0-100)",
+      "type": "number",
+      "key": "teamFitScore",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 100
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_1i1razt"
+      }
+    },
+    {
+      "label": "Postignuća tijekom probnog rada",
+      "type": "textarea",
+      "key": "achievements",
+      "id": "f3",
+      "layout": {
+        "row": "Row_0d31o1e"
+      }
+    },
+    {
+      "label": "Područja za razvoj",
+      "type": "textarea",
+      "key": "developmentAreas",
+      "id": "f4",
+      "layout": {
+        "row": "Row_00o0g5r"
+      }
+    },
+    {
+      "label": "Probni rad uspješan?",
+      "values": [
+        {
+          "label": "DA — nastavak zaposlenja",
+          "value": true
+        },
+        {
+          "label": "NE — raskid ugovora",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "probationPassed",
+      "validate": {
+        "required": true
+      },
+      "id": "f5",
+      "layout": {
+        "row": "Row_1yxdoqy"
+      }
+    },
+    {
+      "label": "Zaključak / preporuka",
+      "type": "textarea",
+      "key": "finalRecommendation",
+      "id": "f6",
+      "layout": {
+        "row": "Row_0y7to2y"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_ProbationEval",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

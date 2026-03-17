@@ -1,0 +1,16 @@
+{
+  "name": "jgl-it-hire-worker",
+  "version": "1.0.0",
+  "description": "Camunda 8 Job Worker za As-Is reduciran model zapošljavanja IT djelatnika u JGL-u",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@camunda8/sdk": "^8.6.0",
+    "express": "^4.21.0"
+  },
+  "author": "Igor Pavlić",
+  "license": "MIT"
+}

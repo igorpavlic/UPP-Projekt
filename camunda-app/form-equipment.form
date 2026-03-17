@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "text": "# Nabava opreme",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_1aokucs"
+      }
+    },
+    {
+      "label": "Oprema dostupna na skladištu?",
+      "values": [
+        {
+          "label": "DA — rezervirano",
+          "value": true
+        },
+        {
+          "label": "NE — naručeno",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "equipmentInStock",
+      "validate": {
+        "required": true
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_0swbkdo"
+      }
+    },
+    {
+      "label": "Tip laptopa",
+      "type": "textfield",
+      "key": "laptopModel",
+      "validate": {
+        "required": true
+      },
+      "id": "f2",
+      "layout": {
+        "row": "Row_1vtktpc"
+      }
+    },
+    {
+      "label": "Broj monitora",
+      "type": "number",
+      "key": "monitorCount",
+      "validate": {
+        "required": true,
+        "min": 0,
+        "max": 3
+      },
+      "id": "f3",
+      "layout": {
+        "row": "Row_1g1jmaq"
+      }
+    },
+    {
+      "label": "Oprema isporučena IT odjelu?",
+      "values": [
+        {
+          "label": "DA",
+          "value": true
+        },
+        {
+          "label": "NE — čeka se",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "equipmentDelivered",
+      "validate": {
+        "required": true
+      },
+      "id": "f4",
+      "layout": {
+        "row": "Row_1pdbdxs"
+      }
+    },
+    {
+      "label": "Nabavne napomene",
+      "type": "textarea",
+      "key": "procurementNotes",
+      "id": "f5",
+      "layout": {
+        "row": "Row_1gfbr7w"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_Equipment",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

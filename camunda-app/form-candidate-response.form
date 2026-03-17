@@ -1,0 +1,52 @@
+{
+  "components": [
+    {
+      "text": "# Odgovor kandidata na ponudu",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_0r7t8cg"
+      }
+    },
+    {
+      "label": "Kandidat prihvaća ponudu?",
+      "values": [
+        {
+          "label": "DA — prihvaća",
+          "value": true
+        },
+        {
+          "label": "NE — odbija ponudu",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "offerAccepted",
+      "validate": {
+        "required": true
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_0at8kot"
+      }
+    },
+    {
+      "label": "Razlog odbijanja (ako je odbijeno)",
+      "type": "textarea",
+      "key": "declineReason",
+      "id": "f2",
+      "layout": {
+        "row": "Row_14tt0fz"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_CandidateResponse",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}

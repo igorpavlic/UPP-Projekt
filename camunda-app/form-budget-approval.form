@@ -1,0 +1,52 @@
+{
+  "components": [
+    {
+      "text": "# Odobrenje zahtjeva za zapošljavanje",
+      "type": "text",
+      "id": "h1",
+      "layout": {
+        "row": "Row_1aylfap"
+      }
+    },
+    {
+      "label": "Odobreno?",
+      "values": [
+        {
+          "label": "DA — odobravamo zapošljavanje",
+          "value": true
+        },
+        {
+          "label": "NE — odbijamo zahtjev",
+          "value": false
+        }
+      ],
+      "type": "radio",
+      "key": "approved",
+      "validate": {
+        "required": true
+      },
+      "id": "f1",
+      "layout": {
+        "row": "Row_1ant5j8"
+      }
+    },
+    {
+      "label": "Komentar uprave",
+      "type": "textarea",
+      "key": "approvalNotes",
+      "id": "f2",
+      "layout": {
+        "row": "Row_17bi6s1"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "AsIs_Form_BudgetApproval",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "schemaVersion": 19,
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.40.1"
+  }
+}
