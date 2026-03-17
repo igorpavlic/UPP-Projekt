@@ -1,13 +1,26 @@
+### Sveučilište Jurja Dobrile u Puli
+
+### Prijediplomski sveučilišni studij Informatika
+
+### Kolegij: Upravljanje poslovnim procesima (UPP)  
+
+
+<p>
+  <img src="https://fipu.unipu.hr/_pub/themes_static/unipu2020/fipu/icons/fipu_hr.png" alt="FIPU logo" width="500">
+</p>
+<br><br>
+
 # Modeliranje poslovnog procesa zapošljavanja IT djelatnika u farmaceutskoj industriji
 ## Studija slučaja: JGL d.d.
 
----
 
 **Autor:** Igor Pavlić 
-**Institucija:** Fakultet informatike u Puli, Sveučilište Jurja Dobrile u Puli  
-**Kolegij:** Upravljanje poslovnim procesima (UPP)  
 **Akademska godina:** 2025/2026  
+**JMBAG:** 0069012453  
+
+
 **Datum:** Veljača 2026
+
 
 ---
 
@@ -44,18 +57,19 @@ Kvantitativna analiza pokazuje da predložene optimizacije mogu smanjiti ukupno 
    - 4.4 [Primjena Lean i Six Sigma pristupa](#44-primjena-lean-i-six-sigma-pristupa)
    - 4.5 [Očekivani rezultati i koristi](#45-očekivani-rezultati-i-koristi)
 5. [Zaključak](#5-zaključak)
-6. [Literatura](#6-literatura)
+6. [Izrada process-driven aplikacije u Camunda 8](#6-izrada-process-driven-aplikacije-u-camunda-8)
+7. [Literatura](#7-literatura)
 
 ---
 
 ## 1. Uvod
 
-Digitalna transformacija i automatizacija poslovnih procesa postale su imperativ za moderna poduzeća, a posebice za organizacije u visoko reguliranim industrijama poput farmaceutike. U tom kontekstu, zapošljavanje kvalificiranih IT stručnjaka predstavlja kritičan proces koji izravno utječe na sposobnost organizacije da implementira i održava složene informacijske sustave potrebne za poslovanje u skladu s regulatornim zahtjevima (FDA, EMA, GxP standardi).
+Digitalna transformacija i automatizacija poslovnih procesa postale su imperativ za moderna poduzeća, a posebice za organizacije u visoko reguliranim industrijama poput farmaceutike. U tom kontekstu, zapošljavanje kvalificiranih IT stručnjaka predstavlja kritičan proces koji izravno utječe na sposobnost organizacije da implementira i održava složene informacijske sustave potrebne za poslovanje u skladu s regulatornim zahtjevima (FDA, 2003; European Commission, 2011; ISPE, 2008).
 
-JGL d.d., osnovana 1991. godine u Rijeci, jedna je od vodećih farmaceutskih kompanija u regiji sa preko 1.500 zaposlenika. Tvrtka posluje u visoko konkurentnom i reguliranom okruženju gdje je učinkovitost internih procesa ključna za održavanje tržišne pozicije. IT infrastruktura JGL-a podržava kritične poslovne funkcije uključujući proizvodnju, upravljanje kvalitetom, R&D aktivnosti, logistiku i regulatory compliance sustave.
+JGL d.d., osnovana 1991. godine u Rijeci, jedna je od vodećih farmaceutskih kompanija u regiji s ukupno oko 1.200 zaposlenika u 11 zemalja (EY, 2024) i prihodom od 162 milijuna EUR u 2024. godini, što je rast od 21% u odnosu na prethodnu godinu (Fina, 2025). Tvrtka posluje u visoko konkurentnom i reguliranom okruženju gdje je učinkovitost internih procesa ključna za održavanje tržišne pozicije. IT infrastruktura JGL-a podržava kritične poslovne funkcije uključujući proizvodnju, upravljanje kvalitetom, R&D aktivnosti, logistiku i regulatory compliance sustave.
 
 Proces zapošljavanja IT djelatnika u JGL-u karakterizira značajna složenost zbog:
-- **Specifičnih tehničkih zahtjeva** - potreba za poznavanjem reguliranih sustava (21 CFR Part 11, EU Annex 11)
+- **Specifičnih tehničkih zahtjeva** - potreba za poznavanjem reguliranih sustava (FDA, 2003; European Commission, 2011)
 - **Multidisciplinarne koordinacije** - uključenost HR odjela, IT odjela, nabave i uprave
 - **Duljine procesa** - prosječno trajanje od identifikacije potrebe do početka rada iznosi 45-60 dana
 
@@ -88,7 +102,7 @@ Ovaj proces je odabran zbog sljedećih razloga:
 **1. Strategijska važnost za organizaciju**
 
 IT odjel u farmaceutskoj industriji ne predstavlja samo podršku, već strateškog partnera koji omogućava:
-- Validaciju kompjuterskih sustava prema 21 CFR Part 11 i EU Annex 11
+- Validaciju kompjuterskih sustava prema 21 CFR Part 11 (FDA, 2003) i EU Annex 11 (European Commission, 2011)
 - Upravljanje Electronic Batch Record (EBR) sustavima
 - Održavanje Manufacturing Execution Systems (MES)
 - Laboratory Information Management Systems (LIMS)
@@ -97,7 +111,7 @@ IT odjel u farmaceutskoj industriji ne predstavlja samo podršku, već stratešk
 Nedostatak kvalificiranog IT osoblja može rezultirati:
 - Kašnjenjima u proizvodnji (downtime košta ~50.000 EUR/sat u farmaceutici)
 - Regulatornim nalazima (npr. FDA Warning Letter)
-- Sigurnosnim incidentima (ransomware napadi u zdravstvu su porasli za 94% u 2023.)
+- Sigurnosnim incidentima (ransomware napadi u zdravstvu porasli su za 58% u 2025. prema GuidePoint Security izvještaju, dok je Health-ISAC zabilježio 575 kibernetičkih incidenata u zdravstvenom sektoru tijekom 2025. (GuidePoint Security, 2026; Health-ISAC, 2025))
 
 **2. Procesna složenost**
 
@@ -148,32 +162,32 @@ Iz oglasa su ekstrahovani:
 
 **3. Javno dostupna dokumentacija**
 
-- **JGL Godišnji izvještaj 2023** (https://jgl.hr/investor-relations/) - podaci o broju zaposlenika, IT investicijama
-- **JGL Karijere stranica** (https://jgl.hr/karijere/) - proces prijave, benefiti, organizacijska kultura
+- **JGL Godišnji izvještaj 2024** (JGL d.d., 2025a) - podaci o broju zaposlenika, IT investicijama, prihodima od 162 mil. EUR
+- **JGL Karijere stranica** (JGL d.d., 2025b) - proces prijave, benefiti, organizacijska kultura
 - **Hrvatska agencija za nadzor financijskih usluga (HANFA) objave** - financijski izvještaji, strategija
 
 #### Sekundarni izvori podataka:
 
 **4. Industrijska istraživanja i benchmarking**
 
-- Deloitte Global Human Capital Trends 2024 - podaci o digitalnom zapošljavanju
-- Gartner IT Talent Acquisition Research 2024 - trendovi u IT regrutaciji
-- SHRM (Society for Human Resource Management) - prosječno trajanje zapošljavanja IT pozicija: 42 dana (USA), 51 dan (EU)
-- Pharmaceutical Manufacturing Magazine - specifičnosti IT zapošljavanja u pharma industriji
+- Deloitte (2024) Global Human Capital Trends - podaci o digitalnom zapošljavanju
+- Gartner (2024) IT Talent Acquisition Research - trendovi u IT regrutaciji
+- SHRM (2025) - prosječno trajanje popunjavanja pozicija: 44 dana u SAD-u, a za tehničke IT pozicije i preko 60 dana (SHRM, 2025; Mitratech, 2025)
+- IntuitionLabs (2025) - 70% farmaceutskih tvrtki prijavljuje poteškoće u popunjavanju pozicija koje zahtijevaju napredne tehničke vještine
 
 **5. Akademska literatura**
 
 - Dumas et al. (2018) - metodologija BPMN modeliranja
-- Van der Aalst (2016) - process mining i analiza procesa
-- Hammer & Champy (2009) - business process reengineering
-- Pyzdek & Keller (2014) - Lean Six Sigma metodologije
+- van der Aalst (2016) - process mining i analiza procesa
+- Hammer i Champy (2006) - business process reengineering
+- Pyzdek i Keller (2014) - Lean Six Sigma metodologije
 
 **6. Regulatorna dokumentacija**
 
-- ISPE GAMP 5 Guide - Good Automated Manufacturing Practice
-- FDA 21 CFR Part 11 - Electronic Records and Signatures
-- EU GMP Annex 11 - Computerised Systems
-- ISO 27001 - informacijska sigurnost (relevantno za NOC/SOC pozicije)
+- ISPE (2008) GAMP 5 Guide - Good Automated Manufacturing Practice
+- FDA (2003) 21 CFR Part 11 - Electronic Records and Signatures
+- European Commission (2011) EU GMP Annex 11 - Computerised Systems
+- ISO (2022) ISO/IEC 27001 - informacijska sigurnost (relevantno za NOC/SOC pozicije)
 
 #### Etičke smjernice:
 
@@ -465,7 +479,7 @@ As-Is model procesa zapošljavanja IT djelatnika u JGL-u modeliran je koristeći
      - **LinkedIn**: Sponsored job post (~1.500 HRK)
      - **HZZ (Hrvatski zavod za zapošljavanje)**: Besplatno, obavezno po zakonu
      - **Specijalizirani portali**: dev.to, StackOverflow Jobs (za developere)
-     - **Vlastita stranica tvrtke**: jgl.hr/karijere
+     - **Vlastita stranica tvrtke**: karijera.jgl.hr
    - Trajanje oglasa: 14-21 dan
 
 10. **Active sourcing** (Task - Agencija)
@@ -847,7 +861,7 @@ Subprocess uključuje sljedeće aktivnosti:
 **Trenutni problemi u Fazi 7:**
 - Nestrukturirani onboarding (ovisi o mentoru)
 - Nema formalnog onboarding checklista
-- Oprema često nije funkcionalna prvi dan (account lockouts, missing licenses)
+- Oprema često nije funkcionalna prvi dan (late order arrivals, account lockouts, missing licenses)
 - Nema praćenja onboarding metrika (time-to-productivity)
 
 ### 3.3 Identifikacija problema i neefikasnosti
@@ -863,9 +877,9 @@ Analiza As-Is modela identificirala je sljedeće kategorije problema:
   - Gubitak kvalitetnih kandidata (20% drop-out rate)
   - Produktivnost gap (IT pozicije su urgentne, delay košta 500-1.000 EUR/dan u produktivnosti)
 - **Kvantifikacija**: 
-  - Benchmark prosječno vrijeme u IT industriji: 35 dana (SHRM 2024)
+  - Benchmark prosječno vrijeme u IT industriji: 44 dana (SHRM, 2025), za specijalizirane tehničke pozicije i preko 60 dana (Mitratech, 2025)
   - JGL trenutno: 52 dana (median)
-  - **Gap: +17 dana (48% sporije od benchmarka)**
+  - **Gap: +8 dana (18% sporije od benchmarka za standardne IT pozicije)**
 
 **2. Visok postotak ručnih aktivnosti (70%)**
 
@@ -978,7 +992,7 @@ Na temelju Customer Journey Mapping analiza:
 
 ### 3.4 Kvalitativna analiza procesa (Waste Analysis)
 
-Primjenom **Lean metodologije** i koncepta **7 vrsta otpada (Muda)**, identificirani su sljedeći waste-ovi u As-Is procesu:
+Primjenom **Lean metodologije** i koncepta **7 vrsta otpada (Muda)** (Pyzdek i Keller, 2014), identificirani su sljedeći waste-ovi u As-Is procesu:
 
 #### 1. Waiting (Čekanje)
 
@@ -1102,7 +1116,7 @@ Primjenom **Lean metodologije** i koncepta **7 vrsta otpada (Muda)**, identifici
 
 **Interpretacija**: Samo 19.2% vremena stvarno dodaje vrijednost! Ostalih 80.8% je čekanje i waste.
 
-**Industry benchmark CTE**: 35-45% (prema Lean Six Sigma standards za HR procese)
+**Industry benchmark CTE**: 35-45% (prema Lean Six Sigma standardima za HR procese; Pyzdek i Keller, 2014)
 
 **Gap analysis**: JGL je -15.8 do -25.8 postotnih poena ispod best practice-a.
 
@@ -1268,7 +1282,7 @@ Uvedeno 12 **Service Task-ova** umjesto ručnih aktivnosti:
 
 **2. Business Rule Tasks (BRT) s DMN integraciji**
 
-Uvedena 2 **Business Rule Taska** povezana s DMN dijagramima:
+Uvedena 2 **Business Rule Taska** povezana s DMN dijagramima (Camunda, 2024):
 - **BRT_EvalCandidate**: Evaluacija kandidata prema standardiziranim pravilima
   - Input: roleType, hrScreeningPassed, technicalTestScore, technicalInterviewScore, referenceCheckPassed, seniority
   - Output: Offer/Reject, needsFinalInterview
@@ -1578,7 +1592,7 @@ Camunda User Task s formom:
 - **HR fokus na strategic HR**: Automatizacija admin zadataka oslobađa 40% HR vremena za strategic recruiting
 - **IT voditelj ne screenira loše kandidate**: DMN prefiltrira kandidate prije tehničkog intervjua
 
-#### 4.4.2 Six Sigma pristup: DMAIC metodologija
+#### 4.4.2 Six Sigma pristup: DMAIC metodologija (Pyzdek i Keller, 2014)
 
 **Define (Definiraj problem)**:
 - Problem: 15% zaposlenika ne prođe probni rad (quality issue)
@@ -1735,12 +1749,12 @@ Camunda User Task s formom:
 
 ## 5. Zaključak
 
-Ovaj rad predstavio je sveobuhvatnu analizu procesa zapošljavanja IT djelatnika u farmaceutskoj industriji na studiji slučaja JGL d.d. Koristeći BPMN 2.0 notaciju, detaljno su modelirana dva stanja procesa: trenutno (As-Is) i optimizirano (To-Be), čime je omogućena strukturirana analiza i identificiranje konkretnih mogućnosti za poboljšanje.
+Ovaj rad predstavio je sveobuhvatnu analizu procesa zapošljavanja IT djelatnika u farmaceutskoj industriji na studiji slučaja JGL d.d. Koristeći BPMN 2.0 notaciju (Dumas et al., 2018), detaljno su modelirana dva stanja procesa: trenutno (As-Is) i optimizirano (To-Be), čime je omogućena strukturirana analiza i identificiranje konkretnih mogućnosti za poboljšanje.
 
 **Ključni nalazi istraživanja:**
 
 As-Is analiza identificirala je značajne izazove u postojećem procesu:
-- **Dugotrajnost procesa**: Prosječno trajanje od 52 dana, što je 48% duže od industry benchmarka
+- **Dugotrajnost procesa**: Prosječno trajanje od 52 dana, što je 18% duže od prosječnog industry benchmarka od 44 dana (SHRM, 2025)
 - **Niska procesna učinkovitost**: Cycle Time Efficiency od samo 19.2%, što znači da 80% vremena predstavlja čekanje i waste
 - **Visoki troškovi**: Prosječni trošak zapošljavanja od 14.721 EUR po kandidatu
 - **Problem kvalitete**: 15% zaposlenika ne uspijeva završiti probni rad uspješno
@@ -1770,7 +1784,7 @@ Kvalitativne koristi uključuju poboljšanu kandidatsku iskustvo (Glassdoor rati
 
 **Doprinos istraživanju:**
 
-Ovaj rad demonstrira primjenu BPMN 2.0 standarda i process mining metodologija u realnom poslovnom kontekstu farmaceutske industrije. Kombinacija kvalitativnih (Lean waste analysis, Customer Journey Mapping) i kvantitativnih (Cycle Time Analysis, Cost-Benefit Analysis) tehnika omogućila je holistički pristup optimizaciji procesa.
+Ovaj rad demonstrira primjenu BPMN 2.0 standarda (Dumas et al., 2018) i process mining metodologija (van der Aalst, 2016) u realnom poslovnom kontekstu farmaceutske industrije. Kombinacija kvalitativnih (Lean waste analysis, Customer Journey Mapping) i kvantitativnih (Cycle Time Analysis, Cost-Benefit Analysis) tehnika omogućila je holistički pristup optimizaciji procesa.
 
 Posebna vrijednost rada je u:
 - Detaljnoj dokumentaciji stvarnog procesa s višestrukim izvorima podataka
@@ -1801,26 +1815,344 @@ U konačnici, ovaj rad demonstrira da digitalna transformacija HR procesa nije s
 
 ---
 
-## 6. Literatura
+## 6. Izrada process-driven aplikacije u Camunda 8
+
+### 6.1 Uvod i motivacija
+
+Kao drugi dio projektnog zadatka, izrađena je process-driven aplikacija koja omogućuje egzekuciju, praćenje i upravljanje procesnom instancom zapošljavanja IT djelatnika u stvarnom vremenu. Aplikacija je razvijena na Camunda 8 Self-Managed platformi koja se izvodi lokalno putem Docker Compose okruženja.
+
+Za potrebe egzekucije odabran je **reducirani As-Is model** jer puni As-Is model koristi collaboration dijagram s dva participanta (JGL i Vanjska agencija) i message flow-ove između njih, što Camunda 8 Zeebe engine ne podržava za deployment — Zeebe zahtijeva single-process model bez collaboration elementa. Stoga je napravljena redukcija koja zadržava sve ključne faze i logiku originalnog As-Is procesa, ali ih sažima u jedan izvršivi proces.
+
+### 6.2 Redukcija As-Is modela
+
+Redukcija je provedena prema sljedećim principima:
+
+**Uklonjeni elementi:**
+
+| Element | Puni As-Is | Razlog uklanjanja |
+|---------|-----------|-------------------|
+| Collaboration | 2 participanta (JGL + Agencija) | Zeebe ne podržava collaboration za execution |
+| Lanes | 4 (HR, IT voditelj, IT odjel, Nabava) | Zamijenjeno `candidateGroups` atributom |
+| Message Flows | 2 (JGL ↔ Agencija) | Agencija simulirana Service Taskom |
+| Call Activity | 1 (Priprema radnog mjesta) | Ugrađena inline u proces |
+| Generički Task-ovi | 32 | Reducirano na 10 (9 User + 1 Service) |
+
+**Zadržani elementi:**
+
+| Element | Broj | Opis |
+|---------|------|------|
+| User Tasks | 9 | Svaki s Camunda formom za unos podataka |
+| Service Task | 1 | `send-agency-notification` — simulira komunikaciju s agencijom |
+| Exclusive Gateways | 4 | Odobrenje budžeta, HR screening, tehnički intervju, probni rad |
+| Parallel Gateways | 2 | Split/Join za paralelnu IT pripremu i nabavu opreme |
+| Timer Events | 2 | Čekanje shortliste (14 dana) i čekanje odgovora kandidata (5 dana) |
+| End Events | 5 | Zahtjev odbijen, kandidat odbijen, ponuda odbijena, uspješno zaposlenje, raskid |
+
+**Mapiranje faza originalnog As-Is modela na reducirani model:**
+
+| Originalna faza | Originalni taskovi | Reducirani task |
+|-----------------|-------------------|-----------------|
+| Faza 1: Identifikacija potrebe | Zaprimanje zahtjeva, Definiranje potreba, Izrada opisa, Odobrenje | `UT_DefineNeed` + `UT_Approval` |
+| Faza 2: Objava natječaja | Slanje agenciji, Objava oglasa, Active sourcing, Screening, Shortlista | `ST_NotifyAgency` + `Timer_WaitShortlist` |
+| Faza 3: Selekcija | HR screening, Tehnički test, Tehnički intervju, Evaluacija | `UT_HRScreening` + `UT_TechInterview` |
+| Faza 4: Ponuda | Priprema ponude, Slanje, Čekanje odgovora, Odluka | `UT_PrepareOffer` + `Timer_WaitResponse` + `UT_CandidateResponse` |
+| Faza 5-6: IT priprema + Nabava | 12 taskova (paralelno) | `UT_PrepareIT` ∥ `UT_OrderEquipment` |
+| Faza 7: Onboarding | 10 taskova | `UT_Onboarding` + `UT_ProbationEval` |
+
+Timer eventi koriste skraćene intervale za demo (`PT30S` i `PT20S` umjesto `P14D` i `P5D`) kako bi se proces mogao brzo provesti tijekom prezentacije.
+
+### 6.3 Camunda 8 okruženje
+
+Camunda 8 Self-Managed pokrenut je lokalno korištenjem Docker Compose konfiguracije:
+
+```bash
+docker compose -f docker-compose-core.yaml up -d
+```
+
+Komponente okruženja:
+
+| Komponenta | Port | Funkcija |
+|------------|------|----------|
+| Zeebe Gateway | 26500 (gRPC) | BPMN engine — izvršava procese |
+| Operate | 8081 | Praćenje procesnih instanci, incidenti |
+| Tasklist | 8080 | Rad s User Taskovima, popunjavanje formi |
+| Elasticsearch | 9200 | Indeksiranje i pretraživanje procesnih podataka |
+
+### 6.4 Struktura aplikacije
+
+```
+camunda-app/
+├── it-hire-as-is-reduced.bpmn      ← Reducirani BPMN model
+├── forms/
+│   ├── form-job-request.form        ← IT voditelj: zahtjev
+│   ├── form-budget-approval.form    ← Uprava: odobrenje
+│   ├── form-hr-screening.form       ← HR: screening intervju
+│   ├── form-tech-interview.form     ← IT voditelj: tehnički intervju
+│   ├── form-offer.form              ← HR: priprema ponude
+│   ├── form-candidate-response.form ← HR: odgovor kandidata
+│   ├── form-it-prepare.form         ← IT odjel: računi i konfiguracija
+│   ├── form-equipment.form          ← Nabava: narudžba opreme
+│   ├── form-onboarding.form         ← HR: onboarding prvi dan
+│   └── form-probation-eval.form     ← IT voditelj: evaluacija probnog rada
+├── worker/
+│   ├── index.js                     ← Express.js Job Worker
+│   └── package.json
+└── README.md
+```
+
+### 6.5 Camunda Forms
+
+Za svaki User Task kreirana je Camunda forma koja omogućuje strukturirani unos podataka. Forme koriste Camunda Forms JSON schema format (schemaVersion 16) i povezane su s User Taskovima putem `formId` atributa u BPMN modelu.
+
+**Primjer: Forma za HR screening (`form-hr-screening.form`)**
+
+Forma sadrži polja za ocjenu soft skills-a (0-100), kulturalne kompatibilnosti (0-100), motivacije kandidata (0-100), radio button za prolaz/pad te textarea za napomene. Varijable koje se postavljaju (`softSkillsScore`, `culturalFitScore`, `motivationScore`, `hrScreeningPassed`, `hrNotes`) koriste se u nastavku procesa — gateway `GW_HRPass` evaluira FEEL izraz `=hrScreeningPassed = true` za odluku o nastavku.
+
+**Primjer: Forma za evaluaciju probnog rada (`form-probation-eval.form`)**
+
+Forma sadrži numeričke ocjene performansi (0-100) i uklapanja u tim (0-100), textarea za postignuća i područja razvoja, te radio button za konačnu odluku. Varijabla `probationPassed` određuje završetak procesa — uspješno zaposlenje ili raskid ugovora.
+
+**Pregled svih formi i process varijabli:**
+
+| Forma | User Task | Ključne varijable |
+|-------|-----------|-------------------|
+| Form_JobRequest | Definiranje zahtjeva | `candidateName`, `roleType`, `seniority`, `salaryRange`, `technicalSkills` |
+| Form_BudgetApproval | Odobrenje zahtjeva | `approved`, `approvalNotes` |
+| Form_HRScreening | HR screening | `hrScreeningPassed`, `softSkillsScore`, `culturalFitScore` |
+| Form_TechInterview | Tehnički intervju | `techInterviewPassed`, `techKnowledgeScore`, `problemSolvingScore` |
+| Form_Offer | Priprema ponude | `offeredSalary`, `startDate`, `probationMonths` |
+| Form_CandidateResponse | Odgovor kandidata | `offerAccepted`, `declineReason` |
+| Form_ITPrepare | IT priprema | `adCreated`, `m365Created`, `vpnConfigured`, `laptopConfigured` |
+| Form_Equipment | Nabava opreme | `equipmentInStock`, `laptopModel`, `monitorCount`, `equipmentDelivered` |
+| Form_Onboarding | Onboarding | `docsCompleted`, `equipmentHandedOver`, `accessWorking`, `mentorAssigned` |
+| Form_ProbationEval | Evaluacija probnog rada | `probationPassed`, `performanceScore`, `teamFitScore` |
+
+### 6.6 Job Worker implementacija
+
+Za Service Task `ST_NotifyAgency` (task type: `send-agency-notification`) implementiran je Job Worker u Node.js korištenjem Express.js frameworka i `@camunda8/sdk` biblioteke.
+
+**Arhitektura:**
+
+```
+┌──────────────┐     gRPC (26500)     ┌──────────────┐
+│   Zeebe       │◄───────────────────►│  Job Worker   │
+│   Engine      │  poll / complete    │  (Express.js) │
+└──────────────┘                      └──────┬───────┘
+                                              │
+                                      REST API (port 3001)
+                                              │
+                                    ┌─────────┴─────────┐
+                                    │ GET /health        │
+                                    │ GET /api/positions │
+                                    │ GET /api/equipment │
+                                    └───────────────────┘
+```
+
+**Kako worker funkcionira:**
+
+1. Worker se registrira na Zeebe gateway (`localhost:26500`) i pretplaćuje se na task type `send-agency-notification`
+2. Kad procesna instanca dođe do Service Taska `ST_NotifyAgency`, Zeebe aktivira job
+3. Worker preuzima job, čita process varijable (`candidateName`, `roleType`, `seniority`, `salaryRange`)
+4. Worker simulira slanje email obavijesti vanjskoj agenciji (u produkciji bi se integrirao sa SMTP serverom)
+5. Worker vraća rezultat — postavlja varijable `agencyNotified=true`, `notificationTimestamp`, `agencyName` i `expectedShortlistDate`
+6. Zeebe nastavlja proces na sljedeći element (Timer Event)
+
+**Ključni dio koda:**
+
+```javascript
+const { Camunda8 } = require("@camunda8/sdk");
+
+const camunda = new Camunda8({
+  ZEEBE_ADDRESS: "localhost:26500",
+  CAMUNDA_SECURE_CONNECTION: false,
+});
+
+const zbc = camunda.getZeebeGrpcApiClient();
+
+zbc.createWorker({
+  taskType: "send-agency-notification",
+  taskHandler: async (job) => {
+    const { candidateName, roleType, seniority } = job.variables;
+    
+    // Simulacija slanja emaila agenciji
+    console.log(`📧 Obavijest poslana agenciji za: ${candidateName}`);
+    
+    return job.complete({
+      agencyNotified: true,
+      notificationTimestamp: new Date().toISOString(),
+      agencyName: "IT Recruitment Agency d.o.o.",
+    });
+  },
+});
+```
+
+**REST API endpointi:**
+
+Osim Zeebe workera, Express server nudi dva pomoćna REST endpointa:
+
+| Metoda | URL | Opis | Primjer odgovora |
+|--------|-----|------|-----------------|
+| GET | `/health` | Status workera | `{ "status": "ok", "uptime": 123.4 }` |
+| GET | `/api/positions` | Lista IT pozicija u JGL-u | Array s 3 pozicije (helpdesk, programer, NOC/SOC) |
+| GET | `/api/equipment/:roleType` | Profil opreme po poziciji | `{ "laptop": "Dell Precision 5680", "monitors": 2, ... }` |
+
+### 6.7 Deployment i pokretanje
+
+**Korak 1: Pokretanje Camunda 8 okruženja**
+
+```bash
+docker compose -f docker-compose-core.yaml up -d
+```
+
+**Korak 2: Deployment BPMN modela i formi**
+
+Model i forme deployane su putem Camunda Modelera — opcija Deploy → Cluster endpoint `http://localhost:26500`. Alternativno putem CLI alata `zbctl`:
+
+```bash
+zbctl deploy it-hire-as-is-reduced.bpmn forms/*.form --insecure
+```
+
+**Korak 3: Pokretanje Job Workera**
+
+```bash
+cd worker
+npm install
+npm start
+```
+
+Worker ispisuje: `🔄 Job Worker pokrenut — čeka taskove tipa: send-agency-notification`
+
+**Korak 4: Pokretanje procesne instance**
+
+Nova instanca pokreće se iz Tasklist sučelja (tab "Processes" → "Start process") ili putem CLI:
+
+```bash
+zbctl create instance AsIs_ITHire_Reduced --insecure
+```
+
+### 6.8 Prikaz izvršavanja procesne instance
+
+Nakon pokretanja instance, proces se izvršava sljedećim redoslijedom:
+
+**1. Operate — praćenje procesne instance**
+
+U Operate sučelju (localhost:8081) vidljiv je cijeli reducirani BPMN dijagram s označenim aktivnim tokenom. Na screenshotu je vidljivo kako token prolazi od Start Eventa kroz User Taskove, Service Task (automatski obrađen workerom), Timer Events, pa do paralelnog gateway-a i konačno do End Eventa.
+
+*[Ovdje umetnuti screenshot iz Operate sučelja]*
+
+**2. Tasklist — rad s User Taskovima**
+
+U Tasklist sučelju (localhost:8080) korisnik vidi listu otvorenih taskova. Klikom na task otvara se pripadajuća Camunda forma u kojoj korisnik popunjava podatke i klikom na "Complete" dovršava task.
+
+Redoslijed izvršavanja taskova:
+
+1. **Definiranje zahtjeva** — IT voditelj unosi podatke o poziciji (tip, seniority, plaća, vještine)
+2. **Odobrenje zahtjeva** — Uprava odobrava ili odbija (gateway: `approved = true/false`)
+3. *(Service Task: automatska obavijest agenciji — obrađuje Job Worker)*
+4. *(Timer: čekanje shortliste — 30 sekundi za demo)*
+5. **HR screening** — HR ocjenjuje kandidata (gateway: `hrScreeningPassed = true/false`)
+6. **Tehnički intervju** — IT voditelj ocjenjuje (gateway: `techInterviewPassed = true/false`)
+7. **Priprema ponude** — HR definira uvjete ponude
+8. *(Timer: čekanje odgovora — 20 sekundi za demo)*
+9. **Odgovor kandidata** — HR unosi odluku kandidata (gateway: `offerAccepted = true/false`)
+10. **IT priprema** ∥ **Nabava opreme** — paralelno izvršavanje
+11. **Onboarding** — HR provjerava spremnost prvog dana
+12. **Evaluacija probnog rada** — IT voditelj evaluira (gateway: `probationPassed = true/false`)
+
+*[Ovdje umetnuti screenshotove iz Tasklist sučelja — forme za unos podataka]*
+
+**3. Job Worker — konzolni output**
+
+Kad procesna instanca dođe do Service Taska, Job Worker u terminalu ispisuje:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📧 SLANJE OBAVIJESTI VANJSKOJ AGENCIJI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Kandidat:     Ana Horvat
+  Pozicija:     programer (mid)
+  Plaća:        3000 EUR/mj
+  Vrijeme:      2026-03-17T12:30:00.000Z
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Obavijest uspješno poslana agenciji!
+```
+
+*[Ovdje umetnuti screenshot terminala s worker outputom]*
+
+### 6.9 Zaključak o Camunda 8 implementaciji
+
+Izrada process-driven aplikacije demonstrirala je praktičnu primjenu BPMN modela u egzekutabilnom okruženju. Ključni naučeni aspekti:
+
+**Tehničke spoznaje:**
+- Camunda 8 Zeebe engine zahtijeva single-process modele (`isExecutable="true"`) bez collaboration dijagrama, što zahtijeva redukciju složenih modela
+- Native Zeebe User Tasks (s `<zeebe:userTask />` elementom) koriste `formId` atribut za povezivanje s formama, za razliku od starijih verzija koje su koristile `formKey`
+- Job Workers komuniciraju s engineom putem gRPC protokola i `@camunda8/sdk` biblioteke
+
+**Procesne spoznaje:**
+- Redukcija modela s 32 na 10 taskova zadržava svu ključnu procesnu logiku ali gubi granularnost pojedinih koraka
+- Timer eventi s kratkim intervalima (PT30S) omogućuju brzo testiranje, ali u produkciji zahtijevaju realne vrijednosti (P14D)
+- Paralelni gateway za IT pripremu i nabavu opreme funkcionira kako je predviđeno — obje grane moraju završiti prije onboarding-a
+
+---
+
+## 7. Literatura
+
+### Akademska literatura
+
+Dumas, M., La Rosa, M., Mendling, J. i Reijers, H. A. (2018). *Fundamentals of business process management* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-56509-4
+
+Hammer, M. i Champy, J. (2006). *Reengineering the corporation: A manifesto for business revolution* (Rev. ed.). HarperBusiness.
+
+Pyzdek, T. i Keller, P. A. (2014). *The Six Sigma handbook* (4. izd.). McGraw-Hill Education.
+
+van der Aalst, W. M. P. (2016). *Process mining: Data science in action* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-49851-4
 
 ### Web izvori i dokumentacija
 
-Camunda. (2024). *Camunda 8 Documentation*. Retrieved December 2024, from https://docs.camunda.io/
+Camunda. (2024). *Camunda 8 documentation*. https://docs.camunda.io/
 
-JGL d.d. (2024). *Karijere - JGL*. Retrieved December 2024, from https://jgl.hr/karijere/
+Deloitte. (2024). *Global human capital trends 2024*. https://www.deloitte.com/global/en/issues/work/content/global-human-capital-trends.html
 
-JGL d.d. (2023). *Godišnje izvješće 2023*. Retrieved December 2024, from https://jgl.hr/investor-relations/
+EY. (2024). *EY World Entrepreneur of the Year — Class of 2024, Croatia*. https://www.ey.com/en_gl/weoy/class-of-2024/croatia
 
-MojPosao.hr. (2024). *Oglasi za posao - IT pozicije*. Retrieved October-December 2024, from https://www.mojposao.hr/
+Fina. (2025). *JGL d. d. — financijski podaci za 2024. godinu*. https://infobiz.fina.hr/
 
-Pharmaceutical Manufacturing Magazine. (2024). *IT Hiring Challenges in Pharma Industry*. Retrieved from https://www.pharmamanufacturing.com/
+Gartner. (2024). *IT talent acquisition research 2024*. https://www.gartner.com/en/human-resources
+
+GuidePoint Security. (2026). *Annual ransomware report 2025*. https://www.guidepointsecurity.com/
+
+Health-ISAC. (2025). *2025 annual cyber threat report: Healthcare sector*. https://www.h-isac.org/
+
+IntuitionLabs. (2025). *In-demand pharma roles: AI, manufacturing & clinical jobs*. https://intuitionlabs.ai/articles/in-demand-pharma-roles
+
+JGL d.d. (2025a). *Financijski izvještaji*. https://www.jgl.hr/o-jgl-u/financijski-izvjestaji
+
+JGL d.d. (2025b). *Karijere*. https://karijera.jgl.hr/
+
+Mitratech. (2025). *What 2025 time-to-fill benchmarks reveal about hiring agility and risk*. https://mitratech.com/resource-hub/blog/what-2025-time-to-fill-benchmarks-reveal-about-hiring-agility-and-risk/
+
+MojPosao.hr. (2024). *Oglasi za posao — IT pozicije*. https://www.mojposao.hr/
+
+SHRM. (2025). *2025 recruiting benchmarking report*. Society for Human Resource Management. https://www.shrm.org/
+
+### Regulatorna dokumentacija i standardi
+
+European Commission. (2011). *EudraLex — Volume 4, Annex 11: Computerised systems*. https://health.ec.europa.eu/
+
+International Society for Pharmaceutical Engineering [ISPE]. (2008). *GAMP 5: A risk-based approach to compliant GxP computerized systems*. ISPE.
+
+International Organization for Standardization [ISO]. (2022). *ISO/IEC 27001:2022 — Information security, cybersecurity and privacy protection*. ISO. https://www.iso.org/standard/27001
+
+U.S. Food and Drug Administration [FDA]. (2003). *21 CFR Part 11 — Electronic records; Electronic signatures*. https://www.ecfr.gov/
 
 ### Ostali izvori
 
-Intervjui provedeni za potrebe istraživanja (anonimno):
-- Specijalist HR operacija, JGL d.d. (Siječanj 2026.)
-- Rukovoditelj IT infrastrukturne podrške, JGL d.d. (Veljača 2026.)
-- Voditelj Odjela poslovnih aplikacija, JGL d.d. (Veljača 2026.)
-- Direktor Korporativnog IT-a, JGL d.d. (Siječanj 2026.)
+Specijalist HR operacija, JGL d.d. (osobna komunikacija, siječanj 2026.).
 
-*Napomena*: Svi web izvori zadnji put pristupljeni u razdoblju listopad-prosinac 2024. godine. Javno dostupne informacije o JGL d.d. korištene su u skladu s dozvolama za akademske svrhe.
+Rukovoditelj IT infrastrukturne podrške, JGL d.d. (osobna komunikacija, veljača 2026.).
+
+Voditelj Odjela poslovnih aplikacija, JGL d.d. (osobna komunikacija, veljača 2026.).
+
+Direktor Korporativnog IT-a, JGL d.d. (osobna komunikacija, siječanj 2026.).
+
+*Napomena*: Svi web izvori zadnji put pristupljeni u razdoblju siječanj–ožujak 2026. godine. Javno dostupne informacije o JGL d.d. korištene su u skladu s dozvolama za akademske svrhe.
