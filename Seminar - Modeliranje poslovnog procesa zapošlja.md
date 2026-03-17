@@ -66,7 +66,7 @@ Kvantitativna analiza pokazuje da predložene optimizacije mogu smanjiti ukupno 
 
 Digitalna transformacija i automatizacija poslovnih procesa postale su imperativ za moderna poduzeća, a posebice za organizacije u visoko reguliranim industrijama poput farmaceutike. U tom kontekstu, zapošljavanje kvalificiranih IT stručnjaka predstavlja kritičan proces koji izravno utječe na sposobnost organizacije da implementira i održava složene informacijske sustave potrebne za poslovanje u skladu s regulatornim zahtjevima (FDA, 2003; European Commission, 2011; ISPE, 2008).
 
-JGL d.d., osnovana 1991. godine u Rijeci, jedna je od vodećih farmaceutskih kompanija u regiji s ukupno oko 1.200 zaposlenika u 11 zemalja (EY, 2024) i prihodom od 162 milijuna EUR u 2024. godini, što je rast od 21% u odnosu na prethodnu godinu (Fina, 2025). Tvrtka posluje u visoko konkurentnom i reguliranom okruženju gdje je učinkovitost internih procesa ključna za održavanje tržišne pozicije. IT infrastruktura JGL-a podržava kritične poslovne funkcije uključujući proizvodnju, upravljanje kvalitetom, R&D aktivnosti, logistiku i regulatory compliance sustave.
+JGL d.d., osnovana 1991. godine u Rijeci, jedna je od vodećih farmaceutskih kompanija u regiji s ukupno oko 1.200 zaposlenika u 11 zemalja i prihodom od 162 milijuna EUR u 2024. godini, što je rast od 21% u odnosu na prethodnu godinu. Tvrtka posluje u visoko konkurentnom i reguliranom okruženju gdje je učinkovitost internih procesa ključna za održavanje tržišne pozicije. IT infrastruktura JGL-a podržava kritične poslovne funkcije uključujući proizvodnju, upravljanje kvalitetom, R&D aktivnosti, logistiku i regulatory compliance sustave.
 
 Proces zapošljavanja IT djelatnika u JGL-u karakterizira značajna složenost zbog:
 - **Specifičnih tehničkih zahtjeva** - potreba za poznavanjem reguliranih sustava (FDA, 2003; European Commission, 2011)
@@ -175,14 +175,7 @@ Iz oglasa su ekstrahovani:
 - SHRM (2025) - prosječno trajanje popunjavanja pozicija: 44 dana u SAD-u, a za tehničke IT pozicije i preko 60 dana (SHRM, 2025; Mitratech, 2025)
 - IntuitionLabs (2025) - 70% farmaceutskih tvrtki prijavljuje poteškoće u popunjavanju pozicija koje zahtijevaju napredne tehničke vještine
 
-**5. Akademska literatura**
-
-- Dumas et al. (2018) - metodologija BPMN modeliranja
-- van der Aalst (2016) - process mining i analiza procesa
-- Hammer i Champy (2006) - business process reengineering
-- Pyzdek i Keller (2014) - Lean Six Sigma metodologije
-
-**6. Regulatorna dokumentacija**
+**5. Regulatorna dokumentacija**
 
 - ISPE (2008) GAMP 5 Guide - Good Automated Manufacturing Practice
 - FDA (2003) 21 CFR Part 11 - Electronic Records and Signatures
@@ -1830,7 +1823,7 @@ U konačnici, ovaj rad demonstrira da digitalna transformacija HR procesa nije s
 
 ### 6.1 Uvod i motivacija
 
-Kao drugi dio projektnog zadatka, izrađena je process-driven aplikacija koja omogućuje egzekuciju, praćenje i upravljanje procesnom instancom zapošljavanja IT djelatnika u stvarnom vremenu. Aplikacija je razvijena na Camunda 8 Self-Managed platformi koja se izvodi lokalno putem Docker Compose okruženja.
+Kao drugi dio projektnog zadatka, izrađena je process-driven aplikacija koja omogućuje egzekuciju, praćenje i upravljanje procesnom instancom zapošljavanja IT djelatnika u stvarnom vremenu. Aplikacija je razvijena na Camunda 8 Self-Managed platformi koja se izvodi lokalno putem Camunda 8 Run (c8run) distribucije.
 
 Za potrebe egzekucije odabran je **reducirani As-Is model** jer puni As-Is model koristi collaboration dijagram s dva participanta (JGL i Vanjska agencija) i message flow-ove između njih, što Camunda 8 Zeebe engine ne podržava za deployment — Zeebe zahtijeva single-process model bez collaboration elementa. Stoga je napravljena redukcija koja zadržava sve ključne faze i logiku originalnog As-Is procesa, ali ih sažima u jedan izvršivi proces.
 
@@ -1874,20 +1867,26 @@ Timer eventi koriste skraćene intervale za demo (`PT30S` i `PT20S` umjesto `P14
 
 ### 6.3 Camunda 8 okruženje
 
-Camunda 8 Self-Managed pokrenut je lokalno korištenjem Docker Compose konfiguracije:
+Camunda 8 Self-Managed pokrenut je lokalno korištenjem **Camunda 8 Run (c8run-8.8.9)** distribucije koja uključuje sve potrebne komponente (Zeebe, Operate, Tasklist, Elasticsearch) u jednom paketu:
 
 ```bash
-docker compose -f docker-compose-core.yaml up -d
+camunda-start.bat
 ```
 
 Komponente okruženja:
 
-| Komponenta | Port | Funkcija |
-|------------|------|----------|
-| Zeebe Gateway | 26500 (gRPC) | BPMN engine — izvršava procese |
-| Operate | 8081 | Praćenje procesnih instanci, incidenti |
-| Tasklist | 8080 | Rad s User Taskovima, popunjavanje formi |
-| Elasticsearch | 9200 | Indeksiranje i pretraživanje procesnih podataka |
+| Komponenta | URL | Funkcija |
+|------------|-----|----------|
+| Operate | http://localhost:8080/operate | Praćenje procesnih instanci, incidenti |
+| Tasklist | http://localhost:8080/tasklist | Rad s User Taskovima, popunjavanje formi |
+| Identity | http://localhost:8080/identity | Upravljanje korisnicima i grupama |
+| Orchestration API | http://localhost:8080/v2/ | REST API za upravljanje procesima |
+| Connectors | http://localhost:8086/ | Inbound Connectors runtime |
+| Zeebe Gateway | localhost:26500 (gRPC) | BPMN engine — izvršava procese |
+
+Pokretanje i zaustavljanje okruženja vrši se putem batch skripti:
+- `camunda-start.bat` — pokreće sve komponente
+- `camunda-stop.bat` — zaustavlja sve komponente
 
 ### 6.4 Struktura aplikacije
 
@@ -1895,16 +1894,16 @@ Komponente okruženja:
 camunda-app/
 ├── it-hire-as-is-reduced.bpmn      ← Reducirani BPMN model
 ├── forms/
-│   ├── form-job-request.form        ← IT voditelj: zahtjev
-│   ├── form-budget-approval.form    ← Uprava: odobrenje
-│   ├── form-hr-screening.form       ← HR: screening intervju
-│   ├── form-tech-interview.form     ← IT voditelj: tehnički intervju
-│   ├── form-offer.form              ← HR: priprema ponude
-│   ├── form-candidate-response.form ← HR: odgovor kandidata
-│   ├── form-it-prepare.form         ← IT odjel: računi i konfiguracija
-│   ├── form-equipment.form          ← Nabava: narudžba opreme
-│   ├── form-onboarding.form         ← HR: onboarding prvi dan
-│   └── form-probation-eval.form     ← IT voditelj: evaluacija probnog rada
+├── form-job-request.form        ← IT voditelj: zahtjev
+├── form-budget-approval.form    ← Uprava: odobrenje
+├── form-hr-screening.form       ← HR: screening intervju
+├── form-tech-interview.form     ← IT voditelj: tehnički intervju
+├── form-offer.form              ← HR: priprema ponude
+├── form-candidate-response.form ← HR: odgovor kandidata
+├── form-it-prepare.form         ← IT odjel: računi i konfiguracija
+├── form-equipment.form          ← Nabava: narudžba opreme
+├── form-onboarding.form         ← HR: onboarding prvi dan
+├── form-probation-eval.form     ← IT voditelj: evaluacija probnog rada
 ├── worker/
 │   ├── index.js                     ← Express.js Job Worker
 │   └── package.json
@@ -2019,16 +2018,12 @@ Osim Zeebe workera, Express server nudi dva pomoćna REST endpointa:
 **Korak 1: Pokretanje Camunda 8 okruženja**
 
 ```bash
-docker compose -f docker-compose-core.yaml up -d
+camunda-start.bat
 ```
 
 **Korak 2: Deployment BPMN modela i formi**
 
-Model i forme deployane su putem Camunda Modelera — opcija Deploy → Cluster endpoint `http://localhost:26500`. Alternativno putem CLI alata `zbctl`:
-
-```bash
-zbctl deploy it-hire-as-is-reduced.bpmn forms/*.form --insecure
-```
+Model i forme deployane su putem Camunda Modelera — opcija Deploy → Cluster endpoint `http://localhost:26500`. 
 
 **Korak 3: Pokretanje Job Workera**
 
@@ -2042,11 +2037,7 @@ Worker ispisuje: `🔄 Job Worker pokrenut — čeka taskove tipa: send-agency-n
 
 **Korak 4: Pokretanje procesne instance**
 
-Nova instanca pokreće se iz Tasklist sučelja (tab "Processes" → "Start process") ili putem CLI:
-
-```bash
-zbctl create instance AsIs_ITHire_Reduced --insecure
-```
+Nova instanca pokreće se iz Tasklist sučelja (tab "Processes" → "Start process").
 
 ### 6.8 Prikaz izvršavanja procesne instance
 
@@ -2054,13 +2045,13 @@ Nakon pokretanja instance, proces se izvršava sljedećim redoslijedom:
 
 **1. Operate — praćenje procesne instance**
 
-U Operate sučelju (localhost:8081) vidljiv je cijeli reducirani BPMN dijagram s označenim aktivnim tokenom. Na screenshotu je vidljivo kako token prolazi od Start Eventa kroz User Taskove, Service Task (automatski obrađen workerom), Timer Events, pa do paralelnog gateway-a i konačno do End Eventa.
+U Operate sučelju (localhost:8080/operate) vidljiv je cijeli reducirani BPMN dijagram s označenim aktivnim tokenom. Na screenshotu je vidljivo kako token prolazi od Start Eventa kroz User Taskove, Service Task (automatski obrađen workerom), Timer Events, pa do paralelnog gateway-a i konačno do End Eventa.
 
 *[Ovdje umetnuti screenshot iz Operate sučelja]*
 
 **2. Tasklist — rad s User Taskovima**
 
-U Tasklist sučelju (localhost:8080) korisnik vidi listu otvorenih taskova. Klikom na task otvara se pripadajuća Camunda forma u kojoj korisnik popunjava podatke i klikom na "Complete" dovršava task.
+U Tasklist sučelju (localhost:8080/tasklist) korisnik vidi listu otvorenih taskova. Klikom na task otvara se pripadajuća Camunda forma u kojoj korisnik popunjava podatke i klikom na "Complete" dovršava task.
 
 Redoslijed izvršavanja taskova:
 
@@ -2087,7 +2078,6 @@ Kad procesna instanca dođe do Service Taska, Job Worker u terminalu ispisuje:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📧 SLANJE OBAVIJESTI VANJSKOJ AGENCIJI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Kandidat:     Ana Horvat
   Pozicija:     programer (mid)
   Plaća:        3000 EUR/mj
   Vrijeme:      2026-03-17T12:30:00.000Z
@@ -2115,25 +2105,11 @@ Izrada process-driven aplikacije demonstrirala je praktičnu primjenu BPMN model
 
 ## 7. Literatura
 
-### Akademska literatura
-
-Dumas, M., La Rosa, M., Mendling, J. i Reijers, H. A. (2018). *Fundamentals of business process management* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-56509-4
-
-Hammer, M. i Champy, J. (2006). *Reengineering the corporation: A manifesto for business revolution* (Rev. ed.). HarperBusiness.
-
-Pyzdek, T. i Keller, P. A. (2014). *The Six Sigma handbook* (4. izd.). McGraw-Hill Education.
-
-van der Aalst, W. M. P. (2016). *Process mining: Data science in action* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-49851-4
-
 ### Web izvori i dokumentacija
 
 Camunda. (2024). *Camunda 8 documentation*. https://docs.camunda.io/
 
 Deloitte. (2024). *Global human capital trends 2024*. https://www.deloitte.com/global/en/issues/work/content/global-human-capital-trends.html
-
-EY. (2024). *EY World Entrepreneur of the Year — Class of 2024, Croatia*. https://www.ey.com/en_gl/weoy/class-of-2024/croatia
-
-Fina. (2025). *JGL d. d. — financijski podaci za 2024. godinu*. https://infobiz.fina.hr/
 
 Gartner. (2024). *IT talent acquisition research 2024*. https://www.gartner.com/en/human-resources
 
