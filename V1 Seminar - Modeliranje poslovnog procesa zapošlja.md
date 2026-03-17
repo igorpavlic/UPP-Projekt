@@ -2125,7 +2125,7 @@ JGL d.d. (2025b). *Karijere*. https://karijera.jgl.hr/
 
 Mitratech. (2025). *What 2025 time-to-fill benchmarks reveal about hiring agility and risk*. https://mitratech.com/resource-hub/blog/what-2025-time-to-fill-benchmarks-reveal-about-hiring-agility-and-risk/
 
-MojPosao.hr. (2024). *Oglasi za posao — IT pozicije*. https://www.mojposao.hr/
+MojPosao.hr. (2025). *Oglasi za posao — IT pozicije*. https://www.mojposao.hr/
 
 SHRM. (2025). *2025 recruiting benchmarking report*. Society for Human Resource Management. https://www.shrm.org/
 
