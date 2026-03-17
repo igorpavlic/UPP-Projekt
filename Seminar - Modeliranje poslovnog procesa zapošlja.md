@@ -366,11 +366,11 @@ As-Is model procesa zapošljavanja IT djelatnika u JGL-u modeliran je koristeći
 **Ključne karakteristike As-Is modela:**
 
 - **Tip modela**: Collaboration dijagram s 2 participanta (JGL i Vanjska agencija)
-- **Broj aktivnosti**: 32 task elementa
-- **Broj gatewaya**: 4 exclusive gateways, 1 parallel gateway
-- **Broj događaja**: 1 start event, 3 end eventa, 2 timer eventa, 4 message eventa
+- **Broj aktivnosti**: 27 task elemenata (20 u JGL procesu + 3 u procesu agencije + 4 u potprocesu pripreme radnog mjesta)
+- **Broj gatewaya**: 3 exclusive gateways (Odobreno?, Oprema dostupna?, Kandidat prihvaća?), 2 parallel gateways (split + join za pripremu)
+- **Broj događaja**: 3 start eventa (JGL, Agencija, Priprema), 5 end evenata, 2 timer intermediate catch eventa, 2 message intermediate catch eventa, 2 message flow-a
 - **Broj staza (lanes)**: 4 staze unutar JGL participanta
-- **Broj data objekata**: 6 dokumenata koji se generiraju tijekom procesa
+- **Broj data objekata**: Dokumenti koji se generiraju tijekom procesa opisani su u tekstu (zahtjev za zapošljavanje, opis radnog mjesta, shortlista kandidata, evaluacijski formular, ugovor, IT setup checklist)
 - **Ukupno trajanje**: 45-60 dana (optimistički scenarij 35 dana, pesimistički 75 dana)
 
 **Glavni tokovi procesa:**
@@ -1269,7 +1269,7 @@ To-Be model procesa zapošljavanja uvodi sljedeće ključne promjene:
 
 **1. Automatizacija ključnih aktivnosti**
 
-Uvedeno 12 **Service Task-ova** umjesto ručnih aktivnosti:
+Uvedeno 21 **Service Task-ov** za automatizaciju ručnih aktivnosti. Ključni Service Task-ovi:
 - **ST_ValidateBudget**: Automatska provjera budžeta putem REST API-ja prema ERP sustavu
 - **ST_PublishJob**: Automatsko slanje oglasa agenciji putem API-ja
 - **ST_ProvisionAD**: Automatsko kreiranje Active Directory računa
@@ -1279,6 +1279,17 @@ Uvedeno 12 **Service Task-ova** umjesto ručnih aktivnosti:
 - **ST_ConfigureDevice**: Automatska konfiguracija uređaja (integracija s Intune MDM)
 - **ST_SecurityConfig**: Automatske sigurnosne postavke
 - **ST_TestAndRegister**: Automatsko testiranje i registracija u CMDB
+- **ST_OrderEquipment**: Automatska narudžba opreme kod dobavljača
+- **ST_CheckInventory**: Provjera zaliha opreme na skladištu
+- **ST_ReserveEquipment**: Rezervacija opreme sa skladišta
+- **ST_TrackDelivery**: Praćenje isporuke naručene opreme
+- **ST_HandoverEquipment**: Predaja opreme IT odjelu
+- **ST_RegisterHR**: Registracija zaposlenika u HR sustav
+- **ST_RegisterHZMO**: Prijava na HZMO (mirovinsko osiguranje)
+- **ST_RegisterHZZO**: Prijava na HZZO (zdravstveno osiguranje)
+- **ST_ScheduleCheckins**: Planiranje check-in sastanaka tijekom probnog rada
+- **ST_EvaluateProbationHR**: Zapis evaluacije probnog rada u HR sustav
+- **ST_NotifySLABreach**: Obavijest o probijanju SLA roka selekcije
 
 **2. Business Rule Tasks (BRT) s DMN integraciji**
 
@@ -1301,19 +1312,19 @@ Uvedena 2 **Business Rule Taska** povezana s DMN dijagramima (Camunda, 2024):
 
 - **BE_Selection_SLA**: Timer boundary event na subprocessu selekcije (max 14 dana)
   - Ako proces traje duže, automatska eskalacija (slanje emaila menadžmentu)
-- **BE_OfferTimeout**: Timer boundary event na čekanju odgovora kandidata (5 dana)
   - Ako kandidat ne odgovori, automatski reminder email
 
 **5. Camunda User Task forme**
 
-Svih 6 korisničkih intervencija ima definirane Camunda forme:
+Svih 10 korisničkih intervencija ima definirane Camunda forme:
 - **UT_Request** → Form_JobRequest
 - **UT_HRScreening** → Form_HRScreening
 - **UT_TechTest** → Form_TechTest
 - **UT_TechInterview** → Form_InterviewScores
 - **UT_FinalInterview** → Form_FinalInterview
 - **UT_ReferenceCheck** → Form_ReferenceCheck
-- **UT_Contract** → Digital contract signing
+- **UT_Contract** → Form_Contract
+- **UT_SendOffer** → Form_SendOffer
 - **UT_OnboardingDay1** → Form_OnboardingDay1
 - **UT_ProbationEval** → Form_ProbationEvaluation
 
@@ -1765,7 +1776,7 @@ Primjenom Lean waste analysis metodologije, identificiran je godišnji waste u i
 
 To-Be model uvodi sistemske promjene temeljene na automatizaciji, standardizaciji i paralelizaciji:
 
-1. **Automatizacija ključnih odluka i aktivnosti**: Implementacija 12 Service Task-ova za automatsku provjeru budžeta, IT provisioning, kreiranje računa i konfiguraciju opreme
+1. **Automatizacija ključnih odluka i aktivnosti**: Implementacija 21 Service Task-ova za automatsku provjeru budžeta, IT provisioning, kreiranje računa i konfiguraciju opreme
 2. **Standardizacija kroz DMN**: Dva Business Rule Task-a s DMN dijagramima za evaluaciju kandidata i određivanje profila opreme eliminiraju subjektivnost i osiguravaju konzistentnost
 3. **SLA enforcement**: Boundary Event-ovi osiguravaju poštivanje vremenskih okvira i proaktivnu eskalaciju
 4. **Digitalizacija**: Camunda forme zamjenjuju email komunikaciju i osiguravaju strukturirane podatke
@@ -1843,7 +1854,7 @@ Redukcija je provedena prema sljedećim principima:
 |---------|------|------|
 | User Tasks | 9 | Svaki s Camunda formom za unos podataka |
 | Service Task | 1 | `send-agency-notification` — simulira komunikaciju s agencijom |
-| Exclusive Gateways | 4 | Odobrenje budžeta, HR screening, tehnički intervju, probni rad |
+| Exclusive Gateways | 5 | Odobrenje budžeta, HR screening, tehnički intervju, prihvaćanje ponude, probni rad |
 | Parallel Gateways | 2 | Split/Join za paralelnu IT pripremu i nabavu opreme |
 | Timer Events | 2 | Čekanje shortliste (14 dana) i čekanje odgovora kandidata (5 dana) |
 | End Events | 5 | Zahtjev odbijen, kandidat odbijen, ponuda odbijena, uspješno zaposlenje, raskid |
@@ -1902,7 +1913,14 @@ camunda-app/
 
 ### 6.5 Camunda Forms
 
-Za svaki User Task kreirana je Camunda forma koja omogućuje strukturirani unos podataka. Forme koriste Camunda Forms JSON schema format (schemaVersion 16) i povezane su s User Taskovima putem `formId` atributa u BPMN modelu.
+Za svaki User Task kreirana je Camunda forma koja omogućuje strukturirani unos podataka. Forme koriste Camunda Forms JSON schema format (schemaVersion 16) i povezane su s User Taskovima putem `formId` atributa u BPMN modelu. Sve forme koriste prefix `AsIs_` u identifikatoru (npr. `AsIs_Form_JobRequest`) kako bi se izbjegla kolizija s formama iz To-Be modela koje su deployane na istom Camunda okruženju.
+
+Proces koristi 5 Exclusive Gateway-a koji evaluiraju FEEL izraze nad varijablama postavljenima u formama:
+- `GW_Approved`: `=approved = true` — odobrenje budžeta
+- `GW_HRPass`: `=hrScreeningPassed = true` — prolaz HR screeninga
+- `GW_TechPass`: `=techInterviewPassed = true` — prolaz tehničkog intervjua
+- `GW_Accepted`: `=offerAccepted = true` — kandidat prihvaća ponudu
+- `GW_Probation`: `=probationPassed = true` — uspješan probni rad
 
 **Primjer: Forma za HR screening (`form-hr-screening.form`)**
 
@@ -1916,16 +1934,16 @@ Forma sadrži numeričke ocjene performansi (0-100) i uklapanja u tim (0-100), t
 
 | Forma | User Task | Ključne varijable |
 |-------|-----------|-------------------|
-| Form_JobRequest | Definiranje zahtjeva | `candidateName`, `roleType`, `seniority`, `salaryRange`, `technicalSkills` |
-| Form_BudgetApproval | Odobrenje zahtjeva | `approved`, `approvalNotes` |
-| Form_HRScreening | HR screening | `hrScreeningPassed`, `softSkillsScore`, `culturalFitScore` |
-| Form_TechInterview | Tehnički intervju | `techInterviewPassed`, `techKnowledgeScore`, `problemSolvingScore` |
-| Form_Offer | Priprema ponude | `offeredSalary`, `startDate`, `probationMonths` |
-| Form_CandidateResponse | Odgovor kandidata | `offerAccepted`, `declineReason` |
-| Form_ITPrepare | IT priprema | `adCreated`, `m365Created`, `vpnConfigured`, `laptopConfigured` |
-| Form_Equipment | Nabava opreme | `equipmentInStock`, `laptopModel`, `monitorCount`, `equipmentDelivered` |
-| Form_Onboarding | Onboarding | `docsCompleted`, `equipmentHandedOver`, `accessWorking`, `mentorAssigned` |
-| Form_ProbationEval | Evaluacija probnog rada | `probationPassed`, `performanceScore`, `teamFitScore` |
+| AsIs_Form_JobRequest | Definiranje zahtjeva | `candidateName`, `roleType`, `seniority`, `salaryRange`, `technicalSkills` |
+| AsIs_Form_BudgetApproval | Odobrenje zahtjeva | `approved`, `approvalNotes` |
+| AsIs_Form_HRScreening | HR screening | `hrScreeningPassed`, `softSkillsScore`, `culturalFitScore` |
+| AsIs_Form_TechInterview | Tehnički intervju | `techInterviewPassed`, `techKnowledgeScore`, `problemSolvingScore` |
+| AsIs_Form_Offer | Priprema ponude | `offeredSalary`, `startDate`, `probationMonths` |
+| AsIs_Form_CandidateResponse | Odgovor kandidata | `offerAccepted`, `declineReason` |
+| AsIs_Form_ITPrepare | IT priprema | `adCreated`, `m365Created`, `vpnConfigured`, `laptopConfigured` |
+| AsIs_Form_Equipment | Nabava opreme | `equipmentInStock`, `laptopModel`, `monitorCount`, `equipmentDelivered` |
+| AsIs_Form_Onboarding | Onboarding | `docsCompleted`, `equipmentHandedOver`, `accessWorking`, `mentorAssigned` |
+| AsIs_Form_ProbationEval | Evaluacija probnog rada | `probationPassed`, `performanceScore`, `teamFitScore` |
 
 ### 6.6 Job Worker implementacija
 
