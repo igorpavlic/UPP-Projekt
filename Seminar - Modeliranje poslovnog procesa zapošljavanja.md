@@ -38,27 +38,46 @@ Kvantitativna analiza pokazuje da predložene optimizacije mogu smanjiti ukupno 
 
 ## Sadržaj
 
-1. [Uvod](#1-uvod)
-2. [Identifikacija i analiza poslovnog procesa](#2-identifikacija-i-analiza-poslovnog-procesa)
-   - 2.1 [Odabir i opravdanje procesa](#21-odabir-i-opravdanje-procesa)
-   - 2.2 [Metodologija prikupljanja podataka](#22-metodologija-prikupljanja-podataka)
-   - 2.3 [Ključni dionici procesa](#23-ključni-dionici-procesa)
-   - 2.4 [Mapiranje korisničkog iskustva](#24-mapiranje-korisničkog-iskustva-customer-journey-mapping)
-3. [Analiza trenutnog stanja procesa (As-Is)](#3-analiza-trenutnog-stanja-procesa-as-is)
-   - 3.1 [Pregled As-Is modela](#31-pregled-as-is-modela)
-   - 3.2 [Detaljni opis faza procesa](#32-detaljni-opis-faza-procesa)
-   - 3.3 [Identifikacija problema i neefikasnosti](#33-identifikacija-problema-i-neefikasnosti)
-   - 3.4 [Kvalitativna analiza procesa](#34-kvalitativna-analiza-procesa-waste-analysis)
-   - 3.5 [Kvantitativna analiza procesa](#35-kvantitativna-analiza-procesa)
-4. [Analiza budućeg stanja procesa (To-Be)](#4-analiza-budućeg-stanja-procesa-to-be)
-   - 4.1 [Ciljevi optimizacije](#41-ciljevi-optimizacije)
-   - 4.2 [Pregled To-Be modela](#42-pregled-to-be-modela)
-   - 4.3 [Ključne promjene i poboljšanja](#43-ključne-promjene-i-poboljšanja)
-   - 4.4 [Primjena Lean i Six Sigma pristupa](#44-primjena-lean-i-six-sigma-pristupa)
-   - 4.5 [Očekivani rezultati i koristi](#45-očekivani-rezultati-i-koristi)
-5. [Zaključak](#5-zaključak)
-6. [Izrada process-driven aplikacije u Camunda 8](#6-izrada-process-driven-aplikacije-u-camunda-8)
-7. [Literatura](#7-literatura)
+- [Modeliranje poslovnog procesa zapošljavanja IT djelatnika u farmaceutskoj industriji](#modeliranje-poslovnog-procesa-zapošljavanja-it-djelatnika-u-farmaceutskoj-industriji)
+  - [Studija slučaja: JGL d.d.](#studija-slučaja-jgl-dd)
+  - [Sažetak](#sažetak)
+  - [Sadržaj](#sadržaj)
+  - [1. Uvod](#1-uvod)
+  - [2. Identifikacija i analiza poslovnog procesa](#2-identifikacija-i-analiza-poslovnog-procesa)
+    - [2.1 Odabir i opravdanje procesa](#21-odabir-i-opravdanje-procesa)
+    - [2.2 Metodologija prikupljanja podataka](#22-metodologija-prikupljanja-podataka)
+    - [2.3 Ključni dionici procesa](#23-ključni-dionici-procesa)
+    - [2.4 Mapiranje korisničkog iskustva (Customer Journey Mapping)](#24-mapiranje-korisničkog-iskustva-customer-journey-mapping)
+  - [3. Analiza trenutnog stanja procesa (As-Is)](#3-analiza-trenutnog-stanja-procesa-as-is)
+    - [3.1 Pregled As-Is modela](#31-pregled-as-is-modela)
+    - [3.2 Opis faza procesa](#32-opis-faza-procesa)
+    - [3.3 Identificirani problemi](#33-identificirani-problemi)
+      - [3.3.1 Problemi procesne učinkovitosti](#331-problemi-procesne-učinkovitosti)
+      - [3.3.2 Problemi komunikacije i koordinacije](#332-problemi-komunikacije-i-koordinacije)
+      - [3.3.3 Problemi troškova i kvalitete](#333-problemi-troškova-i-kvalitete)
+    - [3.4 Kvalitativna analiza procesa — Waste Analysis](#34-kvalitativna-analiza-procesa--waste-analysis)
+    - [3.5 Kvantitativna analiza procesa](#35-kvantitativna-analiza-procesa)
+  - [4. Analiza budućeg stanja procesa (To-Be)](#4-analiza-budućeg-stanja-procesa-to-be)
+    - [4.1 Ciljevi optimizacije](#41-ciljevi-optimizacije)
+    - [4.2 Pregled To-Be modela](#42-pregled-to-be-modela)
+    - [4.3 Ključne promjene](#43-ključne-promjene)
+    - [4.4 Lean i Six Sigma pristup](#44-lean-i-six-sigma-pristup)
+    - [4.5 Očekivani rezultati](#45-očekivani-rezultati)
+    - [4.6 Analiza rizika implementacije](#46-analiza-rizika-implementacije)
+  - [5. Zaključak](#5-zaključak)
+  - [6. Izrada process-driven aplikacije u Camunda 8](#6-izrada-process-driven-aplikacije-u-camunda-8)
+    - [6.1 Uvod i redukcija modela](#61-uvod-i-redukcija-modela)
+    - [6.2 Camunda 8 okruženje](#62-camunda-8-okruženje)
+    - [6.3 Struktura aplikacije](#63-struktura-aplikacije)
+    - [6.4 Camunda Forms](#64-camunda-forms)
+    - [6.5 Job Worker](#65-job-worker)
+    - [6.6 Deployment i izvršavanje](#66-deployment-i-izvršavanje)
+    - [6.7 Zaključak implementacije](#67-zaključak-implementacije)
+  - [7. Literatura](#7-literatura)
+    - [Akademska literatura](#akademska-literatura)
+    - [Web izvori i dokumentacija](#web-izvori-i-dokumentacija)
+    - [Regulatorna dokumentacija i standardi](#regulatorna-dokumentacija-i-standardi)
+    - [Ostali izvori](#ostali-izvori)
 
 ---
 
@@ -194,10 +213,17 @@ As-Is model procesa zapošljavanja IT djelatnika u JGL-u modeliran je koristeći
 **Faza 1: Identifikacija potrebe (3-5 dana)** — IT voditelj identificira potrebu za novim zaposlenikom (povećanje opsega posla, odlazak zaposlenika ili novi projekt). Definira tip pozicije (Helpdesk/Programer/NOC-SOC), seniority razinu, tehničke vještine i certifikate. HR izrađuje strukturirani opis radnog mjesta s job title-om, odgovornostima, potrebnim vještinama, certifikatima, plaćnim rasponom i benefitima. Zahtjev se šalje upravi na odobrenje s opravdanjem potrebe i budžetskim impact-om (~80.000 EUR godišnji trošak po IT djelatniku). Exclusive Gateway: ako odobreno, proces nastavlja; ako ne, End Event "Odbijeno". Prosječno vrijeme odobrenja: 2-5 dana, success rate ~85%. Problem: ručno odobrenje putem email ping-ponga bez automatske provjere budžeta.
 
 **Faza 2: Objava natječaja (14-21 dan)** — HR šalje zahtjev vanjskoj agenciji putem Send Taska s Message Flow-om. Agencija objavljuje oglas na MojPosao.hr (premium ~2.000 HRK/mj), LinkedIn (sponsored ~1.500 HRK), HZZ-u (besplatno, zakonski obavezno) i specijaliziranim portalima. Paralelno provodi active sourcing — LinkedIn InMail kampanje, pretraživanje baza CV-a i headhunting za senior pozicije. Inicijalni screening odbacuje ~60% prijava koje ne zadovoljavaju minimalne kriterije. Agencija kreira shortlistu od 5-10 kandidata i šalje je JGL-u putem Message Flow-a. Prosječan broj prijava: Helpdesk 30-50, Programer 20-40, NOC/SOC 15-25. Problem: dugo trajanje (14-21 dan čekanja), kvaliteta screeninga agencije varijabilna, agencija ne razumije dublje tehničke zahtjeve.
-
+<p align="center">
+  <img src="img/message.png" width="600"><br>
+  <em>Slika 1: Message Flow JGL ↔ Agencija</em>
+</p>
 **Faza 3: Selekcijski postupak (7-14 dana)** — HR screening intervju (30-45 min, telefonski ili video): provjera motivacije, kulturalne kompatibilnosti, validacija CV-a, razgovor o očekivanjima. Subjektivna ocjena 1-5, ~70% kandidata prolazi. Tehnički test (1-3 sata): standardizirane vještine ovisno o poziciji. Tehnički intervju s IT voditeljem (45-60 min): dubinska evaluacija tehničkih kompetencija, problem-solving, arhitekturna pitanja za senior pozicije. Evaluacija kandidata prema weighted kriterijima: HR screening 20%, tehnički test 30%, tehnički intervju 40%, reference 10%. Problem: nema standardiziranog scoring modela, subjektivna odluka komisije.
 
 **Faza 4: Ponuda (3-5 dana)** — HR priprema formalnu ponudu (pozicija, datum početka, bruto plaća, benefiti, probni rad 3-6 mjeseci) i šalje kandidatu putem Send Taska s rokom od 5 radnih dana. Timer Event čeka odgovor. Exclusive Gateway: ako kandidat prihvaća, proces nastavlja; ako odbija, End Event "Ponuda odbijena" ili ponuda sljedećem kandidatu. Problem: kandidati često dobiju counter-offer od trenutnog poslodavca (15% slučajeva), nema automatskog reminder-a.
+<p align="center">
+  <img src="img/gateway.png" width="400"><br>
+  <em>Slika 2: Exclusive Gateway - Kandidat prihvaća</em>
+</p>
 
 **Faza 5: Administrativna priprema (5-10 dana)** — Priprema i potpis ugovora o radu, prikupljanje dokumentacije (OIB, osobna, diploma, potvrda o nekažnjavanju), prijave na HZMO i HZZO putem e-Građani sustava, kreiranje evidencije u HRIS-u. HR šalje email zahtjeve IT odjelu za kreiranje računa i Nabavi za narudžbu opreme. Problem: email-based requests bez tracking-a, ručno unošenje podataka u multiple sustave.
 
@@ -208,6 +234,10 @@ As-Is model procesa zapošljavanja IT djelatnika u JGL-u modeliran je koristeći
 *Nabava grana:* Provjera specifikacija opreme prema tipu radnog mjesta. Exclusive Gateway: oprema na skladištu → rezervacija; nije → narudžba kod dobavljača (Emcotec, ELMARK, Campus) s delivery time 5-10 dana. Timer Event čeka isporuku (7-14 dana). Zaprimanje i QC check. Predaja IT odjelu na konfiguraciju.
 
 Parallel Join Gateway čeka završetak obje grane. Problem: Nabava i IT ne komuniciraju dovoljno (oprema stigne ali IT nije spreman), ručna konfiguracija laptopa (4-6h), oprema nije spremna prvi dan u 40% slučajeva.
+<p align="center">
+  <img src="img/parallel.png" width="400"><br>
+  <em>Slika 3: Paralelno izvođenje IT pripreme i nabave</em>
+</p>
 
 **Faza 7: Onboarding novog djelatnika (prvi dan + 1-3 mjeseca probnog rada)** — Prvi dan uključuje check-in na recepciji, potpisivanje preostalih dokumenata (NDA, Code of Conduct, GDPR consent), predaju IT opreme s postavkom lozinki i provjerom pristupa sustavima, obilazak ureda i safety briefing, te upoznavanje s voditeljem tima koji dodjeljuje mentora i definira početne zadatke. Edukacija o sigurnosnim pravilima obuhvaća Information Security Policy, clean desk policy, incident reporting procedure i GDPR training.
 
