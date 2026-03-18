@@ -74,7 +74,6 @@ Kvantitativna analiza pokazuje da predložene optimizacije mogu smanjiti ukupno 
     - [6.6 Deployment i izvršavanje](#66-deployment-i-izvršavanje)
     - [6.7 Zaključak implementacije](#67-zaključak-implementacije)
   - [7. Literatura](#7-literatura)
-    - [Akademska literatura](#akademska-literatura)
     - [Web izvori i dokumentacija](#web-izvori-i-dokumentacija)
     - [Regulatorna dokumentacija i standardi](#regulatorna-dokumentacija-i-standardi)
     - [Ostali izvori](#ostali-izvori)
@@ -235,7 +234,7 @@ As-Is model procesa zapošljavanja IT djelatnika u JGL-u modeliran je koristeći
 
 Parallel Join Gateway čeka završetak obje grane. Problem: Nabava i IT ne komuniciraju dovoljno (oprema stigne ali IT nije spreman), ručna konfiguracija laptopa (4-6h), oprema nije spremna prvi dan u 40% slučajeva.
 <p align="center">
-  <img src="img/parallel.png" width="400"><br>
+  <img src="img/parallel.png" width="600"><br>
   <em>Slika 3: Paralelno izvođenje IT pripreme i nabave</em>
 </p>
 
@@ -539,9 +538,9 @@ Pokretanje: `camunda-start.bat` | Zaustavljanje: `camunda-stop.bat`
 ```
 camunda-app/
 ├── it-hire-as-is-reduced.bpmn
-├── forms/  (10 formi: job-request, budget-approval, hr-screening,
-│           tech-interview, offer, candidate-response, it-prepare,
-│           equipment, onboarding, probation-eval)
+├── (10 formi: job-request, budget-approval, hr-screening,
+│   tech-interview, offer, candidate-response, it-prepare,
+│   equipment, onboarding, probation-eval)
 ├── worker/
 │   ├── index.js          ← Express.js Job Worker
 │   └── package.json
@@ -567,6 +566,11 @@ Proces koristi 5 Exclusive Gateway-a s FEEL izrazima: `GW_Approved` (`=approved 
 | AsIs_Form_Onboarding | Onboarding | docsCompleted, equipmentHandedOver |
 | AsIs_Form_ProbationEval | Evaluacija probnog rada | probationPassed, performanceScore |
 
+<p align="center">
+  <img src="img/4form.png" width="800"><br>
+  <em>Slika 4: Camunda Forma</em>
+</p>
+
 ### 6.5 Job Worker
 
 Za Service Task `ST_NotifyAgency` (task type: `send-agency-notification`) implementiran je Job Worker u Express.js s `@camunda8/sdk` bibliotekom. Worker se registrira na Zeebe gateway, preuzima job, simulira slanje email obavijesti agenciji i vraća varijable (`agencyNotified`, `notificationTimestamp`, `agencyName`).
@@ -579,8 +583,8 @@ const zbc = camunda.getZeebeGrpcApiClient();
 zbc.createWorker({
   taskType: "send-agency-notification",
   taskHandler: async (job) => {
-    const { candidateName, roleType } = job.variables;
-    console.log(`Obavijest poslana agenciji za: ${candidateName} (${roleType})`);
+    const {  roleType } = job.variables;
+    console.log(`Obavijest poslana agenciji za: (${roleType})`);
     return job.complete({ agencyNotified: true, notificationTimestamp: new Date().toISOString() });
   },
 });
@@ -613,11 +617,7 @@ Camunda 8 Run distribucija pokreće se izvršavanjem batch skripte `camunda-star
 
 **Korak 2: Deployment BPMN modela i formi**
 
-Model i forme deployane su putem Camunda Modelera — opcija Deploy → Cluster endpoint `http://localhost:26500`. Prilikom deploymenta, sve forme s `AsIs_` prefixom u ID-u deployaju se zajedno s BPMN modelom kao linked resources. Alternativno, deployment se može izvršiti putem CLI alata:
-
-```bash
-zbctl deploy it-hire-as-is-reduced.bpmn forms/*.form --insecure
-```
+Model i forme deployane su putem Camunda Modelera — opcija Deploy → Cluster endpoint `http://localhost:26500`. Prilikom deploymenta, sve forme s `AsIs_` prefixom u ID-u deployaju se zajedno s BPMN modelom kao linked resources.
 
 Važne napomene o deploymentu: forme moraju imati unikatne ID-ove (koristimo `AsIs_` prefix radi izbjegavanja kolizije s To-Be formama), BPMN model mora koristiti `formId` atribut (ne `formKey`) za native Zeebe user tasks, te svaki User Task mora sadržavati `<zeebe:userTask />` element u extensionElements bloku.
 
@@ -633,17 +633,51 @@ Worker ispisuje potvrdu: `🔄 Job Worker pokrenut — čeka taskove tipa: send-
 
 **Korak 4: Pokretanje procesne instance**
 
-Nova instanca pokreće se iz Tasklist sučelja (tab "Processes" → odabir procesa "Zapošljavanje IT djelatnika — As-Is (reduciran)" → "Start process") ili putem CLI: `zbctl create instance AsIs_ITHire_Reduced --insecure`.
+Nova instanca pokreće se iz Tasklist sučelja (tab "Processes" → odabir procesa "Zapošljavanje IT djelatnika — As-Is (reduciran)" → "Start process").
 
 Redoslijed izvršavanja: Definiranje zahtjeva → Odobrenje (XOR) → Service Task: obavijest agenciji → Timer: čekanje shortliste → HR screening (XOR) → Tehnički intervju (XOR) → Priprema ponude → Timer: čekanje odgovora → Odgovor kandidata (XOR) → IT priprema ∥ Nabava (AND split/join) → Onboarding → Evaluacija probnog rada (XOR) → End.
 
 **Primjer izvršavanja happy path scenarija:**
 
-Instanca se pokreće iz Tasklist sučelja. IT voditelj popunjava formu AsIs_Form_JobRequest s podacima: candidateName="Ana Horvat", roleType="programer", seniority="mid", salaryRange=3000. Uprava odobrava zahtjev (approved=true) putem forme AsIs_Form_BudgetApproval. Service Task automatski obavještava agenciju — u konzoli Job Workera ispisuje se potvrda s vremenskim žigom. Nakon isteka timera (30s za demo), HR popunjava screening formu s ocjenama i potvrđuje prolaz. IT voditelj evaluira kandidata u tehničkom intervjuu. HR šalje ponudu i nakon čekanja (20s) unosi pozitivan odgovor kandidata. IT priprema i nabava opreme izvršavaju se paralelno. Nakon onboarding-a, IT voditelj evaluira probni rad i potvrđuje uspješno zaposlenje — instanca završava na End Eventu "Uspješno zaposlenje".
+Instanca se pokreće iz Tasklist sučelja. IT voditelj popunjava formu AsIs_Form_JobRequest s podacima: roleType="programer", seniority="mid", salaryRange=3000. Uprava odobrava zahtjev (approved=true) putem forme AsIs_Form_BudgetApproval. Service Task automatski obavještava agenciju — u konzoli Job Workera ispisuje se potvrda s vremenskim žigom. Nakon isteka timera (30s za demo), HR popunjava screening formu s ocjenama i potvrđuje prolaz. IT voditelj evaluira kandidata u tehničkom intervjuu. HR šalje ponudu i nakon čekanja (20s) unosi pozitivan odgovor kandidata. IT priprema i nabava opreme izvršavaju se paralelno. Nakon onboarding-a, IT voditelj evaluira probni rad i potvrđuje uspješno zaposlenje — instanca završava na End Eventu "Uspješno zaposlenje".
 
 U Operate sučelju vidljiv je kompletni tok instance s označenim tokenom na aktivnom User Tasku, te history svih završenih taskova s vremenskim žigovima.
+U našem primjeru kandidat je odbijen nakon HR intervjua.
 
-*[Screenshotovi iz Operate i Tasklist sučelja]*
+<p align="center">
+  <img src="img/5camundaop1.png" width="800"><br>
+  <em>Slika 5: Camunda Operate dashboard i pokrenuti proces</em>
+</p>
+
+<p align="center">
+  <img src="img/6camundaop2.png" width="800"><br>
+  <em>Slika 6: Camunda Operate dinstanta procesa</em>
+</p>
+
+<p align="center">
+  <img src="img/8camundatsk2.png" width="800"><br>
+  <em>Slika 7: Camunda Tasklist i forma job-request</em>
+</p>
+
+<p align="center">
+  <img src="img/9camundaop3.png" width="800"><br>
+  <em>Slika 8: Camunda Operate Dovršen zahtjev i prelaz na drugi</em>
+</p>
+
+<p align="center">
+  <img src="img/10message.png" width="600"><br>
+  <em>Slika 9: Obavijest agenciji poslana</em>
+</p>
+
+<p align="center">
+  <img src="img/11camundatsk3.png" width="800"><br>
+  <em>Slika 10: Camunda Tasklist Kandidat nije prošao HR Interview</em>
+</p>
+
+<p align="center">
+  <img src="img/12camundaop4.png" width="800"><br>
+  <em>Slika 11: Camunda Operate Kandidat odbijen</em>
+</p>
 
 ### 6.7 Zaključak implementacije
 
@@ -652,16 +686,6 @@ Camunda 8 Zeebe engine zahtijeva single-process modele bez collaboration dijagra
 ---
 
 ## 7. Literatura
-
-### Akademska literatura
-
-Dumas, M., La Rosa, M., Mendling, J. i Reijers, H. A. (2018). *Fundamentals of business process management* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-56509-4
-
-Hammer, M. i Champy, J. (2006). *Reengineering the corporation: A manifesto for business revolution* (Rev. ed.). HarperBusiness.
-
-Pyzdek, T. i Keller, P. A. (2014). *The Six Sigma handbook* (4. izd.). McGraw-Hill Education.
-
-van der Aalst, W. M. P. (2016). *Process mining: Data science in action* (2. izd.). Springer. https://doi.org/10.1007/978-3-662-49851-4
 
 ### Web izvori i dokumentacija
 

@@ -41,13 +41,12 @@ const zbc = camunda.getZeebeGrpcApiClient();
 zbc.createWorker({
   taskType: "send-agency-notification",
   taskHandler: async (job) => {
-    const { candidateName, roleType, seniority, salaryRange, technicalSkills } =
+    const { roleType, seniority, salaryRange, technicalSkills } =
       job.variables;
 
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     console.log("📧 SLANJE OBAVIJESTI VANJSKOJ AGENCIJI");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log(`  Kandidat:     ${candidateName || "N/A"}`);
     console.log(`  Pozicija:     ${roleType || "N/A"} (${seniority || "N/A"})`);
     console.log(`  Plaća:        ${salaryRange || "N/A"} EUR/mj`);
     console.log(`  Vještine:     ${technicalSkills || "N/A"}`);
